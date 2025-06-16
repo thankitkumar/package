@@ -34,8 +34,9 @@ export function ComponentDisplay({
             <TabsTrigger value="code">Code</TabsTrigger>
             <TabsTrigger value="accessibility">Accessibility</TabsTrigger>
           </TabsList>
-          {/* The TabsContent for preview, which rendered the children, has been removed. */}
-          {/* If you intended to remove the Preview tab entirely, we'd also need to remove its Trigger and adjust the TabList and default Tab. */}
+          <TabsContent value="preview" className="p-4 border rounded-md min-h-[200px] flex justify-center items-center bg-muted/20">
+            {children}
+          </TabsContent>
           <TabsContent value="code">
             <ScrollArea className="h-72 w-full rounded-md border p-4 bg-muted/20">
               <pre className="text-sm font-code whitespace-pre-wrap">
@@ -57,3 +58,4 @@ export function ComponentDisplay({
     </Card>
   );
 }
+
