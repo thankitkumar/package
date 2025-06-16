@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -12,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { CodeBlock } from '@/components/ui/code-block';
 
 import { generateComponentVariants, GenerateComponentVariantsInput, GenerateComponentVariantsOutput } from '@/ai/flows/generate-component-variants';
 import { suggestComponentModifications, SuggestComponentModificationsInput, SuggestComponentModificationsOutput } from '@/ai/flows/suggest-component-modifications';
@@ -102,7 +104,7 @@ export function AiGeneratorForm() {
             id="componentDescriptionVariants"
             placeholder="e.g., A primary call-to-action button for a modern e-commerce site."
             {...variantsForm.register('componentDescriptionVariants')}
-            className="mt-1 min-h-[100px]"
+            className="mt-1 min-h-[100px] text-sm md:text-base"
           />
           {variantsForm.formState.errors.componentDescriptionVariants && (
             <p className="text-sm text-destructive mt-1">{variantsForm.formState.errors.componentDescriptionVariants.message}</p>
@@ -140,7 +142,7 @@ export function AiGeneratorForm() {
             id="componentDescriptionMod"
             placeholder="e.g., A user profile card displaying avatar, name, and bio."
             {...modificationsForm.register('componentDescriptionMod')}
-            className="mt-1 min-h-[80px]"
+            className="mt-1 min-h-[80px] text-sm md:text-base"
           />
           {modificationsForm.formState.errors.componentDescriptionMod && (
             <p className="text-sm text-destructive mt-1">{modificationsForm.formState.errors.componentDescriptionMod.message}</p>
@@ -152,7 +154,7 @@ export function AiGeneratorForm() {
             id="styleGuide"
             placeholder="e.g., Make it look minimalist and modern, using a monochrome color palette."
             {...modificationsForm.register('styleGuide')}
-            className="mt-1 min-h-[80px]"
+            className="mt-1 min-h-[80px] text-sm md:text-base"
           />
           {modificationsForm.formState.errors.styleGuide && (
             <p className="text-sm text-destructive mt-1">{modificationsForm.formState.errors.styleGuide.message}</p>
@@ -163,7 +165,7 @@ export function AiGeneratorForm() {
           <Textarea
             id="currentParameters"
             {...modificationsForm.register('currentParameters')}
-            className="mt-1 font-code min-h-[120px]"
+            className="mt-1 font-code min-h-[120px] text-sm md:text-base"
             placeholder='{ "color": "blue", "fontSize": "16px" }'
           />
           {modificationsForm.formState.errors.currentParameters && (
@@ -184,9 +186,7 @@ export function AiGeneratorForm() {
           <CardContent className="space-y-4">
             <div>
               <h4 className="font-semibold">Modified Parameters (JSON):</h4>
-              <pre className="mt-1 p-3 bg-background rounded-md text-sm font-code overflow-x-auto">
-                <code>{modificationsResult.suggestedModifications}</code>
-              </pre>
+              <CodeBlock code={modificationsResult.suggestedModifications} className="mt-1" />
             </div>
             <div>
               <h4 className="font-semibold">Reasoning:</h4>
