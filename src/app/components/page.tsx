@@ -4,12 +4,22 @@
 import React, { useState } from 'react';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
-import { SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle } from 'lucide-react';
+import { 
+  SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, 
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Type 
+} from 'lucide-react';
+
 import ReactifyButtonDemo from './_components/reactify-button-demo';
 import ReactifyInputDemo from './_components/reactify-input-demo';
 import ReactifyCardDemo from './_components/reactify-card-demo';
 import ReactifyModalDemo from './_components/reactify-modal-demo';
 import ReactifyDropdownDemo from './_components/reactify-dropdown-demo';
+import ReactifyAlertDemo from './_components/reactify-alert-demo';
+import ReactifyBadgeDemo from './_components/reactify-badge-demo';
+import ReactifyCheckboxDemo from './_components/reactify-checkbox-demo';
+import ReactifyTabsDemo from './_components/reactify-tabs-demo';
+import ReactifyTooltipDemo from './_components/reactify-tooltip-demo';
+import ReactifyTextareaDemo from './_components/reactify-textarea-demo';
 
 const components = [
   {
@@ -24,46 +34,14 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
 
 // Primary Button
 <ReactifyButton variant="primary">Primary Action</ReactifyButton>
-
-// Secondary Button
-<ReactifyButton variant="secondary">Secondary Action</ReactifyButton>
-
-// Outline Button
-<ReactifyButton variant="outline">Outline Action</ReactifyButton>
-
-// Ghost Button
-<ReactifyButton variant="ghost">Ghost Action</ReactifyButton>
-
-// Destructive Button
-<ReactifyButton variant="destructive" leftIcon={<AlertTriangle />}>
-  Delete Item
-</ReactifyButton>
-
-// Button with Icon
-<ReactifyButton variant="primary" leftIcon={<Heart />}>
-  Like
-</ReactifyButton>
-
-// Loading State Button
-<ReactifyButton variant="primary" isLoading={true}>
-  Processing
-</ReactifyButton>
-
-// Disabled Button
-<ReactifyButton variant="primary" disabled>
-  Disabled
-</ReactifyButton>
-
-// Different Sizes
-<ReactifyButton variant="primary" size="sm">Small</ReactifyButton>
-<ReactifyButton variant="secondary" size="lg">Large</ReactifyButton>
+// Secondary, Outline, Ghost, Destructive variants also available
+// Supports size (sm, md, lg), isLoading, leftIcon, rightIcon, disabled props
   `,
     accessibilityNotes: [
-      "Ensure buttons have clear, descriptive text content.",
-      "Use \`aria-label\` for icon-only buttons or if the text is not descriptive enough.",
-      "Buttons are focusable and can be activated using Enter or Space keys.",
+      "Ensure buttons have clear, descriptive text content or an aria-label for icon-only buttons.",
+      "Buttons are focusable and activatable using Enter or Space keys.",
       "Loading state is announced via \`aria-busy\` and \`aria-live\`.",
-      "Disabled state is handled with the \`disabled\` attribute, making it unfocusable and unclickable.",
+      "Disabled state uses the \`disabled\` attribute.",
     ]
   },
   {
@@ -71,36 +49,22 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
     name: 'Input',
     icon: <TerminalSquare />,
     demo: <ReactifyInputDemo />,
-    codeBlockScrollAreaClassName: "max-h-none", 
+    codeBlockScrollAreaClassName: "max-h-[450px]", 
     codeExample: `
 import { ReactifyInput } from '@/components/reactify/input';
-import { Label } from '@/components/ui/label'; // Assuming a Label component
+import { Label } from '@/components/ui/label';
 
-// Standard Input
+// Standard Input with Label
 <div>
   <Label htmlFor="name">Name</Label>
   <ReactifyInput type="text" id="name" placeholder="Enter your name" />
 </div>
-
-// Input with Error
-<div>
-  <Label htmlFor="email">Email</Label>
-  <ReactifyInput type="email" id="email" placeholder="your@email.com" error />
-  <p className="text-sm text-destructive mt-1">Invalid email address.</p>
-</div>
-
-// Disabled Input
-<div>
-  <Label htmlFor="disabled-input">Disabled</Label>
-  <ReactifyInput type="text" id="disabled-input" placeholder="Cannot edit" disabled />
-</div>
+// Supports error state, disabled prop.
   `,
     accessibilityNotes: [
-      "Always associate inputs with a \`<label>\` element using \`htmlFor\` and \`id\` attributes.",
-      "Provide clear placeholder text or instructions.",
-      "Use \`aria-invalid\` to indicate an error state, typically managed by the component.",
-      "Ensure sufficient color contrast for borders and text, especially in error states.",
-      "Disabled inputs are not focusable or editable.",
+      "Always associate inputs with a \`<label>\`.",
+      "Use \`aria-invalid\` for error states.",
+      "Ensure sufficient color contrast.",
     ]
   },
   {
@@ -111,33 +75,22 @@ import { Label } from '@/components/ui/label'; // Assuming a Label component
     codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `
 import { 
-  ReactifyCard,
-  ReactifyCardHeader,
-  ReactifyCardTitle,
-  ReactifyCardDescription,
-  ReactifyCardContent,
-  ReactifyCardFooter
+  ReactifyCard, ReactifyCardHeader, ReactifyCardTitle, 
+  ReactifyCardDescription, ReactifyCardContent, ReactifyCardFooter
 } from '@/components/reactify/card';
-import { ReactifyButton } from '@/components/reactify/button';
 
-// Basic Card
 <ReactifyCard>
   <ReactifyCardHeader>
     <ReactifyCardTitle>Card Title</ReactifyCardTitle>
-    <ReactifyCardDescription>A short description for the card.</ReactifyCardDescription>
+    <ReactifyCardDescription>Description</ReactifyCardDescription>
   </ReactifyCardHeader>
-  <ReactifyCardContent>
-    <p>This is the main content of the card. It can contain any elements you need.</p>
-  </ReactifyCardContent>
-  <ReactifyCardFooter>
-    <ReactifyButton variant="primary">Action</ReactifyButton>
-  </ReactifyCardFooter>
+  <ReactifyCardContent><p>Content...</p></ReactifyCardContent>
+  <ReactifyCardFooter><ReactifyButton>Action</ReactifyButton></ReactifyCardFooter>
 </ReactifyCard>
   `,
     accessibilityNotes: [
-      "Ensure card titles are meaningful (e.g., using appropriate heading levels like <h3> within the card).",
-      "If cards are interactive (e.g., clickable as a whole), ensure they have proper focus indicators and ARIA roles (e.g., \`role='link'\` or \`role='button'\`).",
-      "Content within the card should follow general accessibility guidelines for text, images, and interactive elements.",
+      "Ensure card titles are meaningful (e.g., using appropriate heading levels).",
+      "If cards are interactive, ensure proper focus indicators and ARIA roles.",
     ]
   },
   {
@@ -147,40 +100,23 @@ import { ReactifyButton } from '@/components/reactify/button';
     demo: <ReactifyModalDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `
-import { useState } from 'react';
 import { ReactifyModal } from '@/components/reactify/modal';
-import { ReactifyButton } from '@/components/reactify/button';
+// ... useState and ReactifyButton for trigger
 
-function MyComponent() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <>
-      <ReactifyButton onClick={() => setIsOpen(true)}>Open Modal</ReactifyButton>
-      <ReactifyModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        title="My Modal Title"
-        footer={
-          <>
-            <ReactifyButton variant="outline" onClick={() => setIsOpen(false)}>Cancel</ReactifyButton>
-            <ReactifyButton variant="primary" onClick={() => { alert('Confirmed!'); setIsOpen(false); }}>Confirm</ReactifyButton>
-          </>
-        }
-      >
-        <p>This is the content of the modal. You can put any React nodes here.</p>
-      </ReactifyModal>
-    </>
-  );
-}
+<ReactifyModal
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="My Modal"
+  footer={<ReactifyButton onClick={handleConfirm}>Confirm</ReactifyButton>}
+>
+  <p>Modal content goes here.</p>
+</ReactifyModal>
   `,
     accessibilityNotes: [
-      "Modals should be announced by screen readers when opened. Use \`role='dialog'\` and \`aria-modal='true'\`.",
-      "Provide a clear title for the modal using \`aria-labelledby\` referencing the title element.",
-      "Focus should be trapped within the modal when it's open.",
-      "The modal should be closable via the Escape key.",
-      "Ensure there is a clearly identifiable close button.",
-      "When the modal closes, focus should return to the element that triggered it.",
+      "Use \`role='dialog'\` and \`aria-modal='true'\`.",
+      "Provide a title via \`aria-labelledby\`.",
+      "Trap focus within the modal.",
+      "Closable via Escape key and close button.",
     ]
   },
   {
@@ -192,33 +128,158 @@ function MyComponent() {
     codeExample: `
 import { ReactifyDropdown, ReactifyDropdownItem } from '@/components/reactify/dropdown';
 import { ReactifyButton } from '@/components/reactify/button';
-import { ChevronDown } from 'lucide-react';
 
-function MyDropdown() {
-  return (
-    <ReactifyDropdown
-      trigger={
-        <ReactifyButton variant="outline" rightIcon={<ChevronDown size={16} />}>
-          Options
-        </ReactifyButton>
-      }
-    >
-      <ReactifyDropdownItem onSelect={() => alert('Edit selected')}>Edit</ReactifyDropdownItem>
-      <ReactifyDropdownItem onSelect={() => alert('Copy selected')}>Copy</ReactifyDropdownItem>
-      <ReactifyDropdownItem onSelect={() => alert('Archive selected')} disabled>Archive (Disabled)</ReactifyDropdownItem>
-      <hr className="my-1 border-border" />
-      <ReactifyDropdownItem onSelect={() => alert('Delete selected')}>Delete</ReactifyDropdownItem>
-    </ReactifyDropdown>
-  );
-}
+<ReactifyDropdown trigger={<ReactifyButton>Options</ReactifyButton>}>
+  <ReactifyDropdownItem onSelect={() => alert('Edit')}>Edit</ReactifyDropdownItem>
+  <ReactifyDropdownItem disabled>Archive (Disabled)</ReactifyDropdownItem>
+</ReactifyDropdown>
   `,
     accessibilityNotes: [
-      "The dropdown trigger should be focusable and activatable via keyboard (Enter/Space).",
-      "Use \`aria-haspopup='true'\` and \`aria-expanded\` on the trigger element.",
-      "The dropdown menu should have \`role='menu'\`.",
-      "Dropdown items should have \`role='menuitem'\`.",
-      "Keyboard navigation within the dropdown (Up/Down arrows, Enter/Space to select, Esc to close) should be implemented.",
-      "Focus should be managed correctly when opening and closing the dropdown.",
+      "Trigger is focusable and activatable via keyboard.",
+      "Menu has \`role='menu'\`, items have \`role='menuitem'\`.",
+      "Supports keyboard navigation (arrows, Enter/Space, Esc).",
+    ]
+  },
+  {
+    id: 'alert',
+    name: 'Alert',
+    icon: <MessageSquareWarning />,
+    demo: <ReactifyAlertDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyAlert } from '@/components/reactify/alert';
+
+// Info Alert (Default)
+<ReactifyAlert title="Information">This is an info alert.</ReactifyAlert>
+
+// Success, Warning, Destructive variants also available
+<ReactifyAlert variant="success" title="Success!">Operation completed.</ReactifyAlert>
+
+// Can hide default icon or provide custom one
+<ReactifyAlert variant="warning" title="Be Aware" icon={false}>No icon here.</ReactifyAlert>
+  `,
+    accessibilityNotes: [
+      "Use \`role='alert'\` for assertive announcements or \`role='status'\` for polite ones.",
+      "Ensure icons have proper alternative text or are decorative.",
+      "Sufficient color contrast for text and icons.",
+    ]
+  },
+  {
+    id: 'badge',
+    name: 'Badge',
+    icon: <BadgePercent />,
+    demo: <ReactifyBadgeDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyBadge } from '@/components/reactify/badge';
+
+// Primary Badge (Default)
+<ReactifyBadge>Primary</ReactifyBadge>
+
+// Other variants: secondary, destructive, outline, success, warning
+<ReactifyBadge variant="success">Completed</ReactifyBadge>
+
+// Sizes: sm, md (default), lg
+<ReactifyBadge variant="destructive" size="sm">Urgent</ReactifyBadge>
+  `,
+    accessibilityNotes: [
+      "Ensure badge text is descriptive or used in a context that provides meaning.",
+      "Good color contrast is important for readability.",
+    ]
+  },
+  {
+    id: 'checkbox',
+    name: 'Checkbox',
+    icon: <CheckSquare />,
+    demo: <ReactifyCheckboxDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyCheckbox } from '@/components/reactify/checkbox';
+// ... useState for controlled component
+
+<ReactifyCheckbox
+  id="myCheckbox"
+  label="Accept terms"
+  checked={isChecked}
+  onChange={(e) => setIsChecked(e.target.checked)}
+/>
+
+// Supports size (sm, md, lg) and disabled props.
+  `,
+    accessibilityNotes: [
+      "Always associate with a \`<label>\`.",
+      "Ensure visible focus indicator.",
+      "State (checked/unchecked) should be clear.",
+    ]
+  },
+  {
+    id: 'tabs',
+    name: 'Tabs',
+    icon: <Folders />,
+    demo: <ReactifyTabsDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyTabs, ReactifyTab } from '@/components/reactify/tabs';
+
+<ReactifyTabs defaultActiveTab={0} variant="line">
+  <ReactifyTab label="Profile">Profile Content</ReactifyTab>
+  <ReactifyTab label="Settings">Settings Content</ReactifyTab>
+  <ReactifyTab label="Security" disabled>Security Content</ReactifyTab>
+</ReactifyTabs>
+
+// Variant 'enclosed' also available.
+  `,
+    accessibilityNotes: [
+      "Tab list has \`role='tablist'\`, tabs have \`role='tab'\`, panels have \`role='tabpanel'\`.",
+      "Use \`aria-selected\` for active tab, \`aria-controls\` for panel association.",
+      "Support keyboard navigation (arrow keys to switch tabs, Enter/Space to activate).",
+    ]
+  },
+  {
+    id: 'tooltip',
+    name: 'Tooltip',
+    icon: <Info />,
+    demo: <ReactifyTooltipDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyTooltip } from '@/components/reactify/tooltip';
+import { ReactifyButton } from '@/components/reactify/button';
+
+<ReactifyTooltip content="This is helpful information.">
+  <ReactifyButton variant="outline">Hover Me</ReactifyButton>
+</ReactifyTooltip>
+
+// Supports position (top, bottom, left, right) and delay props.
+// Content can be a string or JSX.
+  `,
+    accessibilityNotes: [
+      "Tooltip has \`role='tooltip'\`.",
+      "Trigger element should be focusable.",
+      "Tooltip visibility should be controllable via hover and focus.",
+      "Consider using \`aria-describedby\` to link trigger to tooltip content for screen readers.",
+    ]
+  },
+  {
+    id: 'textarea',
+    name: 'Textarea',
+    icon: <Type />,
+    demo: <ReactifyTextareaDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyTextarea } from '@/components/reactify/textarea';
+import { Label } from '@/components/ui/label';
+
+<div>
+  <Label htmlFor="comment">Comment</Label>
+  <ReactifyTextarea id="comment" placeholder="Your comment..." rows={4} />
+</div>
+
+// Supports error and disabled props.
+  `,
+    accessibilityNotes: [
+      "Always associate with a \`<label>\`.",
+      "Provide clear placeholder text or instructions.",
+      "Use \`aria-invalid\` for error states.",
     ]
   },
 ];
