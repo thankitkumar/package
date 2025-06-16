@@ -7,7 +7,7 @@ import { ComponentDisplay } from './_components/component-display';
 import { 
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, 
   MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Type,
-  PanelTop, PanelBottom
+  PanelTop, PanelBottom, PanelLeft
 } from 'lucide-react';
 
 import ReactifyButtonDemo from './_components/reactify-button-demo';
@@ -23,6 +23,7 @@ import ReactifyTooltipDemo from './_components/reactify-tooltip-demo';
 import ReactifyTextareaDemo from './_components/reactify-textarea-demo';
 import ReactifyHeaderDemo from './_components/reactify-header-demo';
 import ReactifyFooterDemo from './_components/reactify-footer-demo';
+import ReactifySidebarDemo from './_components/reactify-sidebar-demo';
 
 const components = [
   {
@@ -256,6 +257,49 @@ import { ReactifyModal } from '@/components/reactify/modal';
       "Provide a title via \`aria-labelledby\`.",
       "Trap focus within the modal.",
       "Closable via Escape key and close button.",
+    ]
+  },
+  {
+    id: 'sidebar',
+    name: 'Sidebar',
+    icon: <PanelLeft />,
+    demo: <ReactifySidebarDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { useState } from 'react';
+import { ReactifySidebar } from '@/components/reactify/sidebar';
+import { ReactifyButton } from '@/components/reactify/button';
+
+function MyPageWithSidebar() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  return (
+    <div>
+      <ReactifyButton onClick={() => setIsSidebarOpen(true)}>
+        Open Sidebar
+      </ReactifyButton>
+      <ReactifySidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        position="left" // or "right"
+        title="My Sidebar"
+        widthClass="w-72" // Example width
+      >
+        <p>Sidebar content goes here. You can add navigation links, forms, etc.</p>
+        <ReactifyButton onClick={() => setIsSidebarOpen(false)} variant="outline" className="mt-4">
+          Close
+        </ReactifyButton>
+      </ReactifySidebar>
+    </div>
+  );
+}
+  `,
+    accessibilityNotes: [
+      "Ensure the sidebar has a clear title (e.g., using `title` prop which sets `aria-labelledby`).",
+      "If the sidebar is modal (covers content and traps focus), use `aria-modal='true'`.",
+      "Provide a clear way to close the sidebar (e.g., close button, Escape key).",
+      "Manage focus appropriately: when opened, focus should move into the sidebar; when closed, focus should return to the trigger element.",
+      "Overlay should be dismissible on click if present.",
     ]
   },
   {

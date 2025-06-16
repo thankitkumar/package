@@ -12,5 +12,6 @@ export * from './tooltip';
 export * from './textarea';
 export * from './header';
 export * from './footer';
+export * from './sidebar';
 export * from './common-props';
 export * from './utils';
