@@ -8,6 +8,7 @@ const navItems = [
   { href: '/components', label: 'Components' },
   { href: '/theming', label: 'Theming' },
   { href: '/ai-generator', label: 'AI Generator' },
+  { href: '/docs', label: 'Docs' },
 ];
 
 export function MainNav() {
