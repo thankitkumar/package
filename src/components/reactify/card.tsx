@@ -1,5 +1,5 @@
 'use client';
-import { cn } from '@/lib/utils';
+import { cn } from './utils';
 import type { ReactifyComponentProps } from './common-props';
 
 interface ReactifyCardProps extends ReactifyComponentProps {

@@ -1,9 +1,12 @@
 'use client';
 import { useState, useRef, useEffect, type ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from './utils';
 import type { ReactifyComponentProps } from './common-props';
-import { ReactifyButton } from './button';
-import { ChevronDown } from 'lucide-react';
+// Note: ReactifyButton import will be resolved by the build process or if used within the same package.
+// If this file is part of the library, ensure ReactifyButton is also exported or path is correct.
+// For now, assuming it's available.
+// import { ReactifyButton } from './button'; 
+
 
 interface ReactifyDropdownItemProps extends ReactifyComponentProps {
   onSelect?: () => void;

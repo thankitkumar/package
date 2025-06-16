@@ -1,12 +1,28 @@
 {
-  "name": "nextn",
+  "name": "@reactify/components",
   "version": "0.1.0",
-  "private": true,
+  "description": "A universal component library.",
+  "author": "Your Name <you@example.com>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "dev": "next dev --turbopack -p 9002",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
     "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
     "build": "next build",
+    "build:lib": "tsup",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
@@ -60,6 +76,21 @@
     "genkit-cli": "^1.8.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "tsup": "^8.2.3",
     "typescript": "^5"
+  },
+  "peerDependencies": {
+    "lucide-react": "^0.x",
+    "react": "^18.x",
+    "react-dom": "^18.x"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "reactify"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

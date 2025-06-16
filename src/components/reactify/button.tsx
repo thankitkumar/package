@@ -1,6 +1,6 @@
 'use client';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from './utils';
 import type { ReactifyComponentProps } from './common-props';
 
 interface ReactifyButtonProps extends ReactifyComponentProps, ButtonHTMLAttributes<HTMLButtonElement> {

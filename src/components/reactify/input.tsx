@@ -1,6 +1,6 @@
 'use client';
 import type { InputHTMLAttributes } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from './utils';
 import type { ReactifyComponentProps } from './common-props';
 
 interface ReactifyInputProps extends ReactifyComponentProps, InputHTMLAttributes<HTMLInputElement> {
