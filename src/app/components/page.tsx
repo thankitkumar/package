@@ -1,9 +1,7 @@
 import React from 'react';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
-// Removed unused Button, Input, Card imports from '@/components/ui'
-// Kept Lucide icons
-import { Puzzle, LayoutDashboard, Palette, Settings, Info, SquareStack } from 'lucide-react';
+import { SquareStack } from 'lucide-react';
 import ReactifyButtonDemo from './_components/reactify-button-demo';
 import ReactifyInputDemo from './_components/reactify-input-demo';
 import ReactifyCardDemo from './_components/reactify-card-demo';
