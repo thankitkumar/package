@@ -1,3 +1,4 @@
+
 'use client';
 import { ReactifyButton } from '@/components/reactify/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -5,11 +6,13 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ReactifyButtonDemo() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingVariant, setLoadingVariant] = useState<string | null>(null);
 
-  const handleClick = () => {
-    setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 2000);
+  const handleVariantClick = (clickedVariant: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive') => {
+    setLoadingVariant(clickedVariant);
+    setTimeout(() => {
+      setLoadingVariant(null);
+    }, 2000);
   };
   
   const codeExample = `
@@ -68,11 +71,11 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
           <div className="space-y-4">
             <h3 className="font-semibold text-lg mb-2">Variants</h3>
             <div className="flex flex-wrap gap-2">
-              <ReactifyButton variant="primary" onClick={handleClick} isLoading={isLoading && variant === 'primary'} data-variant="primary">Primary</ReactifyButton>
-              <ReactifyButton variant="secondary" onClick={handleClick} isLoading={isLoading && variant === 'secondary'} data-variant="secondary">Secondary</ReactifyButton>
-              <ReactifyButton variant="outline" onClick={handleClick} isLoading={isLoading && variant === 'outline'} data-variant="outline">Outline</ReactifyButton>
-              <ReactifyButton variant="ghost" onClick={handleClick} isLoading={isLoading && variant === 'ghost'} data-variant="ghost">Ghost</ReactifyButton>
-              <ReactifyButton variant="destructive" leftIcon={<AlertTriangle size={16}/>} onClick={handleClick} isLoading={isLoading && variant === 'destructive'} data-variant="destructive">Destructive</ReactifyButton>
+              <ReactifyButton variant="primary" onClick={() => handleVariantClick('primary')} isLoading={loadingVariant === 'primary'} data-variant="primary">Primary</ReactifyButton>
+              <ReactifyButton variant="secondary" onClick={() => handleVariantClick('secondary')} isLoading={loadingVariant === 'secondary'} data-variant="secondary">Secondary</ReactifyButton>
+              <ReactifyButton variant="outline" onClick={() => handleVariantClick('outline')} isLoading={loadingVariant === 'outline'} data-variant="outline">Outline</ReactifyButton>
+              <ReactifyButton variant="ghost" onClick={() => handleVariantClick('ghost')} isLoading={loadingVariant === 'ghost'} data-variant="ghost">Ghost</ReactifyButton>
+              <ReactifyButton variant="destructive" leftIcon={<AlertTriangle size={16}/>} onClick={() => handleVariantClick('destructive')} isLoading={loadingVariant === 'destructive'} data-variant="destructive">Destructive</ReactifyButton>
             </div>
           </div>
 
