@@ -17,7 +17,7 @@ const components = [
     name: 'Button',
     icon: <SquareStack />,
     demo: <ReactifyButtonDemo />,
-    codeBlockScrollAreaClassName: "max-h-none", // Auto height for Button code example
+    codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `
 import { ReactifyButton } from '@/components/reactify/button';
 import { Heart, Upload, AlertTriangle } from 'lucide-react';
@@ -71,7 +71,7 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
     name: 'Input',
     icon: <TerminalSquare />,
     demo: <ReactifyInputDemo />,
-    codeBlockScrollAreaClassName: "max-h-[450px]", 
+    codeBlockScrollAreaClassName: "max-h-none", 
     codeExample: `
 import { ReactifyInput } from '@/components/reactify/input';
 import { Label } from '@/components/ui/label'; // Assuming a Label component
@@ -108,7 +108,7 @@ import { Label } from '@/components/ui/label'; // Assuming a Label component
     name: 'Card',
     icon: <LayoutGrid />,
     demo: <ReactifyCardDemo />,
-    codeBlockScrollAreaClassName: "max-h-none", // Auto height for Card code example
+    codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `
 import { 
   ReactifyCard,
@@ -145,7 +145,7 @@ import { ReactifyButton } from '@/components/reactify/button';
     name: 'Modal',
     icon: <Rows />,
     demo: <ReactifyModalDemo />,
-    codeBlockScrollAreaClassName: "max-h-none", // Auto height for Modal code example
+    codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `
 import { useState } from 'react';
 import { ReactifyModal } from '@/components/reactify/modal';
@@ -188,6 +188,7 @@ function MyComponent() {
     name: 'Dropdown',
     icon: <ChevronDownCircle />,
     demo: <ReactifyDropdownDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `
 import { ReactifyDropdown, ReactifyDropdownItem } from '@/components/reactify/dropdown';
 import { ReactifyButton } from '@/components/reactify/button';
@@ -267,7 +268,7 @@ export default function ComponentsPage() {
                   description={`Examples and usage of the Reactify ${activeComponentDetails.name} component.`}
                   codeExample={activeComponentDetails.codeExample}
                   accessibilityNotes={activeComponentDetails.accessibilityNotes}
-                  codeBlockScrollAreaClassName={(activeComponentDetails as any).codeBlockScrollAreaClassName} 
+                  codeBlockScrollAreaClassName={activeComponentDetails.codeBlockScrollAreaClassName} 
                 >
                   {activeComponentDetails.demo}
                 </ComponentDisplay>
