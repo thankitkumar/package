@@ -17,6 +17,7 @@ const components = [
     name: 'Button',
     icon: <SquareStack />,
     demo: <ReactifyButtonDemo />,
+    codeBlockScrollAreaClassName: "max-h-none", // Auto height for Button code example
     codeExample: `
 import { ReactifyButton } from '@/components/reactify/button';
 import { Heart, Upload, AlertTriangle } from 'lucide-react';
