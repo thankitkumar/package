@@ -1,7 +1,7 @@
 import React from 'react';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
-import { SquareStack } from 'lucide-react';
+import { SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle } from 'lucide-react';
 import ReactifyButtonDemo from './_components/reactify-button-demo';
 import ReactifyInputDemo from './_components/reactify-input-demo';
 import ReactifyCardDemo from './_components/reactify-card-demo';
@@ -66,7 +66,7 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
     { 
       id: 'input', 
       name: 'Input', 
-      icon: <InputIcon />, 
+      icon: <TerminalSquare />, 
       demo: <ReactifyInputDemo />,
       codeExample: `
 import { ReactifyInput } from '@/components/reactify/input';
@@ -102,7 +102,7 @@ import { Label } from '@/components/ui/label'; // Assuming a Label component
     { 
       id: 'card', 
       name: 'Card', 
-      icon: <CardIcon />, 
+      icon: <LayoutGrid />, 
       demo: <ReactifyCardDemo />,
       codeExample: `
 import { 
@@ -138,7 +138,7 @@ import { ReactifyButton } from '@/components/reactify/button';
     { 
       id: 'modal', 
       name: 'Modal', 
-      icon: <ModalIcon />, 
+      icon: <Rows />, 
       demo: <ReactifyModalDemo />,
       codeExample: `
 import { useState } from 'react';
@@ -180,7 +180,7 @@ function MyComponent() {
     { 
       id: 'dropdown', 
       name: 'Dropdown', 
-      icon: <DropdownIcon />, 
+      icon: <ChevronDownCircle />, 
       demo: <ReactifyDropdownDemo />,
       codeExample: `
 import { ReactifyDropdown, ReactifyDropdownItem } from '@/components/reactify/dropdown';
@@ -221,7 +221,7 @@ function MyDropdown() {
       <div className="flex min-h-[calc(100vh-4rem)]">
         <Sidebar collapsible="icon" className="border-r">
           <SidebarHeader className="p-4 flex items-center justify-between">
-            <h2 className="font-headline text-lg font-semibold group-data-[collapsible=icon]:hidden">Components</h2>
+            <h2 className="font-headline text-lg font-semibold group-data-[collapsible=icon]:hidden mt-2">Components</h2>
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
@@ -230,7 +230,6 @@ function MyDropdown() {
                   <SidebarMenuButton
                     asChild
                     tooltip={{ children: component.name, side: 'right' }}
-                    //isActive={true} // Logic to determine active component would go here
                   >
                     <a href={`#${component.id}`}>
                       {React.cloneElement(component.icon, { className: 'h-5 w-5' })}
@@ -269,17 +268,3 @@ function MyDropdown() {
     </SidebarProvider>
   );
 }
-
-// Custom simple icons if Lucide doesn't have exact matches or for style consistency
-const InputIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-);
-const CardIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-);
-const ModalIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21H3a2 2 0 01-2-2V5a2 2 0 012-2h18a2 2 0 012 2v14a2 2 0 01-2 2h-4m-6 0H9m4 0h2m-4-4v4m0 0H9m4 0h2M9 7h6m-6 4h6m-6 4h6" /></svg>
-);
-const DropdownIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-);
