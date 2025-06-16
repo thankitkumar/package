@@ -11,7 +11,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 interface CodeBlockProps {
   code: string;
   className?: string;
-  lang?: string; // Optional language for syntax highlighting if extended later
+  lang?: string;
 }
 
 export function CodeBlock({ code, className, lang }: CodeBlockProps) {
@@ -24,7 +24,7 @@ export function CodeBlock({ code, className, lang }: CodeBlockProps) {
       await navigator.clipboard.writeText(code);
       setIsCopied(true);
       toast({ title: 'Copied!', description: 'Code copied to clipboard.' });
-      setTimeout(() => setIsCopied(false), 2000); // Reset icon after 2 seconds
+      setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy text: ', err);
       toast({ title: 'Error', description: 'Failed to copy code.', variant: 'destructive' });
@@ -44,7 +44,7 @@ export function CodeBlock({ code, className, lang }: CodeBlockProps) {
         {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <ClipboardCopy className="h-4 w-4" />}
       </Button>
       <ScrollArea className="max-h-[300px] w-full">
-        <pre className={cn("h-full whitespace-pre-wrap", lang ? `language-${lang}` : '')}>
+        <pre className={cn("whitespace-pre-wrap", lang ? `language-${lang}` : '')}>
           <code className={lang ? `language-${lang}` : ''}>{code}</code>
         </pre>
       </ScrollArea>
