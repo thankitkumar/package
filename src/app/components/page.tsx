@@ -107,6 +107,7 @@ import { Label } from '@/components/ui/label'; // Assuming a Label component
     name: 'Card',
     icon: <LayoutGrid />,
     demo: <ReactifyCardDemo />,
+    codeBlockScrollAreaClassName: "max-h-none", // Auto height for Card code example
     codeExample: `
 import { 
   ReactifyCard,
