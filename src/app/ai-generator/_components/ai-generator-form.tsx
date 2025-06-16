@@ -185,7 +185,7 @@ export function AiGeneratorForm() {
           <CardContent className="space-y-4">
             <div>
               <h4 className="font-semibold">Modified Parameters (JSON):</h4>
-              <CodeBlock code={modificationsResult.suggestedModifications} className="mt-1" />
+              <CodeBlock code={modificationsResult.suggestedModifications} className="mt-1" lang="json" />
             </div>
             <div>
               <h4 className="font-semibold">Reasoning:</h4>

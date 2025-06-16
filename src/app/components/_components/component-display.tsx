@@ -3,6 +3,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CodeBlock } from '@/components/ui/code-block';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { ReactNode } from 'react';
 
@@ -38,13 +39,8 @@ export function ComponentDisplay({
             <TabsTrigger value="code">Code</TabsTrigger>
             <TabsTrigger value="accessibility">Accessibility</TabsTrigger>
           </TabsList>
-          {/* TabsContent for value="preview" is removed */}
           <TabsContent value="code">
-            <ScrollArea className="h-72 w-full rounded-md border p-4 bg-muted/20">
-              <pre className="text-sm font-code whitespace-pre-wrap">
-                <code>{codeExample}</code>
-              </pre>
-            </ScrollArea>
+            <CodeBlock code={codeExample} />
           </TabsContent>
           <TabsContent value="accessibility">
             <ScrollArea className="h-72 w-full rounded-md border p-4 bg-muted/20">

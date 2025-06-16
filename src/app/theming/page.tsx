@@ -3,8 +3,23 @@ import { ThemeSwitcher } from './_components/theme-switcher';
 import { ReactifyButton } from '@/components/reactify/button';
 import { ReactifyInput } from '@/components/reactify/input';
 import { Label } from '@/components/ui/label';
+import { CodeBlock } from '@/components/ui/code-block';
 
 export default function ThemingPage() {
+  const themingCode = `
+:root {
+  --primary: 209 100% 60%; /* Deep Sky Blue */
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --accent: 266 100% 46%; /* Electric Indigo */
+  --accent-foreground: 210 40% 98%;
+  --background: 210 29% 95%; /* Light Gray */
+  --foreground: 222.2 84% 4.9%;
+  /* ... and more ... */
+}
+  `.trim();
+
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="text-center mb-12">
@@ -59,21 +74,7 @@ export default function ThemingPage() {
             Reactify components use CSS custom properties (variables) for styling. You can override these variables in your global stylesheet or on specific component instances to create custom themes.
           </p>
           <h4 className="font-semibold mb-2">Example CSS Variables:</h4>
-          <pre className="bg-muted p-4 rounded-md text-sm font-code overflow-x-auto">
-            <code>
-{`:root {
-  --primary: 209 100% 60%; /* Deep Sky Blue */
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --accent: 266 100% 46%; /* Electric Indigo */
-  --accent-foreground: 210 40% 98%;
-  --background: 210 29% 95%; /* Light Gray */
-  --foreground: 222.2 84% 4.9%;
-  /* ... and more ... */
-}`}
-            </code>
-          </pre>
+          <CodeBlock code={themingCode} lang="css" />
           <p className="text-muted-foreground mt-4">
             By changing these HSL values, you can globally alter the look and feel of all Reactify components.
           </p>

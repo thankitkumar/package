@@ -1,7 +1,53 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Terminal, Palette, Puzzle } from 'lucide-react';
+import { CodeBlock } from '@/components/ui/code-block';
 
 export default function DocsPage() {
+  const installationCode = `
+# Using npm
+npm install @reactify/components # (Example package name)
+
+# Using yarn
+yarn add @reactify/components # (Example package name)
+  `.trim();
+
+  const usageCode = `
+import { ReactifyButton } from '@/components/reactify/button';
+import { ReactifyInput } from '@/components/reactify/input';
+
+function MyFormComponent() {
+  return (
+    <form>
+      <label htmlFor="name">Name:</label>
+      <ReactifyInput type="text" id="name" placeholder="Enter your name" />
+      <ReactifyButton variant="primary" type="submit" className="mt-4">
+        Submit
+      </ReactifyButton>
+    </form>
+  );
+}
+
+export default MyFormComponent;
+  `.trim();
+
+  const themingCode = `
+:root {
+  /* Primary Colors */
+  --primary: 209 100% 60%; /* HSL value for Deep Sky Blue */
+  --primary-foreground: 210 40% 98%;
+
+  /* Accent Colors */
+  --accent: 266 100% 46%; /* HSL value for Electric Indigo */
+  --accent-foreground: 210 40% 98%;
+
+  /* Background & Foreground */
+  --background: 210 29% 95%; /* Light Gray */
+  --foreground: 222.2 84% 4.9%;
+  
+  /* ... and more for border, input, card, etc. */
+}
+  `.trim();
+
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="text-center mb-12">
@@ -26,15 +72,7 @@ export default function DocsPage() {
               Reactify components are designed to be easily integrated. Currently, they are part of this starter project.
               If this were an external library, you would typically install it via npm or yarn:
             </p>
-            <pre className="bg-muted p-4 rounded-md text-sm font-code overflow-x-auto">
-              <code>
-{`# Using npm
-npm install @reactify/components # (Example package name)
-
-# Using yarn
-yarn add @reactify/components # (Example package name)`}
-              </code>
-            </pre>
+            <CodeBlock code={installationCode} lang="bash" />
             <p className="text-muted-foreground">
               Since the components are included locally in <code className="font-code bg-muted px-1 py-0.5 rounded-sm">@/components/reactify</code>, you can directly import them.
             </p>
@@ -53,26 +91,7 @@ yarn add @reactify/components # (Example package name)`}
             <p className="text-muted-foreground">
               Import any Reactify component into your React/Next.js files and use them like standard components:
             </p>
-            <pre className="bg-muted p-4 rounded-md text-sm font-code overflow-x-auto">
-              <code>
-{`import { ReactifyButton } from '@/components/reactify/button';
-import { ReactifyInput } from '@/components/reactify/input';
-
-function MyFormComponent() {
-  return (
-    <form>
-      <label htmlFor="name">Name:</label>
-      <ReactifyInput type="text" id="name" placeholder="Enter your name" />
-      <ReactifyButton variant="primary" type="submit" className="mt-4">
-        Submit
-      </ReactifyButton>
-    </form>
-  );
-}
-
-export default MyFormComponent;`}
-              </code>
-            </pre>
+            <CodeBlock code={usageCode} lang="tsx" />
             <p className="text-muted-foreground">
               Each component comes with various props to customize its behavior and appearance. Check the "Components" page for detailed examples and prop lists for each component.
             </p>
@@ -92,25 +111,7 @@ export default MyFormComponent;`}
               Reactify uses CSS custom properties (variables) for styling, primarily defined in <code className="font-code bg-muted px-1 py-0.5 rounded-sm">src/app/globals.css</code>.
               You can override these variables to create custom themes.
             </p>
-            <pre className="bg-muted p-4 rounded-md text-sm font-code overflow-x-auto">
-              <code>
-{`:root {
-  /* Primary Colors */
-  --primary: 209 100% 60%; /* HSL value for Deep Sky Blue */
-  --primary-foreground: 210 40% 98%;
-
-  /* Accent Colors */
-  --accent: 266 100% 46%; /* HSL value for Electric Indigo */
-  --accent-foreground: 210 40% 98%;
-
-  /* Background & Foreground */
-  --background: 210 29% 95%; /* Light Gray */
-  --foreground: 222.2 84% 4.9%;
-  
-  /* ... and more for border, input, card, etc. */
-}`}
-              </code>
-            </pre>
+            <CodeBlock code={themingCode} lang="css" />
             <p className="text-muted-foreground">
               Visit the "Theming" page for an interactive demonstration of how changing these variables affects the components live.
               The values are in HSL format (Hue Saturation Lightness), but the theme switcher tool allows you to use hex color codes as well.
