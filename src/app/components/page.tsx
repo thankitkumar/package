@@ -1,5 +1,7 @@
 
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
 import { SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle } from 'lucide-react';
@@ -9,14 +11,13 @@ import ReactifyCardDemo from './_components/reactify-card-demo';
 import ReactifyModalDemo from './_components/reactify-modal-demo';
 import ReactifyDropdownDemo from './_components/reactify-dropdown-demo';
 
-export default function ComponentsPage() {
-  const components = [
-    { 
-      id: 'button', 
-      name: 'Button', 
-      icon: <SquareStack />, 
-      demo: <ReactifyButtonDemo />,
-      codeExample: `
+const components = [
+  {
+    id: 'button',
+    name: 'Button',
+    icon: <SquareStack />,
+    demo: <ReactifyButtonDemo />,
+    codeExample: `
 import { ReactifyButton } from '@/components/reactify/button';
 import { Heart, Upload, AlertTriangle } from 'lucide-react';
 
@@ -56,20 +57,20 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
 <ReactifyButton variant="primary" size="sm">Small</ReactifyButton>
 <ReactifyButton variant="secondary" size="lg">Large</ReactifyButton>
   `,
-      accessibilityNotes: [
-        "Ensure buttons have clear, descriptive text content.",
-        "Use \`aria-label\` for icon-only buttons or if the text is not descriptive enough.",
-        "Buttons are focusable and can be activated using Enter or Space keys.",
-        "Loading state is announced via \`aria-busy\` and \`aria-live\`.",
-        "Disabled state is handled with the \`disabled\` attribute, making it unfocusable and unclickable.",
-      ]
-    },
-    { 
-      id: 'input', 
-      name: 'Input', 
-      icon: <TerminalSquare />, 
-      demo: <ReactifyInputDemo />,
-      codeExample: `
+    accessibilityNotes: [
+      "Ensure buttons have clear, descriptive text content.",
+      "Use `aria-label` for icon-only buttons or if the text is not descriptive enough.",
+      "Buttons are focusable and can be activated using Enter or Space keys.",
+      "Loading state is announced via `aria-busy` and `aria-live`.",
+      "Disabled state is handled with the `disabled` attribute, making it unfocusable and unclickable.",
+    ]
+  },
+  {
+    id: 'input',
+    name: 'Input',
+    icon: <TerminalSquare />,
+    demo: <ReactifyInputDemo />,
+    codeExample: `
 import { ReactifyInput } from '@/components/reactify/input';
 import { Label } from '@/components/ui/label'; // Assuming a Label component
 
@@ -92,20 +93,20 @@ import { Label } from '@/components/ui/label'; // Assuming a Label component
   <ReactifyInput type="text" id="disabled-input" placeholder="Cannot edit" disabled />
 </div>
   `,
-      accessibilityNotes: [
-        "Always associate inputs with a \`<label>\` element using \`htmlFor\` and \`id\` attributes.",
-        "Provide clear placeholder text or instructions.",
-        "Use \`aria-invalid\` to indicate an error state, typically managed by the component.",
-        "Ensure sufficient color contrast for borders and text, especially in error states.",
-        "Disabled inputs are not focusable or editable.",
-      ]
-    },
-    { 
-      id: 'card', 
-      name: 'Card', 
-      icon: <LayoutGrid />, 
-      demo: <ReactifyCardDemo />,
-      codeExample: `
+    accessibilityNotes: [
+      "Always associate inputs with a `<label>` element using `htmlFor` and `id` attributes.",
+      "Provide clear placeholder text or instructions.",
+      "Use `aria-invalid` to indicate an error state, typically managed by the component.",
+      "Ensure sufficient color contrast for borders and text, especially in error states.",
+      "Disabled inputs are not focusable or editable.",
+    ]
+  },
+  {
+    id: 'card',
+    name: 'Card',
+    icon: <LayoutGrid />,
+    demo: <ReactifyCardDemo />,
+    codeExample: `
 import { 
   ReactifyCard,
   ReactifyCardHeader,
@@ -130,18 +131,18 @@ import { ReactifyButton } from '@/components/reactify/button';
   </ReactifyCardFooter>
 </ReactifyCard>
   `,
-      accessibilityNotes: [
-        "Ensure card titles are meaningful (e.g., using appropriate heading levels like <h3> within the card).",
-        "If cards are interactive (e.g., clickable as a whole), ensure they have proper focus indicators and ARIA roles (e.g., \`role='link'\` or \`role='button'\`).",
-        "Content within the card should follow general accessibility guidelines for text, images, and interactive elements.",
-      ]
-    },
-    { 
-      id: 'modal', 
-      name: 'Modal', 
-      icon: <Rows />, 
-      demo: <ReactifyModalDemo />,
-      codeExample: `
+    accessibilityNotes: [
+      "Ensure card titles are meaningful (e.g., using appropriate heading levels like <h3> within the card).",
+      "If cards are interactive (e.g., clickable as a whole), ensure they have proper focus indicators and ARIA roles (e.g., `role='link'` or `role='button'`).",
+      "Content within the card should follow general accessibility guidelines for text, images, and interactive elements.",
+    ]
+  },
+  {
+    id: 'modal',
+    name: 'Modal',
+    icon: <Rows />,
+    demo: <ReactifyModalDemo />,
+    codeExample: `
 import { useState } from 'react';
 import { ReactifyModal } from '@/components/reactify/modal';
 import { ReactifyButton } from '@/components/reactify/button';
@@ -169,21 +170,21 @@ function MyComponent() {
   );
 }
   `,
-      accessibilityNotes: [
-        "Modals should be announced by screen readers when opened. Use \`role='dialog'\` and \`aria-modal='true'\`.",
-        "Provide a clear title for the modal using \`aria-labelledby\` referencing the title element.",
-        "Focus should be trapped within the modal when it's open.",
-        "The modal should be closable via the Escape key.",
-        "Ensure there is a clearly identifiable close button.",
-        "When the modal closes, focus should return to the element that triggered it.",
-      ]
-    },
-    { 
-      id: 'dropdown', 
-      name: 'Dropdown', 
-      icon: <ChevronDownCircle />, 
-      demo: <ReactifyDropdownDemo />,
-      codeExample: `
+    accessibilityNotes: [
+      "Modals should be announced by screen readers when opened. Use `role='dialog'` and `aria-modal='true'`.",
+      "Provide a clear title for the modal using `aria-labelledby` referencing the title element.",
+      "Focus should be trapped within the modal when it's open.",
+      "The modal should be closable via the Escape key.",
+      "Ensure there is a clearly identifiable close button.",
+      "When the modal closes, focus should return to the element that triggered it.",
+    ]
+  },
+  {
+    id: 'dropdown',
+    name: 'Dropdown',
+    icon: <ChevronDownCircle />,
+    demo: <ReactifyDropdownDemo />,
+    codeExample: `
 import { ReactifyDropdown, ReactifyDropdownItem } from '@/components/reactify/dropdown';
 import { ReactifyButton } from '@/components/reactify/button';
 import { ChevronDown } from 'lucide-react';
@@ -206,16 +207,21 @@ function MyDropdown() {
   );
 }
   `,
-      accessibilityNotes: [
-        "The dropdown trigger should be focusable and activatable via keyboard (Enter/Space).",
-        "Use \`aria-haspopup='true'\` and \`aria-expanded\` on the trigger element.",
-        "The dropdown menu should have \`role='menu'\`.",
-        "Dropdown items should have \`role='menuitem'\`.",
-        "Keyboard navigation within the dropdown (Up/Down arrows, Enter/Space to select, Esc to close) should be implemented.",
-        "Focus should be managed correctly when opening and closing the dropdown.",
-      ]
-    },
-  ];
+    accessibilityNotes: [
+      "The dropdown trigger should be focusable and activatable via keyboard (Enter/Space).",
+      "Use `aria-haspopup='true'` and `aria-expanded` on the trigger element.",
+      "The dropdown menu should have `role='menu'`.",
+      "Dropdown items should have `role='menuitem'`.",
+      "Keyboard navigation within the dropdown (Up/Down arrows, Enter/Space to select, Esc to close) should be implemented.",
+      "Focus should be managed correctly when opening and closing the dropdown.",
+    ]
+  },
+];
+
+export default function ComponentsPage() {
+  const [selectedComponentId, setSelectedComponentId] = useState<string>(components[0]?.id ?? '');
+
+  const activeComponentDetails = components.find(comp => comp.id === selectedComponentId);
 
   return (
     <SidebarProvider defaultOpen>
@@ -229,13 +235,12 @@ function MyDropdown() {
               {components.map((component) => (
                 <SidebarMenuItem key={component.id}>
                   <SidebarMenuButton
-                    asChild
+                    onClick={() => setSelectedComponentId(component.id)}
+                    isActive={selectedComponentId === component.id}
                     tooltip={{ children: component.name, side: 'right' }}
                   >
-                    <a href={`#${component.id}`}>
-                      {React.cloneElement(component.icon, { className: 'h-5 w-5' })}
-                      <span className="group-data-[collapsible=icon]:hidden">{component.name}</span>
-                    </a>
+                    {React.cloneElement(component.icon, { className: 'h-5 w-5' })}
+                    <span className="group-data-[collapsible=icon]:hidden">{component.name}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -251,18 +256,22 @@ function MyDropdown() {
             <p className="text-muted-foreground mb-8">
               Explore our collection of reusable, unstyled UI components. Each component is designed for accessibility and can be easily themed.
             </p>
-            {components.map((component) => (
-              <div key={component.id} id={component.id} className="mb-12 scroll-mt-20">
-                <ComponentDisplay 
-                  title={component.name} 
-                  description={`Examples and usage of the Reactify ${component.name} component.`}
-                  codeExample={component.codeExample}
-                  accessibilityNotes={component.accessibilityNotes}
+            {activeComponentDetails ? (
+              <div key={activeComponentDetails.id} className="mb-12">
+                <ComponentDisplay
+                  title={activeComponentDetails.name}
+                  description={`Examples and usage of the Reactify ${activeComponentDetails.name} component.`}
+                  codeExample={activeComponentDetails.codeExample}
+                  accessibilityNotes={activeComponentDetails.accessibilityNotes}
                 >
-                  {component.demo}
+                  {activeComponentDetails.demo}
                 </ComponentDisplay>
               </div>
-            ))}
+            ) : (
+              <p className="text-muted-foreground text-center py-10">
+                {components.length > 0 ? "Select a component from the sidebar to view its details." : "No components to display."}
+              </p>
+            )}
           </div>
         </SidebarInset>
       </div>
