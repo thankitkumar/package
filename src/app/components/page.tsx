@@ -59,10 +59,10 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
   `,
     accessibilityNotes: [
       "Ensure buttons have clear, descriptive text content.",
-      "Use `aria-label` for icon-only buttons or if the text is not descriptive enough.",
+      "Use \`aria-label\` for icon-only buttons or if the text is not descriptive enough.",
       "Buttons are focusable and can be activated using Enter or Space keys.",
-      "Loading state is announced via `aria-busy` and `aria-live`.",
-      "Disabled state is handled with the `disabled` attribute, making it unfocusable and unclickable.",
+      "Loading state is announced via \`aria-busy\` and \`aria-live\`.",
+      "Disabled state is handled with the \`disabled\` attribute, making it unfocusable and unclickable.",
     ]
   },
   {
@@ -70,6 +70,7 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
     name: 'Input',
     icon: <TerminalSquare />,
     demo: <ReactifyInputDemo />,
+    codeBlockCustomHeightClass: "max-h-[450px]", // Custom height for this example
     codeExample: `
 import { ReactifyInput } from '@/components/reactify/input';
 import { Label } from '@/components/ui/label'; // Assuming a Label component
@@ -94,9 +95,9 @@ import { Label } from '@/components/ui/label'; // Assuming a Label component
 </div>
   `,
     accessibilityNotes: [
-      "Always associate inputs with a `<label>` element using `htmlFor` and `id` attributes.",
+      "Always associate inputs with a \`<label>\` element using \`htmlFor\` and \`id\` attributes.",
       "Provide clear placeholder text or instructions.",
-      "Use `aria-invalid` to indicate an error state, typically managed by the component.",
+      "Use \`aria-invalid\` to indicate an error state, typically managed by the component.",
       "Ensure sufficient color contrast for borders and text, especially in error states.",
       "Disabled inputs are not focusable or editable.",
     ]
@@ -133,7 +134,7 @@ import { ReactifyButton } from '@/components/reactify/button';
   `,
     accessibilityNotes: [
       "Ensure card titles are meaningful (e.g., using appropriate heading levels like <h3> within the card).",
-      "If cards are interactive (e.g., clickable as a whole), ensure they have proper focus indicators and ARIA roles (e.g., `role='link'` or `role='button'`).",
+      "If cards are interactive (e.g., clickable as a whole), ensure they have proper focus indicators and ARIA roles (e.g., \`role='link'\` or \`role='button'\`).",
       "Content within the card should follow general accessibility guidelines for text, images, and interactive elements.",
     ]
   },
@@ -171,8 +172,8 @@ function MyComponent() {
 }
   `,
     accessibilityNotes: [
-      "Modals should be announced by screen readers when opened. Use `role='dialog'` and `aria-modal='true'`.",
-      "Provide a clear title for the modal using `aria-labelledby` referencing the title element.",
+      "Modals should be announced by screen readers when opened. Use \`role='dialog'\` and \`aria-modal='true'\`.",
+      "Provide a clear title for the modal using \`aria-labelledby\` referencing the title element.",
       "Focus should be trapped within the modal when it's open.",
       "The modal should be closable via the Escape key.",
       "Ensure there is a clearly identifiable close button.",
@@ -209,9 +210,9 @@ function MyDropdown() {
   `,
     accessibilityNotes: [
       "The dropdown trigger should be focusable and activatable via keyboard (Enter/Space).",
-      "Use `aria-haspopup='true'` and `aria-expanded` on the trigger element.",
-      "The dropdown menu should have `role='menu'`.",
-      "Dropdown items should have `role='menuitem'`.",
+      "Use \`aria-haspopup='true'\` and \`aria-expanded\` on the trigger element.",
+      "The dropdown menu should have \`role='menu'\`.",
+      "Dropdown items should have \`role='menuitem'\`.",
       "Keyboard navigation within the dropdown (Up/Down arrows, Enter/Space to select, Esc to close) should be implemented.",
       "Focus should be managed correctly when opening and closing the dropdown.",
     ]
@@ -263,6 +264,7 @@ export default function ComponentsPage() {
                   description={`Examples and usage of the Reactify ${activeComponentDetails.name} component.`}
                   codeExample={activeComponentDetails.codeExample}
                   accessibilityNotes={activeComponentDetails.accessibilityNotes}
+                  codeBlockScrollAreaClassName={(activeComponentDetails as any).codeBlockCustomHeightClass} // Pass custom class
                 >
                   {activeComponentDetails.demo}
                 </ComponentDisplay>

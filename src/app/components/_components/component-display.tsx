@@ -14,7 +14,8 @@ interface ComponentDisplayProps {
   children: ReactNode; // The component demo itself
   codeExample?: string;
   accessibilityNotes?: string[];
-  previewPaddingClassName?: string; // New prop for custom padding
+  previewPaddingClassName?: string;
+  codeBlockScrollAreaClassName?: string; // New prop
 }
 
 export function ComponentDisplay({
@@ -23,7 +24,8 @@ export function ComponentDisplay({
   children,
   codeExample = "No code example provided.",
   accessibilityNotes = ["Follow standard accessibility practices for this component type."],
-  previewPaddingClassName = "p-4" // Default padding
+  previewPaddingClassName = "p-4",
+  codeBlockScrollAreaClassName, // Destructure new prop
 }: ComponentDisplayProps) {
   return (
     <Card className="mb-12 shadow-lg">
@@ -32,10 +34,9 @@ export function ComponentDisplay({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        {/* Preview content now always visible, with customizable padding */}
         <div className={cn(
           "border rounded-md min-h-[200px] flex justify-center items-center bg-muted/20 mb-6",
-          previewPaddingClassName // Apply custom padding here
+          previewPaddingClassName
         )}>
           {children}
         </div>
@@ -46,7 +47,11 @@ export function ComponentDisplay({
             <TabsTrigger value="accessibility">Accessibility</TabsTrigger>
           </TabsList>
           <TabsContent value="code">
-            <CodeBlock code={codeExample} lang="tsx" />
+            <CodeBlock 
+              code={codeExample} 
+              lang="tsx" 
+              scrollAreaClassName={codeBlockScrollAreaClassName} // Pass prop here
+            />
           </TabsContent>
           <TabsContent value="accessibility">
             <ScrollArea className="h-72 w-full rounded-md border p-4 bg-muted/20">

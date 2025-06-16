@@ -12,9 +12,10 @@ interface CodeBlockProps {
   code: string;
   className?: string;
   lang?: string;
+  scrollAreaClassName?: string; // New prop
 }
 
-export function CodeBlock({ code, className, lang }: CodeBlockProps) {
+export function CodeBlock({ code, className, lang, scrollAreaClassName }: CodeBlockProps) {
   const { toast } = useToast();
   const [isCopied, setIsCopied] = useState(false);
 
@@ -43,7 +44,7 @@ export function CodeBlock({ code, className, lang }: CodeBlockProps) {
       >
         {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <ClipboardCopy className="h-4 w-4" />}
       </Button>
-      <ScrollArea className="max-h-[300px] w-full">
+      <ScrollArea className={cn("max-h-[300px] w-full", scrollAreaClassName)}>
         <pre className={cn("whitespace-pre-wrap", lang ? `language-${lang}` : '')}>
           <code className={lang ? `language-${lang}` : ''}>{code}</code>
         </pre>
