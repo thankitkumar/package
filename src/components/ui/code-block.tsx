@@ -44,7 +44,7 @@ export function CodeBlock({ code, className, lang }: CodeBlockProps) {
         {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <ClipboardCopy className="h-4 w-4" />}
       </Button>
       <ScrollArea className="max-h-[300px] w-full">
-        <pre className="whitespace-pre-wrap break-all">
+        <pre className={cn("whitespace-pre-wrap", lang ? `language-${lang}` : '')}>
           <code className={lang ? `language-${lang}` : ''}>{code}</code>
         </pre>
       </ScrollArea>
