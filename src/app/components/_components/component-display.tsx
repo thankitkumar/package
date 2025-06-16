@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CodeBlock } from '@/components/ui/code-block';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 interface ComponentDisplayProps {
   title: string;
@@ -13,6 +14,7 @@ interface ComponentDisplayProps {
   children: ReactNode; // The component demo itself
   codeExample?: string;
   accessibilityNotes?: string[];
+  previewPaddingClassName?: string; // New prop for custom padding
 }
 
 export function ComponentDisplay({
@@ -20,7 +22,8 @@ export function ComponentDisplay({
   description,
   children,
   codeExample = "No code example provided.",
-  accessibilityNotes = ["Follow standard accessibility practices for this component type."]
+  accessibilityNotes = ["Follow standard accessibility practices for this component type."],
+  previewPaddingClassName = "p-4" // Default padding
 }: ComponentDisplayProps) {
   return (
     <Card className="mb-12 shadow-lg">
@@ -29,8 +32,11 @@ export function ComponentDisplay({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        {/* Preview content now always visible */}
-        <div className="p-4 border rounded-md min-h-[200px] flex justify-center items-center bg-muted/20 mb-6">
+        {/* Preview content now always visible, with customizable padding */}
+        <div className={cn(
+          "border rounded-md min-h-[200px] flex justify-center items-center bg-muted/20 mb-6",
+          previewPaddingClassName // Apply custom padding here
+        )}>
           {children}
         </div>
 
@@ -40,7 +46,7 @@ export function ComponentDisplay({
             <TabsTrigger value="accessibility">Accessibility</TabsTrigger>
           </TabsList>
           <TabsContent value="code">
-            <CodeBlock code={codeExample} />
+            <CodeBlock code={codeExample} lang="tsx" />
           </TabsContent>
           <TabsContent value="accessibility">
             <ScrollArea className="h-72 w-full rounded-md border p-4 bg-muted/20">
