@@ -70,7 +70,7 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
     name: 'Input',
     icon: <TerminalSquare />,
     demo: <ReactifyInputDemo />,
-    codeBlockCustomHeightClass: "max-h-[450px]", // Custom height for this example
+    codeBlockScrollAreaClassName: "max-h-[450px]", 
     codeExample: `
 import { ReactifyInput } from '@/components/reactify/input';
 import { Label } from '@/components/ui/label'; // Assuming a Label component
@@ -143,6 +143,7 @@ import { ReactifyButton } from '@/components/reactify/button';
     name: 'Modal',
     icon: <Rows />,
     demo: <ReactifyModalDemo />,
+    codeBlockScrollAreaClassName: "max-h-none", // Auto height for Modal code example
     codeExample: `
 import { useState } from 'react';
 import { ReactifyModal } from '@/components/reactify/modal';
@@ -264,7 +265,7 @@ export default function ComponentsPage() {
                   description={`Examples and usage of the Reactify ${activeComponentDetails.name} component.`}
                   codeExample={activeComponentDetails.codeExample}
                   accessibilityNotes={activeComponentDetails.accessibilityNotes}
-                  codeBlockScrollAreaClassName={(activeComponentDetails as any).codeBlockCustomHeightClass} // Pass custom class
+                  codeBlockScrollAreaClassName={(activeComponentDetails as any).codeBlockScrollAreaClassName} 
                 >
                   {activeComponentDetails.demo}
                 </ComponentDisplay>
