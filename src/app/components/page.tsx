@@ -222,7 +222,7 @@ function MyDropdown() {
       <div className="flex min-h-[calc(100vh-4rem)]">
         <Sidebar collapsible="icon" className="border-r">
           <SidebarHeader className="p-4 flex items-center justify-between">
-            <h2 className="font-headline text-lg font-semibold group-data-[collapsible=icon]:hidden mt-2">Components</h2>
+            <h2 className="font-headline text-lg font-semibold group-data-[collapsible=icon]:hidden mt-[70px]">Components</h2>
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
