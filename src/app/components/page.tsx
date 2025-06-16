@@ -6,7 +6,8 @@ import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, S
 import { ComponentDisplay } from './_components/component-display';
 import { 
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, 
-  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Type 
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Type,
+  PanelTop, PanelBottom
 } from 'lucide-react';
 
 import ReactifyButtonDemo from './_components/reactify-button-demo';
@@ -20,8 +21,57 @@ import ReactifyCheckboxDemo from './_components/reactify-checkbox-demo';
 import ReactifyTabsDemo from './_components/reactify-tabs-demo';
 import ReactifyTooltipDemo from './_components/reactify-tooltip-demo';
 import ReactifyTextareaDemo from './_components/reactify-textarea-demo';
+import ReactifyHeaderDemo from './_components/reactify-header-demo';
+import ReactifyFooterDemo from './_components/reactify-footer-demo';
 
 const components = [
+  {
+    id: 'alert',
+    name: 'Alert',
+    icon: <MessageSquareWarning />,
+    demo: <ReactifyAlertDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyAlert } from '@/components/reactify/alert';
+
+// Info Alert (Default)
+<ReactifyAlert title="Information">This is an info alert.</ReactifyAlert>
+
+// Success, Warning, Destructive variants also available
+<ReactifyAlert variant="success" title="Success!">Operation completed.</ReactifyAlert>
+
+// Can hide default icon or provide custom one
+<ReactifyAlert variant="warning" title="Be Aware" icon={false}>No icon here.</ReactifyAlert>
+  `,
+    accessibilityNotes: [
+      "Use appropriate ARIA roles (e.g., role='alert' for assertive messages).",
+      "Ensure icons have proper alternative text or are decorative.",
+      "Sufficient color contrast for text and icons.",
+    ]
+  },
+  {
+    id: 'badge',
+    name: 'Badge',
+    icon: <BadgePercent />,
+    demo: <ReactifyBadgeDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyBadge } from '@/components/reactify/badge';
+
+// Primary Badge (Default)
+<ReactifyBadge>Primary</ReactifyBadge>
+
+// Other variants: secondary, destructive, outline, success, warning
+<ReactifyBadge variant="success">Completed</ReactifyBadge>
+
+// Sizes: sm, md (default), lg
+<ReactifyBadge variant="destructive" size="sm">Urgent</ReactifyBadge>
+  `,
+    accessibilityNotes: [
+      "Ensure badge text is descriptive or used in a context that provides meaning.",
+      "Good color contrast is important for readability.",
+    ]
+  },
   {
     id: 'button',
     name: 'Button',
@@ -42,29 +92,6 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
       "Buttons are focusable and activatable using Enter or Space keys.",
       "Loading state is announced via \`aria-busy\` and \`aria-live\`.",
       "Disabled state uses the \`disabled\` attribute.",
-    ]
-  },
-  {
-    id: 'input',
-    name: 'Input',
-    icon: <TerminalSquare />,
-    demo: <ReactifyInputDemo />,
-    codeBlockScrollAreaClassName: "max-h-[450px]", 
-    codeExample: `
-import { ReactifyInput } from '@/components/reactify/input';
-import { Label } from '@/components/ui/label';
-
-// Standard Input with Label
-<div>
-  <Label htmlFor="name">Name</Label>
-  <ReactifyInput type="text" id="name" placeholder="Enter your name" />
-</div>
-// Supports error state, disabled prop.
-  `,
-    accessibilityNotes: [
-      "Always associate inputs with a \`<label>\`.",
-      "Use \`aria-invalid\` for error states.",
-      "Ensure sufficient color contrast.",
     ]
   },
   {
@@ -94,6 +121,118 @@ import {
     ]
   },
   {
+    id: 'checkbox',
+    name: 'Checkbox',
+    icon: <CheckSquare />,
+    demo: <ReactifyCheckboxDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyCheckbox } from '@/components/reactify/checkbox';
+// ... useState for controlled component
+
+<ReactifyCheckbox
+  id="myCheckbox"
+  label="Accept terms"
+  checked={isChecked}
+  onChange={(e) => setIsChecked(e.target.checked)}
+/>
+
+// Supports size (sm, md, lg) and disabled props.
+  `,
+    accessibilityNotes: [
+      "Always associate with a \`<label>\`.",
+      "Ensure visible focus indicator.",
+      "State (checked/unchecked) should be clear.",
+    ]
+  },
+  {
+    id: 'dropdown',
+    name: 'Dropdown',
+    icon: <ChevronDownCircle />,
+    demo: <ReactifyDropdownDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyDropdown, ReactifyDropdownItem } from '@/components/reactify/dropdown';
+import { ReactifyButton } from '@/components/reactify/button';
+
+<ReactifyDropdown trigger={<ReactifyButton>Options</ReactifyButton>}>
+  <ReactifyDropdownItem onSelect={() => alert('Edit')}>Edit</ReactifyDropdownItem>
+  <ReactifyDropdownItem disabled>Archive (Disabled)</ReactifyDropdownItem>
+</ReactifyDropdown>
+  `,
+    accessibilityNotes: [
+      "Trigger is focusable and activatable via keyboard.",
+      "Menu has \`role='menu'\`, items have \`role='menuitem'\`.",
+      "Supports keyboard navigation (arrows, Enter/Space, Esc).",
+    ]
+  },
+  {
+    id: 'footer',
+    name: 'Footer',
+    icon: <PanelBottom />,
+    demo: <ReactifyFooterDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyFooter } from '@/components/reactify/footer';
+
+<ReactifyFooter>
+  <p>© ${new Date().getFullYear()} My Company. All rights reserved.</p>
+  <a href="/about">About Us</a>
+</ReactifyFooter>
+  `,
+    accessibilityNotes: [
+      "Typically contains copyright information, links to privacy policy, terms of service, etc.",
+      "Use appropriate HTML5 semantic element <footer /> (which is the default).",
+    ],
+  },
+  {
+    id: 'header',
+    name: 'Header',
+    icon: <PanelTop />,
+    demo: <ReactifyHeaderDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyHeader } from '@/components/reactify/header';
+import { ReactifyButton } from '@/components/reactify/button'; // Example
+
+<ReactifyHeader>
+  <div>Logo</div>
+  <nav>
+    <ReactifyButton variant="ghost">Home</ReactifyButton>
+    <ReactifyButton variant="ghost">About</ReactifyButton>
+  </nav>
+</ReactifyHeader>
+  `,
+    accessibilityNotes: [
+      "Should contain main navigation links, site branding/logo.",
+      "Use appropriate HTML5 semantic element <header /> (which is the default).",
+      "Ensure navigation is keyboard accessible.",
+    ],
+  },
+  {
+    id: 'input',
+    name: 'Input',
+    icon: <TerminalSquare />,
+    demo: <ReactifyInputDemo />,
+    codeBlockScrollAreaClassName: "max-h-none", 
+    codeExample: `
+import { ReactifyInput } from '@/components/reactify/input';
+import { Label } from '@/components/ui/label';
+
+// Standard Input with Label
+<div>
+  <Label htmlFor="name">Name</Label>
+  <ReactifyInput type="text" id="name" placeholder="Enter your name" />
+</div>
+// Supports error state, disabled prop.
+  `,
+    accessibilityNotes: [
+      "Always associate inputs with a \`<label>\`.",
+      "Use \`aria-invalid\` for error states.",
+      "Ensure sufficient color contrast.",
+    ]
+  },
+  {
     id: 'modal',
     name: 'Modal',
     icon: <Rows />,
@@ -120,99 +259,6 @@ import { ReactifyModal } from '@/components/reactify/modal';
     ]
   },
   {
-    id: 'dropdown',
-    name: 'Dropdown',
-    icon: <ChevronDownCircle />,
-    demo: <ReactifyDropdownDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyDropdown, ReactifyDropdownItem } from '@/components/reactify/dropdown';
-import { ReactifyButton } from '@/components/reactify/button';
-
-<ReactifyDropdown trigger={<ReactifyButton>Options</ReactifyButton>}>
-  <ReactifyDropdownItem onSelect={() => alert('Edit')}>Edit</ReactifyDropdownItem>
-  <ReactifyDropdownItem disabled>Archive (Disabled)</ReactifyDropdownItem>
-</ReactifyDropdown>
-  `,
-    accessibilityNotes: [
-      "Trigger is focusable and activatable via keyboard.",
-      "Menu has \`role='menu'\`, items have \`role='menuitem'\`.",
-      "Supports keyboard navigation (arrows, Enter/Space, Esc).",
-    ]
-  },
-  {
-    id: 'alert',
-    name: 'Alert',
-    icon: <MessageSquareWarning />,
-    demo: <ReactifyAlertDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyAlert } from '@/components/reactify/alert';
-
-// Info Alert (Default)
-<ReactifyAlert title="Information">This is an info alert.</ReactifyAlert>
-
-// Success, Warning, Destructive variants also available
-<ReactifyAlert variant="success" title="Success!">Operation completed.</ReactifyAlert>
-
-// Can hide default icon or provide custom one
-<ReactifyAlert variant="warning" title="Be Aware" icon={false}>No icon here.</ReactifyAlert>
-  `,
-    accessibilityNotes: [
-      "Use \`role='alert'\` for assertive announcements or \`role='status'\` for polite ones.",
-      "Ensure icons have proper alternative text or are decorative.",
-      "Sufficient color contrast for text and icons.",
-    ]
-  },
-  {
-    id: 'badge',
-    name: 'Badge',
-    icon: <BadgePercent />,
-    demo: <ReactifyBadgeDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyBadge } from '@/components/reactify/badge';
-
-// Primary Badge (Default)
-<ReactifyBadge>Primary</ReactifyBadge>
-
-// Other variants: secondary, destructive, outline, success, warning
-<ReactifyBadge variant="success">Completed</ReactifyBadge>
-
-// Sizes: sm, md (default), lg
-<ReactifyBadge variant="destructive" size="sm">Urgent</ReactifyBadge>
-  `,
-    accessibilityNotes: [
-      "Ensure badge text is descriptive or used in a context that provides meaning.",
-      "Good color contrast is important for readability.",
-    ]
-  },
-  {
-    id: 'checkbox',
-    name: 'Checkbox',
-    icon: <CheckSquare />,
-    demo: <ReactifyCheckboxDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyCheckbox } from '@/components/reactify/checkbox';
-// ... useState for controlled component
-
-<ReactifyCheckbox
-  id="myCheckbox"
-  label="Accept terms"
-  checked={isChecked}
-  onChange={(e) => setIsChecked(e.target.checked)}
-/>
-
-// Supports size (sm, md, lg) and disabled props.
-  `,
-    accessibilityNotes: [
-      "Always associate with a \`<label>\`.",
-      "Ensure visible focus indicator.",
-      "State (checked/unchecked) should be clear.",
-    ]
-  },
-  {
     id: 'tabs',
     name: 'Tabs',
     icon: <Folders />,
@@ -233,6 +279,29 @@ import { ReactifyTabs, ReactifyTab } from '@/components/reactify/tabs';
       "Tab list has \`role='tablist'\`, tabs have \`role='tab'\`, panels have \`role='tabpanel'\`.",
       "Use \`aria-selected\` for active tab, \`aria-controls\` for panel association.",
       "Support keyboard navigation (arrow keys to switch tabs, Enter/Space to activate).",
+    ]
+  },
+  {
+    id: 'textarea',
+    name: 'Textarea',
+    icon: <Type />,
+    demo: <ReactifyTextareaDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyTextarea } from '@/components/reactify/textarea';
+import { Label } from '@/components/ui/label';
+
+<div>
+  <Label htmlFor="comment">Comment</Label>
+  <ReactifyTextarea id="comment" placeholder="Your comment..." rows={4} />
+</div>
+
+// Supports error and disabled props.
+  `,
+    accessibilityNotes: [
+      "Always associate with a \`<label>\`.",
+      "Provide clear placeholder text or instructions.",
+      "Use \`aria-invalid\` for error states.",
     ]
   },
   {
@@ -259,35 +328,16 @@ import { ReactifyButton } from '@/components/reactify/button';
       "Consider using \`aria-describedby\` to link trigger to tooltip content for screen readers.",
     ]
   },
-  {
-    id: 'textarea',
-    name: 'Textarea',
-    icon: <Type />,
-    demo: <ReactifyTextareaDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyTextarea } from '@/components/reactify/textarea';
-import { Label } from '@/components/ui/label';
-
-<div>
-  <Label htmlFor="comment">Comment</Label>
-  <ReactifyTextarea id="comment" placeholder="Your comment..." rows={4} />
-</div>
-
-// Supports error and disabled props.
-  `,
-    accessibilityNotes: [
-      "Always associate with a \`<label>\`.",
-      "Provide clear placeholder text or instructions.",
-      "Use \`aria-invalid\` for error states.",
-    ]
-  },
 ];
 
 export default function ComponentsPage() {
   const [selectedComponentId, setSelectedComponentId] = useState<string>(components[0]?.id ?? '');
 
   const activeComponentDetails = components.find(comp => comp.id === selectedComponentId);
+
+  // Sort components alphabetically by name for the sidebar
+  const sortedComponents = [...components].sort((a, b) => a.name.localeCompare(b.name));
+
 
   return (
     <SidebarProvider defaultOpen>
@@ -298,7 +348,7 @@ export default function ComponentsPage() {
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
-              {components.map((component) => (
+              {sortedComponents.map((component) => (
                 <SidebarMenuItem key={component.id}>
                   <SidebarMenuButton
                     onClick={() => setSelectedComponentId(component.id)}
