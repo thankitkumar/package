@@ -1,3 +1,4 @@
+import React from 'react';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
 import { Button } from '@/components/ui/button'; // Example component
