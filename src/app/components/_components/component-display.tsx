@@ -28,15 +28,17 @@ export function ComponentDisplay({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="preview" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-4">
-            <TabsTrigger value="preview">Preview</TabsTrigger>
+        {/* Preview content now always visible */}
+        <div className="p-4 border rounded-md min-h-[200px] flex justify-center items-center bg-muted/20 mb-6">
+          {children}
+        </div>
+
+        <Tabs defaultValue="code" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger value="code">Code</TabsTrigger>
             <TabsTrigger value="accessibility">Accessibility</TabsTrigger>
           </TabsList>
-          <TabsContent value="preview" className="p-4 border rounded-md min-h-[200px] flex justify-center items-center bg-muted/20">
-            {children}
-          </TabsContent>
+          {/* TabsContent for value="preview" is removed */}
           <TabsContent value="code">
             <ScrollArea className="h-72 w-full rounded-md border p-4 bg-muted/20">
               <pre className="text-sm font-code whitespace-pre-wrap">
@@ -58,4 +60,3 @@ export function ComponentDisplay({
     </Card>
   );
 }
-
