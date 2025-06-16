@@ -10,6 +10,7 @@ const navItems = [
   { href: '/components', label: 'Components' },
   { href: '/theming', label: 'Theming' },
   { href: '/ai-generator', label: 'AI Generator' },
+  { href: '/auth-demo/login', label: 'Auth Demo' },
   { href: '/docs', label: 'Docs' },
 ];
 
@@ -29,7 +30,9 @@ export function MainNav() {
           href={item.href}
           className={cn(
             'text-sm font-medium transition-colors hover:text-primary px-1 py-0.5 sm:px-0 sm:py-0',
-            isMounted && pathname === item.href ? 'text-primary' : 'text-muted-foreground'
+            isMounted && (pathname === item.href || (item.href === '/auth-demo/login' && pathname.startsWith('/auth-demo')))
+              ? 'text-primary'
+              : 'text-muted-foreground'
           )}
         >
           {item.label}

@@ -13,5 +13,8 @@ export * from './textarea';
 export * from './header';
 export * from './footer';
 export * from './sidebar';
+export * from './login-form';
+export * from './signup-form';
+export * from './forgot-password-form';
 export * from './common-props';
 export * from './utils';
