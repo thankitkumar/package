@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { GripVertical, Filter, Columns, ChevronLeft, ChevronRight, PlusCircle } from 'lucide-react';
 
 export interface ColumnDef<TData> {
-  key: keyof TData | string; // string for action columns etc.
+  key: keyof TData | string;
   header: ReactNode;
   cell?: (row: TData, rowIndex: number) => ReactNode;
   enableResizing?: boolean;
@@ -19,6 +19,7 @@ export interface ColumnDef<TData> {
   width?: number | string;
 }
 
+// Props specific to the AdvancedTable's functionality
 interface AdvancedTableSpecificProps<TData extends Record<string, any>> {
   columns: ColumnDef<TData>[];
   data: TData[];
@@ -36,9 +37,7 @@ interface AdvancedTableSpecificProps<TData extends Record<string, any>> {
   onRowClick?: (row: TData) => void;
 }
 
-// Props for the ReactifyAdvancedTable component
-// It renders a div as its root, so it accepts div HTML attributes.
-// The 'children' prop is not used by the root div itself.
+// Combine specific props with standard HTML attributes for a div element
 interface ReactifyAdvancedTableProps<TData extends Record<string, any>>
   extends AdvancedTableSpecificProps<TData>,
     Omit<HTMLAttributes<HTMLDivElement>, 'children'> {}
@@ -58,9 +57,9 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
     pageSize = 10,
     onPageSizeChange,
     availablePageSizes = [10, 20, 50, 100],
-    onColumnOrderChange, // Placeholder for future use
-    onColumnResize,      // Placeholder for future use
-    onFilterChange,      // Placeholder for future use
+    onColumnOrderChange,
+    onColumnResize,
+    onFilterChange,
     onRowClick,
     // Standard HTML attributes for the root div
     className,
