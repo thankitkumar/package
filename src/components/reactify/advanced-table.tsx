@@ -1,15 +1,16 @@
 
 'use client';
 
-import React, { useState, useMemo, type ReactNode, type HTMLAttributes } from 'react';
-import { cn } from '@/lib/utils'; // Using project-standard alias
+import type { ReactNode, HTMLAttributes } from 'react';
+import { useState, useMemo } from 'react';
+import { cn } from '@/lib/utils'; // Standardized import
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell, TableCaption } from '@/components/ui/table';
 import { ReactifyButton } from './button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { GripVertical, Filter, Columns, ChevronLeft, ChevronRight, PlusCircle } from 'lucide-react';
 
-export interface ColumnDef<TData> {
+export interface ColumnDef<TData extends Record<string, any>> {
   key: keyof TData | string;
   header: ReactNode;
   cell?: (row: TData, rowIndex: number) => ReactNode;
@@ -19,7 +20,6 @@ export interface ColumnDef<TData> {
   width?: number | string;
 }
 
-// Props specific to the AdvancedTable's functionality
 interface AdvancedTableSpecificProps<TData extends Record<string, any>> {
   columns: ColumnDef<TData>[];
   data: TData[];
@@ -37,10 +37,10 @@ interface AdvancedTableSpecificProps<TData extends Record<string, any>> {
   onRowClick?: (row: TData) => void;
 }
 
-// Combine specific props with standard HTML attributes for a div element
+// Combine specific props with HTMLAttributes for the root div, omitting 'children' as it's not used by the wrapper.
 interface ReactifyAdvancedTableProps<TData extends Record<string, any>>
-  extends AdvancedTableSpecificProps<TData>,
-    Omit<HTMLAttributes<HTMLDivElement>, 'children'> {}
+  extends Omit<HTMLAttributes<HTMLDivElement>, 'children'>,
+    AdvancedTableSpecificProps<TData> {}
 
 export function ReactifyAdvancedTable<TData extends Record<string, any>>(
   props: ReactifyAdvancedTableProps<TData>
@@ -57,9 +57,9 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
     pageSize = 10,
     onPageSizeChange,
     availablePageSizes = [10, 20, 50, 100],
-    onColumnOrderChange,
-    onColumnResize,
-    onFilterChange,
+    onColumnOrderChange, // Placeholder for future use
+    onColumnResize,      // Placeholder for future use
+    onFilterChange,      // Placeholder for future use
     onRowClick,
     // Standard HTML attributes for the root div
     className,
@@ -67,7 +67,14 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
     ...htmlDivAttributes
   } = props;
 
-  const [columns, setColumns] = useState(initialColumns);
+  // columnOrder state is not fully implemented but good for future reordering features
+  const [columnOrder, setColumnOrder] = useState<string[]>(() => initialColumns.map(col => String(col.key)));
+
+  // Memoize columns based on order if reordering is implemented
+  const orderedColumns = useMemo(() => {
+    // This would sort initialColumns based on columnOrder if reordering was active
+    return initialColumns;
+  }, [initialColumns, columnOrder]);
 
   const handlePreviousPage = () => {
     if (onPageChange && currentPage > 1) {
@@ -107,7 +114,7 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
           {caption && <TableCaption>{caption}</TableCaption>}
           <TableHeader>
             <TableRow>
-              {columns.map((col) => (
+              {orderedColumns.map((col) => (
                 <TableHead
                   key={String(col.key)}
                   className="relative group whitespace-nowrap"
@@ -133,7 +140,7 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
             {isLoading ? (
               Array.from({ length: pageSize }).map((_, rowIndex) => (
                 <TableRow key={`skeleton-row-${rowIndex}`}>
-                  {columns.map((col, colIndex) => (
+                  {orderedColumns.map((col, colIndex) => (
                     <TableCell key={`skeleton-cell-${String(col.key)}-${rowIndex}-${colIndex}`}>
                       <div className="h-5 bg-muted rounded animate-pulse"></div>
                     </TableCell>
@@ -143,11 +150,11 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
             ) : data.length > 0 ? (
               data.map((row, rowIndex) => (
                 <TableRow
-                  key={(row as any).id || `row-${rowIndex}`}
+                  key={(row as any).id || `row-${rowIndex}`} // Use row.id if available, otherwise fallback to rowIndex
                   onClick={() => onRowClick?.(row)}
-                  className={cn(onRowClick && "cursor-pointer")}
+                  className={cn(onRowClick && "cursor-pointer hover:bg-muted/50")}
                 >
-                  {columns.map((col) => (
+                  {orderedColumns.map((col) => (
                     <TableCell key={`cell-${String(col.key)}-${(row as any).id || rowIndex}`} className="whitespace-nowrap">
                       {col.cell ? col.cell(row, rowIndex) : String(row[col.key as keyof TData] ?? '')}
                     </TableCell>
@@ -156,7 +163,7 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
+                <TableCell colSpan={orderedColumns.length} className="h-24 text-center text-muted-foreground">
                   No data available.
                 </TableCell>
               </TableRow>
