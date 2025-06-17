@@ -6,7 +6,7 @@ import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, S
 import { ComponentDisplay } from './_components/component-display';
 import {
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
-  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck,
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
   Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2
@@ -39,6 +39,7 @@ import ReactifyMarkdownEditorDemo from './_components/reactify-markdown-editor-d
 import ReactifyRichTextEditorDemo from './_components/reactify-rich-text-editor-demo';
 import ReactifyFormWizardDemo from './_components/reactify-form-wizard-demo';
 import ReactifyProtectedContentDemo from './_components/reactify-protected-content-demo';
+import ReactifyNetworkAwareDemo from './_components/reactify-network-aware-demo';
 
 type ComponentCategory = 'standard' | 'charts' | 'advanced';
 
@@ -1016,7 +1017,7 @@ function BubbleChartExample() {
       "Similar to Bar Chart, relies on Recharts' accessibility features.",
       "Descriptive axis labels (\`xAxisLabel\`, \`yAxisLabel\`) and series labels in \`config\` are crucial.",
       "The \`nameKey\` helps identify individual bubbles in tooltips.",
-      "The \`zKey\` (size) should also have a meaningful label in the \`config\` for tooltips (e.g., \`budget: { label: \"Budget ($K)\" }\`).",
+      "The \`zKey\` (size) should also have a meaningful label in the \`config\` for tooltips (e.g., \`budget: { label: \\\"Budget ($K)\\\" }\`).",
       "Ensure color contrast. Bubble opacity/overlap can be a challenge; consider patterns or distinct outlines if series overlap significantly.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
@@ -1281,6 +1282,82 @@ export default function PageWithProtection() {
       "If significant sections of a page are hidden, consider if this impacts the overall page structure or navigation for assistive technologies. Usually, simple conditional rendering is fine.",
       "The `fallback` prop can be used to provide alternative content or an explanation if access is denied, which can be more user-friendly than just hiding content.",
       "If content appearance/disappearance is frequent or based on rapid user interaction, consider using `aria-live` regions on a container to announce changes, though this is often not necessary for role-based access which changes less frequently.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
+    id: 'network-aware-wrapper',
+    name: 'Network Aware Wrapper',
+    icon: <Wifi />,
+    category: 'advanced',
+    demo: <ReactifyNetworkAwareDemo />,
+    codeExample: `
+import { NetworkAwareWrapper } from '@/components/reactify/network-aware-wrapper';
+import { ReactifyButton } from '@/components/reactify/button';
+import { WifiOff, Wifi } from 'lucide-react';
+
+function MyAppContent() {
+  const handleRetry = () => {
+    alert('Retry logic would run here! For example, re-fetch data.');
+  };
+
+  const MyOfflineBanner = (
+    <div style={{ 
+        position: 'fixed', bottom: '0', left: '0', right: '0',
+        background: 'rgba(220, 53, 69, 0.9)', color: 'white', 
+        padding: '12px', textAlign: 'center', zIndex: 1000,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px'
+    }}>
+      <WifiOff size={20} />
+      <span>You are currently offline. Some features might be unavailable.</span>
+      <ReactifyButton 
+        onClick={handleRetry} 
+        variant="outline"
+        size="sm"
+        className="bg-white text-destructive hover:bg-gray-100 border-destructive hover:border-destructive"
+      >
+        Retry Action
+      </ReactifyButton>
+    </div>
+  );
+
+  const MyOnlineBanner = (
+    <div style={{ 
+        position: 'fixed', bottom: '0', left: '0', right: '0',
+        background: 'rgba(25, 135, 84, 0.9)', color: 'white', 
+        padding: '12px', textAlign: 'center', zIndex: 1000,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px'
+    }}>
+      <Wifi size={20} />
+      <span>You are back online!</span>
+    </div>
+  );
+
+  return (
+    <NetworkAwareWrapper
+      offlineBanner={MyOfflineBanner}
+      onlineBanner={MyOnlineBanner}
+      showOnlineBannerDuration={4000} // Show "back online" for 4 seconds
+    >
+      {/* Your main app content goes here */}
+      <h1>Welcome to My App</h1>
+      <p>This content is wrapped and will show banners based on network state.</p>
+      <p>Try toggling your network connection or using the simulation buttons in the demo.</p>
+    </NetworkAwareWrapper>
+  );
+}
+
+// To use the default banners (which also appear at the bottom):
+// <NetworkAwareWrapper>
+//   <p>Content using default banners.</p>
+// </NetworkAwareWrapper>
+`,
+    accessibilityNotes: [
+      "Network status banners should be announced by screen readers. The default banners use `role='status'` and `aria-live` attributes. Ensure custom banners also provide appropriate ARIA feedback.",
+      "Content within banners, especially interactive elements like a 'Retry' button, must be keyboard accessible and clearly labeled.",
+      "Ensure sufficient color contrast for text and icons within the banners.",
+      "The wrapper itself does not add specific ARIA roles to the main children content, as it primarily controls the visibility of banners. The accessibility of the banners themselves is key.",
+      "Test with screen readers to ensure transitions between online/offline states are clearly communicated."
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },
