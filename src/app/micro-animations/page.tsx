@@ -2,28 +2,29 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button'; // Using ShadCN button for demo
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { motion, AnimatePresence } from 'framer-motion'; // Placeholder if we were to use it
-import { Heart, AlertTriangle, CheckCircle, Info, Sparkles } from 'lucide-react';
+import { Heart, AlertTriangle, CheckCircle, Info, Sparkles, Package, MoveRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
-// Note: For this demo, we are primarily using Tailwind CSS transitions and animations.
-// The Framer Motion import is a placeholder to acknowledge the user's mention,
-// but we are not implementing Framer Motion-like timeline animations in this step.
+// Note: We are primarily using Tailwind CSS transitions and animations.
 
 export default function MicroAnimationsPage() {
   const [showElement, setShowElement] = useState(true);
   const [listItems, setListItems] = useState(['Item 1', 'Item 2', 'Item 3']);
   const [newItemText, setNewItemText] = useState('');
+  const [buttonClickState, setButtonClickState] = useState(false);
 
   // For entrance animations on initial load
   const [hasLoaded, setHasLoaded] = useState(false);
   useEffect(() => {
-    setHasLoaded(true);
+    // Ensure this runs only on the client after mount
+    const timer = setTimeout(() => setHasLoaded(true), 100); // Small delay to ensure initial render
+    return () => clearTimeout(timer);
   }, []);
 
   const addListItem = () => {
@@ -34,7 +35,14 @@ export default function MicroAnimationsPage() {
   };
 
   const removeListItem = (indexToRemove: number) => {
+    // For CSS-only, immediate removal is simpler.
+    // Libraries like Framer Motion handle exit animations better.
     setListItems(prev => prev.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleButtonClick = () => {
+    setButtonClickState(true);
+    setTimeout(() => setButtonClickState(false), 150); // Reset after animation duration
   };
 
   return (
@@ -43,7 +51,7 @@ export default function MicroAnimationsPage() {
         <Sparkles className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl font-headline font-bold text-foreground">Micro Animation Showcase</h1>
         <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
-          Explore examples of subtle UI animations using Tailwind CSS transitions and animations.
+          Explore examples of subtle UI animations using Tailwind CSS transitions and the <code className="font-code bg-muted px-1 rounded-sm">tailwindcss-animate</code> plugin.
         </p>
       </div>
 
@@ -52,6 +60,7 @@ export default function MicroAnimationsPage() {
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="font-headline text-2xl">Hover Animations</CardTitle>
+            <CardDescription>Subtle feedback when users hover over elements.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-6 items-center justify-center p-8">
             <Button
@@ -62,10 +71,14 @@ export default function MicroAnimationsPage() {
             <Card className="p-6 w-48 h-32 flex items-center justify-center text-center transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl cursor-default bg-secondary">
               <p className="text-secondary-foreground">Lift Me Up</p>
             </Card>
-            <div className="group relative p-4">
-              <Button variant="outline">Hover for Icon</Button>
-              <Heart className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-destructive opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-300 ease-in-out" />
+            <div className="group relative p-2">
+              <Button variant="outline" className="group-hover:text-primary transition-colors">
+                Hover for Icon <Heart className="inline-block ml-2 h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out transform group-hover:scale-125" />
+              </Button>
             </div>
+            <Button variant="ghost" className="group text-muted-foreground hover:text-foreground transition-colors">
+                Learn More <MoveRight className="ml-1 h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1"/>
+            </Button>
           </CardContent>
         </Card>
 
@@ -73,26 +86,32 @@ export default function MicroAnimationsPage() {
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="font-headline text-2xl">Entrance Animations</CardTitle>
-            <p className="text-sm text-muted-foreground">Elements animating on first appearance (using tailwindcss-animate).</p>
+            <CardDescription>Elements animating on first appearance using <code className="font-code bg-muted px-1 rounded-sm">tailwindcss-animate</code>.</CardDescription>
           </CardHeader>
-          <CardContent className="p-8 space-y-4">
+          <CardContent className="p-8 grid md:grid-cols-2 gap-4">
             <div className={cn(
-              "p-4 bg-primary/10 rounded-md transition-opacity duration-700 ease-out",
-              hasLoaded ? "animate-in fade-in slide-in-from-left-12" : "opacity-0"
+              "p-4 bg-primary/10 rounded-md border border-primary/20",
+              hasLoaded ? "animate-in fade-in slide-in-from-left-12 duration-500" : "opacity-0"
             )}>
-              <p className="text-primary font-semibold">I slid in from the left!</p>
+              <p className="text-primary font-semibold flex items-center gap-2"><Package size={20}/>Slid in from left!</p>
             </div>
             <div className={cn(
-              "p-4 bg-accent/10 rounded-md transition-opacity duration-700 ease-out delay-200",
-              hasLoaded ? "animate-in fade-in slide-in-from-top-12" : "opacity-0"
+              "p-4 bg-accent/10 rounded-md border border-accent/20",
+              hasLoaded ? "animate-in fade-in slide-in-from-right-12 duration-500 delay-100" : "opacity-0"
             )}>
-              <p className="text-accent font-semibold">I slid in from the top (with delay)!</p>
+              <p className="text-accent font-semibold flex items-center gap-2"><Package size={20}/>Slid in from right!</p>
             </div>
             <div className={cn(
-              "p-4 bg-green-500/10 rounded-md transition-opacity duration-700 ease-out delay-300",
-              hasLoaded ? "animate-in fade-in zoom-in-90" : "opacity-0"
+              "p-4 bg-green-500/10 rounded-md border border-green-500/20",
+              hasLoaded ? "animate-in fade-in zoom-in-90 duration-500 delay-200" : "opacity-0"
             )}>
-              <p className="text-green-600 font-semibold">I zoomed in!</p>
+              <p className="text-green-600 font-semibold flex items-center gap-2"><CheckCircle size={20}/>Zoomed in!</p>
+            </div>
+             <div className={cn(
+              "p-4 bg-yellow-500/10 rounded-md border border-yellow-500/20",
+              hasLoaded ? "animate-in fade-in slide-in-from-bottom-12 duration-500 delay-300" : "opacity-0"
+            )}>
+              <p className="text-yellow-700 font-semibold flex items-center gap-2"><AlertTriangle size={20}/>Slid from bottom!</p>
             </div>
           </CardContent>
         </Card>
@@ -101,17 +120,38 @@ export default function MicroAnimationsPage() {
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="font-headline text-2xl">Focus Animations</CardTitle>
+             <CardDescription>Highlighting interactive elements when they receive focus.</CardDescription>
           </CardHeader>
-          <CardContent className="p-8 space-y-4">
+          <CardContent className="p-8 space-y-6">
             <div>
               <Label htmlFor="focus-input">Focus this input</Label>
               <Input
                 id="focus-input"
                 placeholder="Focus will expand ring"
-                className="transition-all duration-200 focus:ring-4 focus:ring-offset-0 focus:border-primary"
+                className="transition-all duration-200 focus:ring-4 focus:ring-offset-0 focus:border-primary mt-1"
               />
             </div>
             <Button variant="outline" className="focus:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-transform">Focusable Button</Button>
+          </CardContent>
+        </Card>
+
+        {/* Click Feedback */}
+        <Card className="shadow-lg">
+          <CardHeader>
+            <CardTitle className="font-headline text-2xl">Click Feedback</CardTitle>
+            <CardDescription>Visual response when a button is clicked.</CardDescription>
+          </CardHeader>
+          <CardContent className="p-8">
+            <Button
+              onClick={handleButtonClick}
+              className={cn(
+                "transition-transform duration-100 ease-out",
+                buttonClickState ? "scale-95" : "scale-100"
+              )}
+            >
+              Click Me for Feedback
+            </Button>
+            <p className="text-xs text-muted-foreground mt-2">Button scales down briefly on click.</p>
           </CardContent>
         </Card>
 
@@ -119,33 +159,36 @@ export default function MicroAnimationsPage() {
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="font-headline text-2xl">Conditional Rendering (Show/Hide)</CardTitle>
+            <CardDescription>Animating elements as they appear or disappear.</CardDescription>
           </CardHeader>
           <CardContent className="p-8 space-y-4">
             <Button onClick={() => setShowElement(!showElement)}>
               {showElement ? 'Hide' : 'Show'} Element
             </Button>
-            {/* Using AnimatePresence from framer-motion would be ideal here.
-                For a CSS-only approach, it's trickier for enter/exit on conditional render.
-                We'll simulate with CSS transitions on opacity and height.
-            */}
             <div
               className={cn(
                 "overflow-hidden transition-all duration-500 ease-in-out",
-                showElement ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                showElement ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'
               )}
             >
-              <div className="p-6 bg-muted rounded-md mt-4 border">
-                <p>This element fades and collapses in and out.</p>
-                <Info size={24} className="text-muted-foreground mt-2" />
-              </div>
+              <Card className="mt-4">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><Info size={20}/>Revealed Content</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>This element smoothly fades and expands/collapses. For more complex enter/exit animations on list items or keyed elements, a library like Framer Motion's <code className="font-code bg-muted px-1 rounded-sm">AnimatePresence</code> is often preferred.</p>
+                  <Image src="https://placehold.co/400x200.png" data-ai-hint="abstract waves" alt="Abstract placeholder" width={400} height={200} className="mt-4 rounded-md"/>
+                </CardContent>
+              </Card>
             </div>
           </CardContent>
         </Card>
 
-        {/* Animated List (Simple Add/Remove - using basic key-based re-render for CSS transitions) */}
+        {/* Animated List (Simple Add/Remove) */}
         <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle className="font-headline text-2xl">Animated List (Basic)</CardTitle>
+            <CardTitle className="font-headline text-2xl">Animated List (Additions)</CardTitle>
+            <CardDescription>Animating new items as they are added to a list.</CardDescription>
           </CardHeader>
           <CardContent className="p-8 space-y-4">
             <div className="flex gap-2 mb-4">
@@ -155,23 +198,24 @@ export default function MicroAnimationsPage() {
                 onChange={(e) => setNewItemText(e.target.value)}
                 placeholder="New item text"
                 className="flex-grow"
+                onKeyDown={(e) => e.key === 'Enter' && addListItem()}
               />
               <Button onClick={addListItem}>Add Item</Button>
             </div>
             <ul className="space-y-2">
               {listItems.map((item, index) => (
                 <li
-                  key={item + index} // Key change helps trigger re-render; for true anim, Framer Motion's AnimatePresence is better
+                  key={item + index} // Unique key for list items
                   className="flex justify-between items-center p-3 bg-background border rounded-md animate-in fade-in-0 slide-in-from-bottom-5 duration-300"
                 >
                   <span>{item}</span>
-                  <Button variant="ghost" size="icon" onClick={() => removeListItem(index)} className="text-destructive hover:text-destructive/80">
-                    <AlertTriangle size={16} />
+                  <Button variant="ghost" size="sm" onClick={() => removeListItem(index)} className="text-destructive hover:text-destructive/80">
+                    <AlertTriangle size={16} className="mr-1 hidden sm:inline-block"/> Remove
                   </Button>
                 </li>
               ))}
             </ul>
-            {listItems.length === 0 && <p className="text-muted-foreground text-sm">No items in the list.</p>}
+            {listItems.length === 0 && <p className="text-muted-foreground text-sm text-center py-4">No items in the list. Add some!</p>}
           </CardContent>
         </Card>
 
@@ -179,42 +223,43 @@ export default function MicroAnimationsPage() {
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="font-headline text-2xl">Tab Switch Animations</CardTitle>
+            <CardDescription>Smooth transitions when switching between tabs.</CardDescription>
           </CardHeader>
           <CardContent className="p-8">
             <Tabs defaultValue="account" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-3 mb-4">
                 <TabsTrigger value="account">Account</TabsTrigger>
                 <TabsTrigger value="password">Password</TabsTrigger>
                 <TabsTrigger value="notifications">Notifications</TabsTrigger>
               </TabsList>
-              <TabsContent value="account" className="pt-4 animate-in fade-in-0 duration-300">
-                <Card>
-                  <CardHeader><CardTitle>Account</CardTitle></CardHeader>
-                  <CardContent><p>Make changes to your account here. (Content animates in)</p></CardContent>
+              <TabsContent value="account" className="pt-2 animate-in fade-in-50 duration-300">
+                <Card className="border-primary/30">
+                  <CardHeader><CardTitle>Account Details</CardTitle></CardHeader>
+                  <CardContent><p>Make changes to your account here. This content fades in when the tab becomes active.</p></CardContent>
                 </Card>
               </TabsContent>
-              <TabsContent value="password" className="pt-4 animate-in fade-in-0 duration-300">
-                 <Card>
-                  <CardHeader><CardTitle>Password</CardTitle></CardHeader>
-                  <CardContent><p>Change your password here. (Content animates in)</p></CardContent>
+              <TabsContent value="password" className="pt-2 animate-in fade-in-50 duration-300">
+                 <Card className="border-accent/30">
+                  <CardHeader><CardTitle>Change Password</CardTitle></CardHeader>
+                  <CardContent><p>Update your password settings. Enjoy the smooth transition!</p></CardContent>
                 </Card>
               </TabsContent>
-              <TabsContent value="notifications" className="pt-4 animate-in fade-in-0 duration-300">
-                 <Card>
-                  <CardHeader><CardTitle>Notifications</CardTitle></CardHeader>
-                  <CardContent><p>Manage your notification settings. (Content animates in)</p></CardContent>
+              <TabsContent value="notifications" className="pt-2 animate-in fade-in-50 duration-300">
+                 <Card className="border-green-500/30">
+                  <CardHeader><CardTitle>Notification Preferences</CardTitle></CardHeader>
+                  <CardContent><p>Manage how you receive notifications. The content animates in!</p></CardContent>
                 </Card>
               </TabsContent>
             </Tabs>
             <p className="text-xs text-muted-foreground mt-4">
-              The default ShadCN Tabs component uses <code className="font-code bg-muted px-1 py-0.5 rounded-sm">tailwindcss-animate</code> for subtle transitions on active tab indicator and content. The content fade-in is added here for demonstration.
+              ShadCN Tabs use <code className="font-code bg-muted px-1 py-0.5 rounded-sm">tailwindcss-animate</code> for indicator movement. The content fade-in is added here for extra flair.
             </p>
           </CardContent>
         </Card>
 
         <p className="text-center text-sm text-muted-foreground mt-12">
-          These examples use utility classes from Tailwind CSS and <code className="font-code bg-muted px-1 py-0.5 rounded-sm">tailwindcss-animate</code>.
-          For more complex, timeline-based, or physics-based animations, a dedicated library like Framer Motion would be recommended.
+          These examples primarily use utility classes from Tailwind CSS and the <code className="font-code bg-muted px-1 py-0.5 rounded-sm">tailwindcss-animate</code> plugin.
+          For more complex, timeline-based, or physics-based animations, consider integrating a dedicated JavaScript animation library like Framer Motion or GSAP.
         </p>
       </div>
     </div>
