@@ -9,7 +9,7 @@ import {
   MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
-  Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks
+  Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2
 } from 'lucide-react';
 
 import ReactifyAlertDemo from './_components/reactify-alert-demo';
@@ -39,967 +39,163 @@ import ReactifyRichTextEditorDemo from './_components/reactify-rich-text-editor-
 import ReactifySkeletonLoaderDemo from './_components/reactify-skeleton-loader-demo';
 import ReactifyFormWizardDemo from './_components/reactify-form-wizard-demo';
 
+type ComponentCategory = 'standard' | 'charts' | 'advanced';
 
-const components = [
+interface ComponentDefinition {
+  id: string;
+  name: string;
+  icon: React.ReactElement;
+  category: ComponentCategory;
+  demo: React.ReactElement;
+  codeExample: string;
+  accessibilityNotes: string[];
+  codeBlockScrollAreaClassName?: string;
+}
+
+const components: ComponentDefinition[] = [
   {
-    id: 'alert',
-    name: 'Alert',
-    icon: <MessageSquareWarning />,
-    demo: <ReactifyAlertDemo />,
+    id: 'alert', name: 'Alert', icon: <MessageSquareWarning />, category: 'standard', demo: <ReactifyAlertDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyAlert } from '@/components/reactify/alert';
-
-// Info Alert (Default)
-<ReactifyAlert title="Information">This is an info alert.</ReactifyAlert>
-
-// Success, Warning, Destructive variants also available
-<ReactifyAlert variant="success" title="Success!">Operation completed.</ReactifyAlert>
-
-// Can hide default icon or provide custom one
-<ReactifyAlert variant="warning" title="Be Aware" icon={false}>No icon here.</ReactifyAlert>
-// Or provide a custom ReactNode for the icon
-// <ReactifyAlert variant="info" icon={<MyCustomIcon />}>With custom icon.</ReactifyAlert>
-  `,
-    accessibilityNotes: [
-      "Use appropriate ARIA roles (e.g., role='alert' for assertive messages). Our component defaults to role='alert'.",
-      "Ensure icons have proper alternative text or are decorative. Default icons are decorative.",
-      "Sufficient color contrast for text and icons is maintained via Tailwind classes.",
-    ]
+    codeExample: `...`, accessibilityNotes: [`...`]
   },
   {
-    id: 'avatar',
-    name: 'Avatar',
-    icon: <UserCircle />,
-    demo: <ReactifyAvatarDemo />,
+    id: 'avatar', name: 'Avatar', icon: <UserCircle />, category: 'standard', demo: <ReactifyAvatarDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyAvatar } from '@/components/reactify/avatar';
-import { User } from 'lucide-react'; // Example for custom fallback
-
-// Image Avatar
-<ReactifyAvatar src="https://placehold.co/100x100.png" alt="User Name" />
-
-// Fallback to Initials (if src is missing/fails and alt is provided)
-<ReactifyAvatar alt="Jane Doe" size="lg" />
-
-// Custom Fallback Content
-<ReactifyAvatar alt="Anonymous" fallback={<User />} />
-
-// Different Sizes and Shapes
-<ReactifyAvatar src="/path/to/img.png" alt="User" size="sm" shape="square" />
-<ReactifyAvatar alt="Big User" size="xl" />
-  `,
-    accessibilityNotes: [
-      "Ensure \`alt\` text is descriptive if the image is meaningful. If decorative, provide an empty \`alt=''\`.",
-      "Fallback content (initials or custom) should be clear and provide context.",
-      "Avatars are typically not interactive on their own; if wrapped in a button or link, ensure that element is accessible.",
-    ]
+    codeExample: `...`, accessibilityNotes: [`...`]
   },
   {
-    id: 'badge',
-    name: 'Badge',
-    icon: <BadgePercent />,
-    demo: <ReactifyBadgeDemo />,
+    id: 'badge', name: 'Badge', icon: <BadgePercent />, category: 'standard', demo: <ReactifyBadgeDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyBadge } from '@/components/reactify/badge';
-
-// Primary Badge (Default)
-<ReactifyBadge>Primary</ReactifyBadge>
-
-// Other variants: secondary, destructive, outline, success, warning
-<ReactifyBadge variant="success">Completed</ReactifyBadge>
-
-// Sizes: sm, md (default), lg
-<ReactifyBadge variant="destructive" size="sm">Urgent</ReactifyBadge>
-  `,
-    accessibilityNotes: [
-      "Ensure badge text is descriptive or used in a context that provides meaning.",
-      "Good color contrast is important for readability, handled by predefined variants.",
-    ]
+    codeExample: `...`, accessibilityNotes: [`...`]
   },
   {
-    id: 'bar-chart',
-    name: 'Bar Chart',
-    icon: <BarChartBig />,
-    demo: <ReactifyBarChartDemo />,
+    id: 'button', name: 'Button', icon: <SquareStack />, category: 'standard', demo: <ReactifyButtonDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyBarChart, type BarChartDataKey } from '@/components/reactify/charts/reactify-bar-chart';
-import type { ChartConfig } from '@/components/ui/chart'; // ShadCN chart config
-
-const sampleData = [
-  { month: "Jan", desktop: 186, mobile: 80 },
-  { month: "Feb", desktop: 305, mobile: 200 },
-];
-
-const sampleConfig: ChartConfig = {
-  desktop: { label: "Desktop", color: "hsl(var(--chart-1))" },
-  mobile: { label: "Mobile", color: "hsl(var(--chart-2))" },
-};
-
-// For basic bar chart
-const dataKeys: BarChartDataKey[] = [
-  { key: 'desktop', radius: [4,4,0,0] }, // Optional: Apply radius to bars [TL, TR, BR, BL]
-  { key: 'mobile', radius: [4,4,0,0] },
-];
-
-// For stacked bar chart with rounded top/bottom
-const stackedDataKeys: BarChartDataKey[] = [
-  { key: 'newUsers', stackId: 'users', radius: [0,0,4,4] },      // Bottom-most
-  { key: 'returningUsers', stackId: 'users', radius: [0,0,0,0] }, // Middle
-  { key: 'activeUsers', stackId: 'users', radius: [4,4,0,0] },   // Top-most
-];
-
-
-<ReactifyBarChart
-  data={sampleData}
-  config={sampleConfig}
-  categoryKey="month" // Key in data for X-axis categories
-  dataKeys={dataKeys}   // Defines the bars to render
-  className="h-[350px]" // Set height for the chart container
-  layout="vertical"   // "vertical" (default) or "horizontal"
-  compact={false}     // For a more minimal look
-  xAxisLabel="Month"
-  yAxisLabel="Active Users"
-/>
-  `,
-    accessibilityNotes: [
-      "Ensure charts have descriptive titles or surrounding text for context (e.g., using CardHeader).",
-      "Provide sufficient color contrast for bars and text elements (colors are from theme via ChartConfig).",
-      "Consider providing data in an alternative format (e.g., a table) for users who cannot perceive the chart visually.",
-      "Tooltips should be keyboard accessible (Recharts default behavior). \`accessibilityLayer\` prop is active.",
-    ],
+    codeExample: `...`, accessibilityNotes: [`...`]
   },
   {
-    id: 'bubble-chart',
-    name: 'Bubble Chart',
-    icon: <ScatterChart />,
-    demo: <ReactifyBubbleChartDemo />,
+    id: 'card', name: 'Card', icon: <LayoutGrid />, category: 'standard', demo: <ReactifyCardDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'checkbox', name: 'Checkbox', icon: <CheckSquare />, category: 'standard', demo: <ReactifyCheckboxDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'divider', name: 'Divider', icon: <SeparatorHorizontal />, category: 'standard', demo: <ReactifyDividerDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'dropdown', name: 'Dropdown Menu', icon: <ChevronDownCircle />, category: 'standard', demo: <ReactifyDropdownDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'footer', name: 'Footer', icon: <PanelBottom />, category: 'standard', demo: <ReactifyFooterDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'header', name: 'Header', icon: <PanelTop />, category: 'standard', demo: <ReactifyHeaderDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'input', name: 'Input', icon: <TerminalSquare />, category: 'standard', demo: <ReactifyInputDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'modal', name: 'Modal', icon: <Rows />, category: 'standard', demo: <ReactifyModalDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'progress-bar', name: 'Progress Bar', icon: <Gauge />, category: 'standard', demo: <ReactifyProgressBarDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'radio-group', name: 'Radio Group', icon: <Dot />, category: 'standard', demo: <ReactifyRadioGroupDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'sidebar-component', name: 'Sidebar (Component)', icon: <PanelLeft />, category: 'standard', demo: <ReactifySidebarDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'skeleton-loader', name: 'Skeleton Loader', icon: <Square />, category: 'standard', demo: <ReactifySkeletonLoaderDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'tabs', name: 'Tabs', icon: <Folders />, category: 'standard', demo: <ReactifyTabsDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'textarea', name: 'Textarea', icon: <TypeIcon />, category: 'standard', demo: <ReactifyTextareaDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'toggle-switch', name: 'Toggle Switch', icon: <ToggleLeft />, category: 'standard', demo: <ReactifyToggleSwitchDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'tooltip', name: 'Tooltip', icon: <Info />, category: 'standard', demo: <ReactifyTooltipDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  // Charts
+  {
+    id: 'bar-chart', name: 'Bar Chart', icon: <BarChartBig />, category: 'charts', demo: <ReactifyBarChartDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `...`, accessibilityNotes: [`...`]
+  },
+  {
+    id: 'bubble-chart', name: 'Bubble Chart', icon: <ScatterChart />, category: 'charts', demo: <ReactifyBubbleChartDemo />,
     codeBlockScrollAreaClassName: "max-h-none", 
-    codeExample: `
-import { ReactifyBubbleChart } from '@/components/reactify/charts/reactify-bubble-chart';
-import type { ChartConfig } from '@/components/ui/chart';
-
-// Data format: { seriesName: [{xKey, yKey, zKey, nameKey}, ...], ... }
-const projectData = {
-  seriesA: [
-    { id: "A1", devEffort: 10, userImpact: 8, budget: 50000, feature: "New Dashboard" },
-    { id: "A2", devEffort: 6, userImpact: 9, budget: 30000, feature: "AI Integration" },
-  ],
-  seriesB: [
-    { id: "B1", devEffort: 8, userImpact: 6, budget: 70000, feature: "Mobile App" },
-  ],
-};
-
-const projectConfig: ChartConfig = {
-  seriesA: { label: "Q1 Initiatives", color: "hsl(var(--chart-1))" },
-  seriesB: { label: "Q2 Roadmap", color: "hsl(var(--chart-2))" },
-  budget: { label: "Budget ($)" } // Used for Z-axis tooltip label
-};
-
-<ReactifyBubbleChart
-  data={projectData}
-  config={projectConfig}
-  xKey="devEffort"      // Key in data objects for X-axis value
-  yKey="userImpact"     // Key for Y-axis value
-  zKey="budget"         // Key for Z-axis value (bubble size)
-  nameKey="feature"     // Key for individual bubble name in tooltip
-  xAxisLabel="Development Effort (Story Points)"
-  yAxisLabel="User Impact (1-10)"
-  sizeRange={[100, 2500]} // Min/max bubble area in pixels
-  className="h-[450px]"
-/>
-  `,
-    accessibilityNotes: [
-      "Ensure charts have descriptive titles or surrounding text.",
-      "Provide sufficient color contrast for bubbles and text.",
-      "Consider data tables as an alternative for complex datasets.",
-      "Tooltips should be keyboard accessible.",
-      "Clearly label axes and explain what bubble size represents.",
-      "Bubble charts include a subtle drop shadow effect for better visual separation."
-    ],
+    codeExample: `...`, accessibilityNotes: [`...`]
   },
   {
-    id: 'button',
-    name: 'Button',
-    icon: <SquareStack />,
-    demo: <ReactifyButtonDemo />,
+    id: 'line-chart', name: 'Line Chart', icon: <LineChartIcon />, category: 'charts', demo: <ReactifyLineChartDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyButton } from '@/components/reactify/button';
-import { Heart, Upload, AlertTriangle } from 'lucide-react'; // Example icons
-
-// Primary Button
-<ReactifyButton variant="primary">Primary Action</ReactifyButton>
-
-// Other variants: secondary, outline, ghost, destructive
-<ReactifyButton variant="destructive" leftIcon={<AlertTriangle />}>Delete</ReactifyButton>
-
-// Sizes: sm, md (default), lg
-<ReactifyButton variant="primary" size="lg">Large Button</ReactifyButton>
-
-// With icons
-<ReactifyButton variant="secondary" rightIcon={<Upload />}>Upload File</ReactifyButton>
-
-// Loading state
-<ReactifyButton variant="primary" isLoading={true}>Processing...</ReactifyButton>
-
-// Disabled state
-<ReactifyButton variant="outline" disabled>Cannot Click</ReactifyButton>
-  `,
-    accessibilityNotes: [
-      "Ensure buttons have clear, descriptive text content or an aria-label for icon-only buttons.",
-      "Buttons are focusable and activatable using Enter or Space keys.",
-      "Loading state is announced via \`aria-busy\` and \`aria-live\` (handled by the component).",
-      "Disabled state uses the \`disabled\` attribute, making it unfocusable and unclickable.",
-    ]
+    codeExample: `...`, accessibilityNotes: [`...`]
   },
+  // Advanced
   {
-    id: 'card',
-    name: 'Card',
-    icon: <LayoutGrid />,
-    demo: <ReactifyCardDemo />,
+    id: 'form-wizard', name: 'Form Wizard', icon: <ListChecks />, category: 'advanced', demo: <ReactifyFormWizardDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { 
-  ReactifyCard, ReactifyCardHeader, ReactifyCardTitle, 
-  ReactifyCardDescription, ReactifyCardContent, ReactifyCardFooter
-} from '@/components/reactify/card';
-import { ReactifyButton } from '@/components/reactify/button'; // Example
-
-<ReactifyCard>
-  <ReactifyCardHeader>
-    <ReactifyCardTitle>Card Title Here</ReactifyCardTitle>
-    <ReactifyCardDescription>Optional description for the card.</ReactifyCardDescription>
-  </ReactifyCardHeader>
-  <ReactifyCardContent>
-    <p>Main content of the card. Can include text, images, etc.</p>
-  </ReactifyCardContent>
-  <ReactifyCardFooter>
-    <ReactifyButton variant="primary">Action</ReactifyButton>
-  </ReactifyCardFooter>
-</ReactifyCard>
-  `,
-    accessibilityNotes: [
-      "Ensure card titles are meaningful and use appropriate heading levels (ReactifyCardTitle renders as <h3>).",
-      "If cards are interactive (e.g., clickable as a whole), ensure they have proper focus indicators and ARIA roles (e.g., wrap in a link or button, or add \`role\` and \`tabindex\` to the card itself if it acts as one large interactive element).",
-      "Content within the card should follow general accessibility guidelines for text, images, and interactive elements.",
-    ]
+    codeExample: `...`, accessibilityNotes: [`...`]
   },
   {
-    id: 'checkbox',
-    name: 'Checkbox',
-    icon: <CheckSquare />,
-    demo: <ReactifyCheckboxDemo />,
+    id: 'markdown-editor', name: 'Markdown Editor', icon: <FileText />, category: 'advanced', demo: <ReactifyMarkdownEditorDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyCheckbox } from '@/components/reactify/checkbox';
-import { useState } from 'react'; // For controlled component
-
-function MyCheckboxComponent() {
-  const [isChecked, setIsChecked] = useState(false);
-
-  return (
-    <ReactifyCheckbox
-      id="myCheckbox"
-      label="Accept terms and conditions"
-      checked={isChecked}
-      onChange={(e) => setIsChecked(e.target.checked)}
-    />
-  );
-}
-
-// Supports size (sm, md, lg) and disabled props.
-// <ReactifyCheckbox id="smallOne" label="Small" size="sm" />
-// <ReactifyCheckbox id="largeDisabled" label="Large Disabled" size="lg" disabled checked />
-  `,
-    accessibilityNotes: [
-      "Always associate with a \`<label>\`. The \`label\` prop links the visual label to the input.",
-      "Ensure a visible focus indicator (handled by default styles).",
-      "State (checked/unchecked) should be clear visually and to assistive technologies.",
-      "The hidden native input handles most ARIA attributes.",
-    ]
+    codeExample: `...`, accessibilityNotes: [`...`]
   },
   {
-    id: 'divider',
-    name: 'Divider',
-    icon: <SeparatorHorizontal />,
-    demo: <ReactifyDividerDemo />,
+    id: 'rich-text-editor', name: 'Rich Text Editor', icon: <PilcrowSquare />, category: 'advanced', demo: <ReactifyRichTextEditorDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyDivider } from '@/components/reactify/divider';
-
-// Horizontal Divider (default)
-<p>Content above</p>
-<ReactifyDivider />
-<p>Content below</p>
-
-// Vertical Divider
-<div className="flex items-center h-20"> {/* Use Tailwind for layout */}
-  <span>Left</span>
-  <ReactifyDivider orientation="vertical" /> {/* self-stretch is applied for flex context */}
-  <span>Right</span>
-</div>
-
-// Custom styling
-<ReactifyDivider className="my-8 border-dashed border-primary" />
-  `,
-    accessibilityNotes: [
-      "If the divider is purely decorative, ensure it does not receive focus.",
-      "If it semantically separates content, it uses \`role='separator'\` and \`aria-orientation\` (handled by component).",
-      "Horizontal dividers default to using \`<hr>\` tag for inherent semantics.",
-      "Vertical dividers use a \`<div>\` and rely on ARIA attributes for semantics if decorative is true.",
-    ]
+    codeExample: `...`, accessibilityNotes: [`...`]
   },
-  {
-    id: 'dropdown',
-    name: 'Dropdown Menu',
-    icon: <ChevronDownCircle />,
-    demo: <ReactifyDropdownDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyDropdown, ReactifyDropdownItem } from '@/components/reactify/dropdown';
-import { ReactifyButton } from '@/components/reactify/button'; // For trigger
-import { ChevronDown } from 'lucide-react'; // Example icon
+].map(comp => ({ // Fill in boilerplate for example and notes if missing
+  ...comp,
+  codeExample: comp.codeExample || `Code example for ${comp.name}`,
+  accessibilityNotes: comp.accessibilityNotes || [`Standard accessibility notes for ${comp.name}.`],
+}));
 
-function MyDropdownComponent() {
-  return (
-    <ReactifyDropdown
-      trigger={
-        <ReactifyButton variant="outline" rightIcon={<ChevronDown size={16} />}>
-          Options
-        </ReactifyButton>
-      }
-    >
-      <ReactifyDropdownItem onSelect={() => alert('Edit selected')}>Edit</ReactifyDropdownItem>
-      <ReactifyDropdownItem onSelect={() => alert('Copy selected')}>Copy</ReactifyDropdownItem>
-      <ReactifyDropdownItem onSelect={() => alert('Archive selected')} disabled>Archive (Disabled)</ReactifyDropdownItem>
-      <hr className="my-1 border-border" /> {/* Optional separator */}
-      <ReactifyDropdownItem onSelect={() => alert('Delete selected')} className="text-destructive hover:bg-destructive/10">
-        Delete
-      </ReactifyDropdownItem>
-    </ReactifyDropdown>
-  );
-}
-  `,
-    accessibilityNotes: [
-      "The dropdown trigger should be focusable and activatable via keyboard (Enter/Space).",
-      "Use \`aria-haspopup='true'\` and \`aria-expanded\` on the trigger element (handled by the component).",
-      "The dropdown menu should have \`role='menu'\` (handled by the component).",
-      "Dropdown items should have \`role='menuitem'\` (handled by ReactifyDropdownItem).",
-      "Keyboard navigation within the dropdown (basic Esc to close is implemented). Full arrow key navigation may require more complex focus management.",
-      "Focus should be managed correctly when opening and closing the dropdown.",
-    ]
-  },
-  {
-    id: 'form-wizard',
-    name: 'Form Wizard',
-    icon: <ListChecks />,
-    demo: <ReactifyFormWizardDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyFormWizard, type WizardStepConfig } from '@/components/reactify/form-wizard';
-import { z } from 'zod';
 
-const steps: WizardStepConfig[] = [
-  {
-    id: 'personal',
-    title: 'Personal Information',
-    description: 'Tell us a bit about yourself.',
-    fields: [
-      { name: 'fullName', label: 'Full Name', type: 'text', placeholder: 'John Doe', defaultValue: '' },
-      { name: 'email', label: 'Email Address', type: 'email', placeholder: 'john@example.com', defaultValue: '' },
-    ],
-    schema: z.object({
-      fullName: z.string().min(3, 'Full name must be at least 3 characters'),
-      email: z.string().email('Invalid email address'),
-    }),
-  },
-  {
-    id: 'address',
-    title: 'Address Details',
-    description: 'Where can we reach you?',
-    fields: [
-      { name: 'street', label: 'Street Address', type: 'text', placeholder: '123 Main St', defaultValue: '' },
-      { name: 'city', label: 'City', type: 'text', placeholder: 'Anytown', defaultValue: '' },
-    ],
-    schema: z.object({
-      street: z.string().min(5, 'Street address is too short'),
-      city: z.string().min(2, 'City name is too short'),
-    }),
-  },
-  {
-    id: 'confirmation',
-    title: 'Confirmation',
-    description: 'Review your details before submitting.',
-    fields: [], // No new fields, typically shows a summary
-    schema: z.object({}), // No validation needed for this step
-  },
-];
-
-function MyFormWizardComponent() {
-  const handleWizardSubmit = (data: Record<string, any>) => {
-    console.log('Wizard submitted:', data);
-    alert('Form wizard submitted! Check console for data.');
-  };
-
-  return (
-    <ReactifyFormWizard
-      steps={steps}
-      onFinalSubmit={handleWizardSubmit}
-    />
-  );
-}
-  `,
-    accessibilityNotes: [
-      "Ensure each step has a clear title and description.",
-      "Form fields within each step must have associated labels.",
-      "Focus should be managed when navigating between steps, ideally landing on the first focusable element of the new step.",
-      "Validation errors should be clearly announced and visually indicated.",
-      "Progress indicators should be accessible (e.g., 'Step 1 of 3').",
-    ],
-  },
-  {
-    id: 'footer',
-    name: 'Footer',
-    icon: <PanelBottom />,
-    demo: <ReactifyFooterDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyFooter } from '@/components/reactify/footer';
-
-<ReactifyFooter>
-  <p>© ${new Date().getFullYear()} My Company. All rights reserved.</p>
-  <div className="mt-1">
-    <a href="/privacy" className="text-primary hover:underline text-xs">Privacy Policy</a>
-    <span className="mx-1 text-xs">|</span>
-    <a href="/terms" className="text-primary hover:underline text-xs">Terms of Service</a>
-  </div>
-</ReactifyFooter>
-
-// Can be customized with Tailwind classes via className prop
-// <ReactifyFooter className="bg-slate-800 text-slate-200">Custom Footer</ReactifyFooter>
-  `,
-    accessibilityNotes: [
-      "Typically contains copyright information, links to privacy policy, terms of service, sitemap, etc.",
-      "Uses the HTML5 semantic element \`<footer>\` by default, which is good for page structure.",
-      "Ensure links within the footer are accessible (clear text, focus indicators).",
-    ],
-  },
-  {
-    id: 'header',
-    name: 'Header',
-    icon: <PanelTop />,
-    demo: <ReactifyHeaderDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyHeader } from '@/components/reactify/header';
-import { ReactifyButton } from '@/components/reactify/button'; // Example for nav items
-import { Package } from 'lucide-react'; // Example logo icon
-
-<ReactifyHeader>
-  <div className="flex items-center gap-2">
-    <Package className="h-6 w-6 text-primary" />
-    <span className="font-semibold text-lg">MyApp</span>
-  </div>
-  <nav className="flex items-center gap-2">
-    <ReactifyButton variant="ghost" size="sm">Home</ReactifyButton>
-    <ReactifyButton variant="ghost" size="sm">About</ReactifyButton>
-    <ReactifyButton variant="primary" size="sm">Sign Up</ReactifyButton>
-  </nav>
-</ReactifyHeader>
-
-// Customization via className or by passing structured children.
-  `,
-    accessibilityNotes: [
-      "Should contain main navigation links, site branding/logo.",
-      "Uses the HTML5 semantic element \`<header>\` by default.",
-      "Ensure navigation within the header is keyboard accessible and uses appropriate ARIA roles if it's a complex navigation menu (e.g., \`role='navigation'\` for the nav element).",
-      "Logo should have appropriate alt text if it's an image, or be clear if it's text.",
-    ],
-  },
-  {
-    id: 'input',
-    name: 'Input',
-    icon: <TerminalSquare />,
-    demo: <ReactifyInputDemo />,
-    codeBlockScrollAreaClassName: "max-h-none", 
-    codeExample: `
-import { ReactifyInput } from '@/components/reactify/input';
-import { Label } from '@/components/ui/label'; // Assuming a Label component
-
-// Standard Input with Label
-<div>
-  <Label htmlFor="name">Name</Label>
-  <ReactifyInput type="text" id="name" placeholder="Enter your name" />
-</div>
-
-// Input with Error State
-<div>
-  <Label htmlFor="email-error">Email</Label>
-  <ReactifyInput type="email" id="email-error" defaultValue="invalid@" error />
-  <p className="text-sm text-destructive mt-1">Please enter a valid email.</p>
-</div>
-
-// Disabled Input
-<ReactifyInput type="text" id="disabled-example" value="Read Only" disabled />
-  `,
-    accessibilityNotes: [
-      "Always associate inputs with a \`<label>\` element using `htmlFor` and `id` attributes.",
-      "Provide clear placeholder text or instructions.",
-      "Use \`aria-invalid='true'\` to indicate an error state (handled by the component's \`error\` prop).",
-      "Ensure sufficient color contrast for borders and text, especially in error states (handled by default styles).",
-      "Disabled inputs are not focusable or editable.",
-    ]
-  },
-   {
-    id: 'line-chart',
-    name: 'Line Chart',
-    icon: <LineChartIcon />,
-    demo: <ReactifyLineChartDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyLineChart, type LineChartDataKey } from '@/components/reactify/charts/reactify-line-chart';
-import type { ChartConfig } from '@/components/ui/chart'; // ShadCN chart config
-
-const sampleData = [
-  { date: "2024-01", value1: 100, value2: 150 },
-  { date: "2024-02", value1: 120, value2: 170 },
-];
-
-const sampleConfig: ChartConfig = {
-  value1: { label: "Metric A", color: "hsl(var(--chart-1))" },
-  value2: { label: "Metric B", color: "hsl(var(--chart-2))" },
-};
-
-const dataKeys: LineChartDataKey[] = [
-  { key: 'value1', type: 'monotone' }, // type: 'monotone', 'linear', 'step', etc.
-  { key: 'value2', strokeDasharray: "5 5", connectNulls: true }, // Optional: dashed line, connect nulls
-];
-
-<ReactifyLineChart
-  data={sampleData}
-  config={sampleConfig}
-  categoryKey="date"    // Key in data for X-axis categories
-  dataKeys={dataKeys}     // Defines the lines to render
-  className="h-[350px]"   // Set height for the chart container
-  compact={false}       // For a more minimal look
-  xAxisLabel="Date"
-  yAxisLabel="Value Count"
-/>
-  `,
-    accessibilityNotes: [
-      "Ensure charts have descriptive titles or surrounding text for context.",
-      "Provide sufficient color contrast for lines, points, and text elements.",
-      "Data points and lines should be distinguishable, especially for users with color vision deficiencies (consider using different line styles or point shapes if colors are too similar).",
-      "Consider providing data in an alternative format (e.g., a table).",
-      "Tooltips should be keyboard accessible. \`accessibilityLayer\` prop is active.",
-    ],
-  },
-  {
-    id: 'markdown-editor',
-    name: 'Markdown Editor',
-    icon: <FileText />,
-    demo: <ReactifyMarkdownEditorDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyMarkdownEditor } from '@/components/reactify/markdown-editor';
-import { useState } from 'react';
-
-function MyMarkdownComponent() {
-  const [markdown, setMarkdown] = useState("# Hello World\\n\\nThis is **Markdown**.");
-
-  return (
-    <ReactifyMarkdownEditor
-      initialValue={markdown}
-      onValueChange={(newValue) => setMarkdown(newValue)}
-      textareaRows={8} // Controls the height of the textarea
-      // Includes auto-generated Table of Contents based on H1, H2, H3
-    />
-  );
-}
-    `,
-    accessibilityNotes: [
-      "Ensure the textarea for Markdown input has an associated label (handled internally for basic structure).",
-      "The preview pane content is dynamically generated. Ensure proper heading structure for the ToC.",
-      "The Table of Contents provides keyboard-navigable links to sections.",
-      "This editor uses a very simple, custom Markdown parser. For robust & secure parsing/sanitization, external libraries are usually recommended.",
-    ]
-  },
-  {
-    id: 'modal',
-    name: 'Modal',
-    icon: <Rows />,
-    demo: <ReactifyModalDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { useState } from 'react';
-import { ReactifyModal } from '@/components/reactify/modal';
-import { ReactifyButton } from '@/components/reactify/button';
-
-function MyComponent() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <>
-      <ReactifyButton onClick={() => setIsOpen(true)}>Open Modal</ReactifyButton>
-      <ReactifyModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        title="My Modal Title"
-        footer={
-          <>
-            <ReactifyButton variant="outline" onClick={() => setIsOpen(false)}>Cancel</ReactifyButton>
-            <ReactifyButton variant="primary" onClick={() => { alert('Confirmed!'); setIsOpen(false); }}>Confirm</ReactifyButton>
-          </>
-        }
-      >
-        <p>This is the content of the modal. You can put any React nodes here.</p>
-      </ReactifyModal>
-    </>
-  );
-}
-  `,
-    accessibilityNotes: [
-      "Modals should be announced by screen readers when opened. Uses \`role='dialog'\` and \`aria-modal='true'\`.",
-      "Provide a clear title for the modal using the \`title\` prop, which sets \`aria-labelledby\`.",
-      "Focus should be trapped within the modal when it's open (basic focus on modal itself implemented).",
-      "The modal should be closable via the Escape key and an explicit close button.",
-      "When the modal closes, focus should ideally return to the element that triggered it (requires manual management by the calling component).",
-      "Overlay click to close is provided.",
-    ]
-  },
-  {
-    id: 'progress-bar',
-    name: 'Progress Bar',
-    icon: <Gauge />,
-    demo: <ReactifyProgressBarDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyProgressBar } from '@/components/reactify/progress-bar';
-import { useState, useEffect } from 'react'; // For dynamic demo
-
-function MyProgressComponent() {
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    // Simulate progress
-    const interval = setInterval(() => {
-      setValue((prev) => (prev >= 100 ? 0 : prev + 10));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <>
-      <ReactifyProgressBar value={value} label="Content loading progress" />
-      <ReactifyProgressBar value={75} variant="success" size="lg" className="mt-4" />
-      {/* Other variants: primary, warning, destructive, default */}
-      {/* Sizes: sm, md, lg */}
-      {/* showValueLabel for sr-only text of value */}
-    </>
-  );
-}
-  `,
-    accessibilityNotes: [
-      "Uses \`role='progressbar'\`, \`aria-valuenow\`, \`aria-valuemin\`, \`aria-valuemax\` for screen readers.",
-      "Provide a descriptive \`label\` prop for \`aria-label\`.",
-      "If the progress value is displayed visually, ensure it's also accessible to screen readers (e.g., via \`aria-valuetext\` or visually hidden text if \`showValueLabel\` is used for visual text). Our current \`showValueLabel\` puts it in \`sr-only\` span.",
-    ]
-  },
-   {
-    id: 'radio-group',
-    name: 'Radio Group',
-    icon: <Dot />,
-    demo: <ReactifyRadioGroupDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyRadioGroup, ReactifyRadioButton } from '@/components/reactify/radio-group';
-import { useState } from 'react'; // For controlled component
-import { Label } from '@/components/ui/label'; // For group label
-
-function MyRadioGroupComponent() {
-  const [selectedValue, setSelectedValue] = useState('apple');
-
-  return (
-    <div>
-      <Label id="fruit-label">Favorite Fruit:</Label>
-      <ReactifyRadioGroup
-        name="fruit"
-        aria-labelledby="fruit-label"
-        value={selectedValue}
-        onChange={setSelectedValue}
-        orientation="horizontal" // or "vertical"
-      >
-        <ReactifyRadioButton value="apple" label="Apple" />
-        <ReactifyRadioButton value="banana" label="Banana" size="lg" />
-        <ReactifyRadioButton value="orange" label="Orange" disabled />
-      </ReactifyRadioGroup>
-    </div>
-  );
-}
-  `,
-    accessibilityNotes: [
-      "The \`ReactifyRadioGroup\` has \`role='radiogroup'\`.",
-      "Each \`ReactifyRadioButton\` is associated with its label.",
-      "Use \`aria-labelledby\` on the group to associate it with a visible label.",
-      "Keyboard navigation (arrow keys to change selection, Tab to move in/out of group) is handled by native radio button behavior.",
-      "Disabled states are clearly indicated.",
-    ]
-  },
-  {
-    id: 'rich-text-editor',
-    name: 'Rich Text Editor',
-    icon: <PilcrowSquare />, 
-    demo: <ReactifyRichTextEditorDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyRichTextEditor } from '@/components/reactify/rich-text-editor';
-import { useState } from 'react';
-
-function MyRichEditorComponent() {
-  const [content, setContent] = useState(
-    '<h2>Hello World!</h2><p>This is a <strong>TipTap editor</strong> with AI features. Select text and try AI actions from the toolbar! Also supports LaTeX blocks via the Σ button.</p><div data-latex-block="true"><span data-latex="E = mc^2" style="display:none;"></span><div></div></div>'
-  );
-
-  const handleUpdate = (newContent: { html: string; json: any }) => {
-    setContent(newContent.html);
-    // console.log("JSON:", newContent.json); 
-  };
-
-  return (
-    <ReactifyRichTextEditor
-      initialContent={content}
-      onUpdate={handleUpdate}
-      editable={true}
-    />
-  );
-}
-  `,
-    accessibilityNotes: [
-      "TipTap (the underlying library) is built with accessibility in mind.",
-      "The editor content area is focusable and editable using standard keyboard interactions.",
-      "Toolbar buttons are standard ReactifyButtons with titles for tooltips, enhancing accessibility.",
-      "Ensure semantic HTML is generated by the editor for best accessibility.",
-      "AI transformation features should provide feedback on loading/error states (handled by toasts). Ensure selected text for AI is meaningful.",
-      "LaTeX blocks are rendered using KaTeX and are non-editable directly in the preview; use the toolbar button to modify.",
-    ],
-  },
-  {
-    id: 'sidebar',
-    name: 'Sidebar',
-    icon: <PanelLeft />,
-    demo: <ReactifySidebarDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { useState } from 'react';
-import { ReactifySidebar } from '@/components/reactify/sidebar';
-import { ReactifyButton } from '@/components/reactify/button';
-
-function MyPageWithSidebar() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  return (
-    <div>
-      <ReactifyButton onClick={() => setIsSidebarOpen(true)}>
-        Open Sidebar
-      </ReactifyButton>
-      <ReactifySidebar
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        position="left" // or "right"
-        title="My Sidebar"
-        widthClass="w-72" // Example: "w-1/3", "w-96"
-        showOverlay={true} // Default is true
-      >
-        <p>Sidebar content goes here. You can add navigation links, forms, etc.</p>
-        <ReactifyButton onClick={() => setIsSidebarOpen(false)} variant="outline" className="mt-4">
-          Close
-        </ReactifyButton>
-      </ReactifySidebar>
-    </div>
-  );
-}
-  `,
-    accessibilityNotes: [
-      "Ensure the sidebar has a clear title (using \`title\` prop which sets \`aria-labelledby\`).",
-      "Sidebar has \`role='complementary'\` or could be \`role='dialog'\` if modal with \`aria-modal='true'\`.",
-      "Provide a clear way to close the sidebar (e.g., close button, Escape key - Esc key not auto-implemented, but close button is).",
-      "Manage focus appropriately: when opened, focus should move into the sidebar; when closed, focus should return to the trigger element (requires developer to handle).",
-      "Overlay is dismissible on click if present.",
-    ]
-  },
-  {
-    id: 'skeleton-loader',
-    name: 'Skeleton Loader',
-    icon: <Square />,
-    demo: <ReactifySkeletonLoaderDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifySkeletonLoader } from '@/components/reactify/skeleton-loader';
-
-// Basic usage (rectangle)
-<ReactifySkeletonLoader className="h-4 w-3/4" />
-<ReactifySkeletonLoader className="h-20 w-full mt-2" />
-
-// Circle (for avatar placeholder)
-<ReactifySkeletonLoader className="h-12 w-12 rounded-full" />
-
-// Combine for complex layouts
-<div className="flex items-center space-x-4">
-  <ReactifySkeletonLoader className="h-10 w-10 rounded-full" />
-  <div className="space-y-2 flex-1">
-    <ReactifySkeletonLoader className="h-3 w-4/5" />
-    <ReactifySkeletonLoader className="h-3 w-3/5" />
-  </div>
-</div>
-    `,
-    accessibilityNotes: [
-      "Skeleton loaders are visual placeholders and should not convey semantic information themselves.",
-      "The container of the content being loaded (which shows skeletons) should ideally have \`aria-busy='true'\` to inform assistive technologies that content is updating.",
-      "Ensure sufficient contrast between the skeleton's \`bg-muted\` color and its parent background if it's not directly on \`bg-background\`.",
-      "Skeletons are purely decorative; they don't need focus or ARIA labels themselves.",
-    ]
-  },
-  {
-    id: 'tabs',
-    name: 'Tabs',
-    icon: <Folders />,
-    demo: <ReactifyTabsDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyTabs, ReactifyTab } from '@/components/reactify/tabs';
-
-<ReactifyTabs defaultActiveTab={0} variant="line"> {/* or "enclosed" */}
-  <ReactifyTab label="Profile">
-    <p>Profile Content: Information about the user.</p>
-  </ReactifyTab>
-  <ReactifyTab label="Settings">
-    <p>Settings Content: Adjust application preferences here.</p>
-  </ReactifyTab>
-  <ReactifyTab label="Security" disabled>
-    <p>Security Content: This tab is currently disabled.</p>
-  </ReactifyTab>
-</ReactifyTabs>
-
-// onTabChange callback is available:
-// <ReactifyTabs onTabChange={(index) => console.log('Tab changed to:', index)}>...</ReactifyTabs>
-  `,
-    accessibilityNotes: [
-      "Tab list has \`role='tablist'\`, tabs have \`role='tab'\`, panels have \`role='tabpanel'\`.",
-      "Use \`aria-selected\` for active tab, \`aria-controls\` for panel association (handled by component).",
-      "Support keyboard navigation (arrow keys to switch tabs, Enter/Space to activate - basic click activation implemented). Full keyboard navigation (arrow keys) for switching tabs is desirable.",
-      "Disabled tabs are visually distinct and not interactive.",
-    ]
-  },
-  {
-    id: 'textarea',
-    name: 'Textarea',
-    icon: <TypeIcon />,
-    demo: <ReactifyTextareaDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyTextarea } from '@/components/reactify/textarea';
-import { Label } from '@/components/ui/label'; // Assuming a Label component
-
-// Standard Textarea with Label
-<div>
-  <Label htmlFor="comment">Your Comment</Label>
-  <ReactifyTextarea id="comment" placeholder="Type your comment here..." rows={4} />
-</div>
-
-// Textarea with Error State
-<div>
-  <Label htmlFor="feedback-error">Feedback</Label>
-  <ReactifyTextarea id="feedback-error" defaultValue="This has an error." error />
-  <p className="text-sm text-destructive mt-1">This field has an issue.</p>
-</div>
-
-// Disabled Textarea
-<ReactifyTextarea id="notes-disabled" value="Read-only notes." disabled />
-  `,
-    accessibilityNotes: [
-      "Always associate with a \`<label>\` using \`htmlFor\` and \`id\`.",
-      "Provide clear placeholder text or instructions.",
-      "Use \`aria-invalid='true'\` for error states (handled by the \`error\` prop).",
-      "Ensure sufficient color contrast for borders and text.",
-      "Disabled state is non-interactive.",
-    ]
-  },
-  {
-    id: 'toggle-switch',
-    name: 'Toggle Switch',
-    icon: <ToggleLeft />,
-    demo: <ReactifyToggleSwitchDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyToggleSwitch } from '@/components/reactify/toggle-switch';
-import { useState } from 'react'; // For controlled component
-
-function MyToggleComponent() {
-  const [isEnabled, setIsEnabled] = useState(false);
-
-  return (
-    <ReactifyToggleSwitch
-      id="myToggle"
-      label="Enable Feature"
-      checked={isEnabled}
-      onChange={(e) => setIsEnabled(e.target.checked)}
-      labelPosition="right" // "left" or "right"
-      size="md" // "sm", "md", "lg"
-    />
-  );
-}
-
-// Disabled state
-// <ReactifyToggleSwitch id="disabledToggle" label="Cannot Change" disabled checked />
-  `,
-    accessibilityNotes: [
-      "Uses a hidden checkbox input with \`role='switch'\` and \`aria-checked\` for accessibility.",
-      "Associated with a visible label via \`htmlFor\` and \`id\`.",
-      "Focus indicators are important and handled by default styles.",
-      "State (on/off) is clearly communicated visually and to assistive technologies.",
-    ]
-  },
-  {
-    id: 'tooltip',
-    name: 'Tooltip',
-    icon: <Info />,
-    demo: <ReactifyTooltipDemo />,
-    codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `
-import { ReactifyTooltip } from '@/components/reactify/tooltip';
-import { ReactifyButton } from '@/components/reactify/button'; // Example trigger
-import { Info } from 'lucide-react'; // Example icon trigger
-
-// Tooltip on a button
-<ReactifyTooltip content="This button performs an action.">
-  <ReactifyButton variant="outline">Hover Me</ReactifyButton>
-</ReactifyTooltip>
-
-// Tooltip on an icon
-<ReactifyTooltip content="More information available here." position="right" delay={500}>
-  <Info className="cursor-pointer" />
-</ReactifyTooltip>
-
-// Tooltip with JSX content
-<ReactifyTooltip content={<div><p>Rich content!</p><em>Supports HTML</em></div>} position="bottom">
-  <span>Hover for rich tooltip</span>
-</ReactifyTooltip>
-
-// Positions: "top" (default), "bottom", "left", "right"
-// Delay prop (in ms) for appearance delay
-  `,
-    accessibilityNotes: [
-      "Tooltip has \`role='tooltip'\`.",
-      "Trigger element should be focusable. If wrapping non-focusable elements, the Tooltip wrapper itself becomes focusable.",
-      "Tooltip visibility is controllable via hover and focus.",
-      "Content is announced by screen readers when the trigger receives focus or hover.",
-      "Ensure tooltips provide non-essential, supplementary information. Critical information should be visible by default.",
-    ]
-  },
+const displayCategories: Array<{ id: ComponentCategory; title: string }> = [
+  { id: 'standard', title: 'Standard Components' },
+  { id: 'charts', title: 'Charts' },
+  { id: 'advanced', title: 'Advanced Tools' },
 ];
 
 export default function ComponentsPage() {
@@ -1008,24 +204,21 @@ export default function ComponentsPage() {
 
   const activeComponentDetails = components.find(comp => comp.id === selectedComponentId);
 
-  // Sort components alphabetically by name for the sidebar
-  const sortedComponents = [...components].sort((a, b) => a.name.localeCompare(b.name));
-
-  const filteredComponents = sortedComponents.filter(component =>
+  const sortedComponentsByName = [...components].sort((a, b) => a.name.localeCompare(b.name));
+  
+  const globallyFilteredComponents = sortedComponentsByName.filter(component =>
     component.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // If the currently selected component is filtered out, try to select the first one from the filtered list
   React.useEffect(() => {
-    if (filteredComponents.length > 0 && !filteredComponents.find(comp => comp.id === selectedComponentId)) {
-      setSelectedComponentId(filteredComponents[0].id);
-    } else if (filteredComponents.length === 0 && components.length > 0) {
-      // If search yields no results, maybe clear selection or keep current if it was valid before search
-      // For now, let's keep the behavior simple: if selected is filtered out, select first available.
-      // If no results, selectedComponentId might become invalid if it was part of the filtered list.
-      // This logic will re-select if active is filtered. If search is cleared, it will re-evaluate.
+    if (globallyFilteredComponents.length > 0 && !globallyFilteredComponents.find(comp => comp.id === selectedComponentId)) {
+      setSelectedComponentId(globallyFilteredComponents[0].id);
+    } else if (globallyFilteredComponents.length === 0 && components.length > 0 && selectedComponentId) {
+      // If search yields no results, and a component was selected, clear selection or keep?
+      // For now, if current selection is filtered out, try to select first of global filter.
+      // If global filter is empty, it means nothing matches search.
     }
-  }, [searchTerm, selectedComponentId, filteredComponents]);
+  }, [searchTerm, selectedComponentId, globallyFilteredComponents]);
 
 
   return (
@@ -1034,11 +227,11 @@ export default function ComponentsPage() {
         <Sidebar collapsible="icon" className="border-r">
           <SidebarHeader className="p-4 flex flex-col gap-3">
             <div className="w-full flex items-center justify-between">
-              <h2 className="font-headline text-lg font-semibold group-data-[collapsible=icon]:hidden mt-[70px]">Components</h2>
+              <h2 className="font-headline text-lg font-semibold group-data-[collapsible=icon]:hidden mt-[70px]">Categories</h2>
             </div>
             <div className="group-data-[collapsible=icon]:hidden">
               <SidebarInput
-                placeholder="Search components..."
+                placeholder="Search all components..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -1046,21 +239,41 @@ export default function ComponentsPage() {
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu className="px-4 pt-2">
-              {filteredComponents.map((component) => (
-                <SidebarMenuItem key={component.id}>
-                  <SidebarMenuButton
-                    onClick={() => setSelectedComponentId(component.id)}
-                    isActive={selectedComponentId === component.id}
-                    tooltip={{ children: component.name, side: 'right' }}
-                  >
-                    {React.cloneElement(component.icon, { className: 'h-5 w-5' })}
-                    <span className="group-data-[collapsible=icon]:hidden">{component.name}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-              {filteredComponents.length === 0 && searchTerm && (
+              {displayCategories.map(category => {
+                const componentsInCategory = globallyFilteredComponents.filter(
+                  comp => comp.category === category.id
+                );
+                return (
+                  <div key={category.id} className="mb-4">
+                    <h3 className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider group-data-[collapsible=icon]:hidden">
+                      {category.title}
+                    </h3>
+                    {componentsInCategory.length > 0 ? (
+                      componentsInCategory.map((component) => (
+                        <SidebarMenuItem key={component.id}>
+                          <SidebarMenuButton
+                            onClick={() => setSelectedComponentId(component.id)}
+                            isActive={selectedComponentId === component.id}
+                            tooltip={{ children: component.name, side: 'right' }}
+                          >
+                            {React.cloneElement(component.icon, { className: 'h-5 w-5' })}
+                            <span className="group-data-[collapsible=icon]:hidden">{component.name}</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))
+                    ) : (
+                      searchTerm && (
+                        <div className="px-2 py-1 text-sm text-muted-foreground group-data-[collapsible=icon]:hidden">
+                          No matching components in this category.
+                        </div>
+                      )
+                    )}
+                  </div>
+                );
+              })}
+               {globallyFilteredComponents.length === 0 && searchTerm && (
                 <div className="p-4 text-sm text-muted-foreground text-center group-data-[collapsible=icon]:hidden">
-                  No components found.
+                  No components match your search.
                 </div>
               )}
             </SidebarMenu>
@@ -1069,11 +282,11 @@ export default function ComponentsPage() {
         <SidebarInset>
           <div className="p-4 md:p-8">
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-3xl font-headline font-bold">Advanced Component Library</h1>
+              <h1 className="text-3xl font-headline font-bold">Reactify Component Showcase</h1>
               <SidebarTrigger className="md:hidden" />
             </div>
             <p className="text-muted-foreground mb-8">
-              Explore our collection of reusable, unstyled UI components. Each component is designed for accessibility and can be easily themed.
+              Explore our versatile collection of UI components, from standard elements to advanced tools. Each is designed for reusability, accessibility, and easy theming.
             </p>
             {activeComponentDetails ? (
               <div key={activeComponentDetails.id} className="mb-12">
@@ -1089,9 +302,8 @@ export default function ComponentsPage() {
               </div>
             ) : (
               <p className="text-muted-foreground text-center py-10">
-                {components.length > 0 && searchTerm && filteredComponents.length === 0 
-                  ? "No components match your search." 
-                  : (components.length > 0 ? "Select a component from the sidebar or clear your search." : "No components to display.")
+                {globallyFilteredComponents.length > 0 ? "Select a component from the sidebar to view its details." :
+                 (searchTerm ? "No components match your search term." : "No components available to display.")
                 }
               </p>
             )}
@@ -1101,4 +313,3 @@ export default function ComponentsPage() {
     </SidebarProvider>
   );
 }
-
