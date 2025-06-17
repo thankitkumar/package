@@ -164,7 +164,7 @@ const stackedDataKeys: BarChartDataKey[] = [
       "Ensure charts have descriptive titles or surrounding text for context (e.g., using CardHeader).",
       "Provide sufficient color contrast for bars and text elements (colors are from theme via ChartConfig).",
       "Consider providing data in an alternative format (e.g., a table) for users who cannot perceive the chart visually.",
-      "Tooltips should be keyboard accessible (Recharts default behavior). `accessibilityLayer` prop is active.",
+      "Tooltips should be keyboard accessible (Recharts default behavior). \`accessibilityLayer\` prop is active.",
     ],
   },
   {
@@ -172,7 +172,7 @@ const stackedDataKeys: BarChartDataKey[] = [
     name: 'Bubble Chart',
     icon: <ScatterChart />,
     demo: <ReactifyBubbleChartDemo />,
-    codeBlockScrollAreaClassName: 'max-h-[600px]', // Bubble chart code can be longer
+    codeBlockScrollAreaClassName: "max-h-none", 
     codeExample: `
 import { ReactifyBubbleChart } from '@/components/reactify/charts/reactify-bubble-chart';
 import type { ChartConfig } from '@/components/ui/chart';
@@ -521,7 +521,7 @@ const dataKeys: LineChartDataKey[] = [
       "Provide sufficient color contrast for lines, points, and text elements.",
       "Data points and lines should be distinguishable, especially for users with color vision deficiencies (consider using different line styles or point shapes if colors are too similar).",
       "Consider providing data in an alternative format (e.g., a table).",
-      "Tooltips should be keyboard accessible. `accessibilityLayer` prop is active.",
+      "Tooltips should be keyboard accessible. \`accessibilityLayer\` prop is active.",
     ],
   },
   {
