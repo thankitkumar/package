@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger, SidebarInput } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
 import { 
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
@@ -935,23 +935,49 @@ import { Info } from 'lucide-react'; // Example icon trigger
 
 export default function ComponentsPage() {
   const [selectedComponentId, setSelectedComponentId] = useState<string>(components[0]?.id ?? '');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const activeComponentDetails = components.find(comp => comp.id === selectedComponentId);
 
   // Sort components alphabetically by name for the sidebar
   const sortedComponents = [...components].sort((a, b) => a.name.localeCompare(b.name));
 
+  const filteredComponents = sortedComponents.filter(component =>
+    component.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // If the currently selected component is filtered out, try to select the first one from the filtered list
+  React.useEffect(() => {
+    if (filteredComponents.length > 0 && !filteredComponents.find(comp => comp.id === selectedComponentId)) {
+      setSelectedComponentId(filteredComponents[0].id);
+    } else if (filteredComponents.length === 0 && components.length > 0) {
+      // If search yields no results, maybe clear selection or keep current if it was valid before search
+      // For now, let's keep the behavior simple: if selected is filtered out, select first available.
+      // If no results, selectedComponentId might become invalid if it was part of the filtered list.
+      // This logic will re-select if active is filtered. If search is cleared, it will re-evaluate.
+    }
+  }, [searchTerm, selectedComponentId, filteredComponents]);
+
 
   return (
     <SidebarProvider defaultOpen>
       <div className="flex min-h-[calc(100vh-4rem)]">
         <Sidebar collapsible="icon" className="border-r">
-          <SidebarHeader className="p-4 flex items-center justify-between">
-            <h2 className="font-headline text-lg font-semibold group-data-[collapsible=icon]:hidden mt-[70px]">Components</h2>
+          <SidebarHeader className="p-4 flex flex-col gap-3">
+            <div className="w-full flex items-center justify-between">
+              <h2 className="font-headline text-lg font-semibold group-data-[collapsible=icon]:hidden mt-[70px]">Components</h2>
+            </div>
+            <div className="group-data-[collapsible=icon]:hidden">
+              <SidebarInput
+                placeholder="Search components..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
-              {sortedComponents.map((component) => (
+              {filteredComponents.map((component) => (
                 <SidebarMenuItem key={component.id}>
                   <SidebarMenuButton
                     onClick={() => setSelectedComponentId(component.id)}
@@ -963,6 +989,11 @@ export default function ComponentsPage() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {filteredComponents.length === 0 && searchTerm && (
+                <div className="p-4 text-sm text-muted-foreground text-center group-data-[collapsible=icon]:hidden">
+                  No components found.
+                </div>
+              )}
             </SidebarMenu>
           </SidebarContent>
         </Sidebar>
@@ -989,7 +1020,10 @@ export default function ComponentsPage() {
               </div>
             ) : (
               <p className="text-muted-foreground text-center py-10">
-                {components.length > 0 ? "Select a component from the sidebar to view its details." : "No components to display."}
+                {components.length > 0 && searchTerm && filteredComponents.length === 0 
+                  ? "No components match your search." 
+                  : (components.length > 0 ? "Select a component from the sidebar or clear your search." : "No components to display.")
+                }
               </p>
             )}
           </div>
@@ -998,3 +1032,4 @@ export default function ComponentsPage() {
     </SidebarProvider>
   );
 }
+
