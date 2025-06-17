@@ -15,10 +15,10 @@ export interface ColumnDef<TData extends Record<string, any>> {
   key: keyof TData | string;
   header: ReactNode;
   cell?: (row: TData, rowIndex: number) => ReactNode;
-  enableResizing?: boolean;
-  enableReordering?: boolean;
+  enableResizing?: boolean; // Defaults to true if not specified
+  enableReordering?: boolean; // Defaults to true if not specified
   minWidth?: number;
-  width?: number; // Initial width, will become controlled by internal state
+  width?: number;
 }
 
 interface AdvancedTableSpecificProps<TData extends Record<string, any>> {
@@ -32,6 +32,8 @@ interface AdvancedTableSpecificProps<TData extends Record<string, any>> {
   pageSize?: number;
   onPageSizeChange?: (size: number) => void;
   availablePageSizes?: number[];
+  enableColumnResizing?: boolean; // Global flag for table-wide resizing
+  enableColumnReordering?: boolean; // Global flag for table-wide reordering
   onColumnOrderChange?: (newOrder: string[]) => void;
   onColumnResize?: (columnKey: string, newWidth: number) => void;
   onFilterChange?: (filters: any) => void;
@@ -56,6 +58,8 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
     pageSize = 10,
     onPageSizeChange,
     availablePageSizes = [10, 20, 50, 100],
+    enableColumnResizing = true, // Global table prop, defaults to true
+    enableColumnReordering = true, // Global table prop, defaults to true
     onColumnOrderChange,
     onColumnResize,
     onRowClick,
@@ -89,8 +93,8 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
       if (!resizingColumn) return;
       const diffX = event.clientX - resizingColumn.startX;
       let newWidth = resizingColumn.startWidth + diffX;
-      const colDef = initialColumns.find(c => String(c.key) === resizingColumn.key);
-      const minWidth = colDef?.minWidth || 50;
+      const colDefFromInitial = initialColumns.find(c => String(c.key) === resizingColumn.key);
+      const minWidth = colDefFromInitial?.minWidth || 50;
       if (newWidth < minWidth) {
         newWidth = minWidth;
       }
@@ -147,7 +151,6 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
     const targetTh = event.currentTarget as HTMLTableCellElement;
     targetTh.removeAttribute('data-dragging');
 
-
     if (sourceKey && sourceKey !== dropKey) {
       let newOrder = [...columnOrder];
       const sourceIndex = newOrder.indexOf(sourceKey);
@@ -177,12 +180,16 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
 
   const currentOrderedColumns = useMemo(() => {
     return initialColumns
-      .map(col => ({
-        ...col,
-        enableResizing: col.enableResizing !== false,
-        enableReordering: col.enableReordering !== false,
-        currentWidth: columnWidths[String(col.key)] || col.width || 150,
-      }))
+      .map(col => {
+        const perColumnResizingEnabled = col.enableResizing !== false;
+        const perColumnReorderingEnabled = col.enableReordering !== false;
+        return {
+          ...col,
+          isEffectivelyResizable: enableColumnResizing && perColumnResizingEnabled,
+          isEffectivelyReorderable: enableColumnReordering && perColumnReorderingEnabled,
+          currentWidth: columnWidths[String(col.key)] || col.width || 150,
+        };
+      })
       .sort((a, b) => {
         const aIndex = columnOrder.indexOf(String(a.key));
         const bIndex = columnOrder.indexOf(String(b.key));
@@ -191,7 +198,7 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
         if (bIndex === -1) return -1;
         return aIndex - bIndex;
       });
-  }, [initialColumns, columnOrder, columnWidths]);
+  }, [initialColumns, columnOrder, columnWidths, enableColumnResizing, enableColumnReordering]);
 
 
   const handlePreviousPage = () => {
@@ -236,20 +243,20 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
                   data-key={String(colDef.key)}
                   className={cn(
                     "relative group whitespace-nowrap",
-                    colDef.enableReordering && "cursor-grab",
+                    colDef.isEffectivelyReorderable && "cursor-grab",
                     draggedColumnKey === String(colDef.key) && "opacity-50"
                   )}
                   style={{ width: colDef.currentWidth, minWidth: colDef.minWidth }}
-                  draggable={colDef.enableReordering}
-                  onDragStart={(e) => colDef.enableReordering && handleDragStart(e, String(colDef.key))}
-                  onDragOver={(e) => colDef.enableReordering && handleDragOver(e, String(colDef.key))}
-                  onDrop={(e) => colDef.enableReordering && handleDrop(e, String(colDef.key))}
-                  onDragEnd={(e) => colDef.enableReordering && handleDragEnd(e)}
-                  onDragLeave={(e) => colDef.enableReordering && handleDragLeave(e)} // Added back for clearing indicator when leaving a cell
+                  draggable={colDef.isEffectivelyReorderable}
+                  onDragStart={(e) => colDef.isEffectivelyReorderable && handleDragStart(e, String(colDef.key))}
+                  onDragOver={(e) => colDef.isEffectivelyReorderable && handleDragOver(e, String(colDef.key))}
+                  onDrop={(e) => colDef.isEffectivelyReorderable && handleDrop(e, String(colDef.key))}
+                  onDragEnd={(e) => colDef.isEffectivelyReorderable && handleDragEnd(e)}
+                  onDragLeave={(e) => colDef.isEffectivelyReorderable && handleDragLeave(e)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
-                      {colDef.enableReordering && (
+                      {colDef.isEffectivelyReorderable && (
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -264,14 +271,14 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
                       {colDef.header}
                     </div>
                   </div>
-                   {colDef.enableResizing && (
+                   {colDef.isEffectivelyResizable && (
                     <div
                         onMouseDown={(e) => handleResizeMouseDown(String(colDef.key), e)}
                         className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize select-none touch-none opacity-0 group-hover:opacity-100 bg-primary/30 transition-opacity z-10"
                         title="Resize column"
                     />
                    )}
-                   {dropTargetInfo && dropTargetInfo.targetKey === String(colDef.key) && draggedColumnKey && draggedColumnKey !== String(colDef.key) && (
+                   {dropTargetInfo && dropTargetInfo.targetKey === String(colDef.key) && draggedColumnKey && draggedColumnKey !== String(colDef.key) && colDef.isEffectivelyReorderable && (
                     <div
                         className={cn(
                         "absolute top-0 bottom-0 w-0.5 bg-primary z-20 pointer-events-none",
@@ -308,7 +315,7 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
                     <TableCell
                       key={`cell-${String(colDef.key)}-${(row as any).id || rowIndex}`}
                       className="whitespace-nowrap"
-                      style={{ width: colDef.currentWidth, minWidth: colDef.minWidth }} // Apply width to cells for consistency
+                      style={{ width: colDef.currentWidth, minWidth: colDef.minWidth }}
                     >
                       {colDef.cell ? colDef.cell(row, rowIndex) : String(row[colDef.key as keyof TData] ?? '')}
                     </TableCell>
@@ -378,3 +385,4 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
     </div>
   );
 }
+
