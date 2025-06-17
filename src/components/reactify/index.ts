@@ -16,5 +16,8 @@ export * from './sidebar';
 export * from './login-form';
 export * from './signup-form';
 export * from './forgot-password-form';
+export * from './avatar';
+export * from './radio-group';
+export * from './toggle-switch';
 export * from './common-props';
 export * from './utils';
