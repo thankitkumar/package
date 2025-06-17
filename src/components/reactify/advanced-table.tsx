@@ -1,14 +1,13 @@
 
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useState, type ReactNode, type HTMLAttributes } from 'react';
 import { cn } from './utils';
-import type { ReactifyComponentProps } from './common-props';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell, TableCaption } from '@/components/ui/table';
 import { ReactifyButton } from './button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { GripVertical, ArrowUpDown, Filter, Columns, ChevronLeft, ChevronRight, PlusCircle } from 'lucide-react';
+import { GripVertical, Filter, Columns, ChevronLeft, ChevronRight, PlusCircle } from 'lucide-react';
 
 export interface ColumnDef<TData> {
   key: keyof TData | string;
@@ -20,8 +19,6 @@ export interface ColumnDef<TData> {
   width?: number | string;
 }
 
-// Interface for props specific to AdvancedTable, excluding 'as' and 'children' from ReactifyComponentProps
-// but keeping other HTMLAttributes like 'className', 'id', 'style', etc.
 interface AdvancedTableSpecificProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
@@ -33,23 +30,18 @@ interface AdvancedTableSpecificProps<TData> {
   pageSize?: number;
   onPageSizeChange?: (size: number) => void;
   availablePageSizes?: number[];
-  onColumnOrderChange?: (newOrder: string[]) => void;
-  onColumnResize?: (columnKey: string, newWidth: number) => void;
-  onFilterChange?: (filters: any) => void;
+  onColumnOrderChange?: (newOrder: string[]) => void; // Placeholder
+  onColumnResize?: (columnKey: string, newWidth: number) => void; // Placeholder
+  onFilterChange?: (filters: any) => void; // Placeholder
   onRowClick?: (row: TData) => void;
 }
 
-// Combine ReactifyComponentProps (excluding 'as' and 'children' for this component's root)
-// with specific table props.
-interface ReactifyAdvancedTableProps<TData>
-  extends Omit<ReactifyComponentProps, 'as' | 'children'>, AdvancedTableSpecificProps<TData> {}
+interface ReactifyAdvancedTableProps<TData extends Record<string, any>>
+  extends AdvancedTableSpecificProps<TData>,
+          Omit<HTMLAttributes<HTMLDivElement>, 'children'> {}
 
 
-export function ReactifyAdvancedTable<TData extends object>({
-  // Destructure className from ReactifyComponentProps (via Omit)
-  className,
-
-  // Destructure all specific table props
+export function ReactifyAdvancedTable<TData extends Record<string, any>>({
   columns: initialColumns,
   data,
   caption,
@@ -64,11 +56,9 @@ export function ReactifyAdvancedTable<TData extends object>({
   onColumnResize,
   onFilterChange,
   onRowClick,
-
-  // Collect remaining props, which should now only be HTMLAttributes from ReactifyComponentProps
-  ...htmlAttributes 
-}: ReactifyAdvancedTableProps<TData>) {
-
+  className,
+  ...htmlDivAttributes // Collect remaining props for the div
+}: ReactifyAdvancedTableProps<TData>): JSX.Element {
   const [columns, setColumns] = useState(initialColumns);
 
   const handlePreviousPage = () => {
@@ -84,7 +74,7 @@ export function ReactifyAdvancedTable<TData extends object>({
   };
 
   return (
-    <div className={cn("space-y-4", className)} {...htmlAttributes}>
+    <div className={cn("space-y-4", className)} {...htmlDivAttributes}>
       {/* Toolbar Placeholder */}
       <div className="flex flex-wrap items-center justify-between gap-4 p-2 border-b">
         <div className="flex items-center gap-2">
@@ -103,6 +93,7 @@ export function ReactifyAdvancedTable<TData extends object>({
         </div>
       </div>
 
+      {/* Table Area */}
       <div className="overflow-x-auto border rounded-md">
         <Table>
           {caption && <TableCaption>{caption}</TableCaption>}
@@ -143,9 +134,13 @@ export function ReactifyAdvancedTable<TData extends object>({
               ))
             ) : data.length > 0 ? (
               data.map((row, rowIndex) => (
-                <TableRow key={`row-${rowIndex}`} onClick={() => onRowClick?.(row)} className={cn(onRowClick && "cursor-pointer")}>
+                <TableRow 
+                  key={`row-${row.id || rowIndex}`} 
+                  onClick={() => onRowClick?.(row)} 
+                  className={cn(onRowClick && "cursor-pointer")}
+                >
                   {columns.map((col) => (
-                    <TableCell key={`cell-${String(col.key)}-${rowIndex}`} className="whitespace-nowrap">
+                    <TableCell key={`cell-${String(col.key)}-${row.id || rowIndex}`} className="whitespace-nowrap">
                       {col.cell ? col.cell(row, rowIndex) : String(row[col.key as keyof TData] ?? '')}
                     </TableCell>
                   ))}
@@ -162,6 +157,7 @@ export function ReactifyAdvancedTable<TData extends object>({
         </Table>
       </div>
 
+      {/* Pagination Controls */}
       {pageCount > 1 && onPageChange && (
         <div className="flex items-center justify-between pt-3 flex-wrap gap-4">
           <div className="text-sm text-muted-foreground">
