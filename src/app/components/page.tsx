@@ -7,7 +7,7 @@ import { ComponentDisplay } from './_components/component-display';
 import {
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
   MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox, Bell,
-  PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
+  PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft, ToggleRight, // Added ToggleRight
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
   Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2, Table2,
   Command as CommandIcon
@@ -45,6 +45,9 @@ import ReactifyNetworkAwareDemo from './_components/reactify-network-aware-demo'
 import ReactifySmartEmptyStateDemo from './_components/reactify-smart-empty-state-demo';
 import ReactifyAdvancedTableDemo from './_components/reactify-advanced-table-demo';
 import ReactifyKeyboardShortcutManagerDemo from './_components/reactify-keyboard-shortcut-manager-demo';
+import { ReactifyCard, ReactifyCardContent, ReactifyCardHeader, ReactifyCardTitle } from '@/components/reactify/card';
+import Link from 'next/link';
+import { ReactifyButton } from '@/components/reactify/button';
 
 
 type ComponentCategory = 'standard' | 'charts' | 'advanced';
@@ -1218,9 +1221,9 @@ function MyTablePage() {
       pageSize={pageSize}
       onPageSizeChange={setPageSize}
       caption="List of items"
-      // Optional global controls:
-      // enableColumnResizing={true} 
-      // enableColumnReordering={true}
+      enableColumnResizing={true} // Global toggle
+      enableColumnReordering={true} // Global toggle
+      // Optional callbacks:
       // onColumnOrderChange={(newOrder) => console.log('New column order:', newOrder)}
       // onColumnResize={(key, width) => console.log(\`Column \${key} resized to \${width}\`)}
     />
@@ -1231,10 +1234,75 @@ function MyTablePage() {
       "Tables should use proper HTML semantics (\`<table>\`, \`<thead>\`, \`<tbody>\`, \`<th>\`, \`<td>\`).",
       "\`<th>\` elements should have a \`scope\` attribute (\`col\` or \`row\`). The component implies scope='col'.",
       "Interactive elements within the table (sorting buttons, action buttons in cells, resize handles, drag handles) must be keyboard accessible and properly labeled (e.g., using \`aria-label\` or visually hidden text).",
-      "For column resizing and reordering, ensure ARIA attributes are used to announce states and provide keyboard alternatives if drag-and-drop is not accessible to all users. (Keyboard alternatives are not yet implemented in this version).",
+      "For column resizing and reordering, ensure ARIA attributes are used to announce states and provide keyboard alternatives if drag-and-drop is not accessible to all users. (Keyboard alternatives for reordering are not yet implemented in this version).",
       "Pagination controls should be clearly labeled and operable via keyboard.",
       "Loading states should be announced (e.g., \`aria-busy\`).",
       "Ensure sufficient color contrast for text and interactive elements.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+   {
+    id: 'feature-flag-manager',
+    name: 'Feature Flag Manager',
+    icon: <ToggleRight />,
+    category: 'advanced',
+    demo: (
+      <ReactifyCard>
+        <ReactifyCardHeader>
+          <ReactifyCardTitle>Feature Flag Management Tool</ReactifyCardTitle>
+        </ReactifyCardHeader>
+        <ReactifyCardContent className="text-center">
+          <p className="text-muted-foreground mb-4">
+            This tool demonstrates viewing, toggling, and simulating the configuration of feature flags.
+          </p>
+          <ReactifyButton asChild>
+            <Link href="/advanced-tools/feature-flag-manager">
+              Open Feature Flag Manager
+            </Link>
+          </ReactifyButton>
+        </ReactifyCardContent>
+      </ReactifyCard>
+    ),
+    codeExample: `
+// In src/contexts/feature-flag-context.tsx (simplified example)
+export interface FeatureFlag {
+  id: string;
+  name: string;
+  description: string;
+  isEnabled: boolean;
+  rolloutConditions: Array<{ type: string; value: any; description: string; }>;
+}
+
+// In your page/component using the context
+import { useFeatureFlags } from '@/hooks/use-feature-flags';
+
+function MyComponentUsingFlags() {
+  const { featureFlags, toggleFlag, isFlagEnabled } = useFeatureFlags();
+  const showNewFeature = isFlagEnabled('new-feature-id');
+
+  return (
+    <div>
+      {showNewFeature && <p>The new feature is ON!</p>}
+      {/* UI to list and toggle flags would use featureFlags and toggleFlag */}
+    </div>
+  );
+}
+
+// Ensure FeatureFlagProvider is in your _app.tsx or layout.tsx
+// <FeatureFlagProvider>
+//   <YourApp />
+// </FeatureFlagProvider>
+
+// The actual dashboard UI is in:
+// src/app/advanced-tools/feature-flag-manager/page.tsx
+// src/app/advanced-tools/feature-flag-manager/_components/feature-flag-dashboard.tsx
+`,
+    accessibilityNotes: [
+      "Ensure toggle switches for flags are properly labeled with \`aria-label\` or associated visible labels.",
+      "The dashboard UI should be keyboard navigable.",
+      "Modal dialogs for editing conditions must trap focus and be dismissible via Escape key.",
+      "Clearly indicate the current status of each flag.",
+      "Provide descriptive text for rollout conditions.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },

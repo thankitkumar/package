@@ -17,6 +17,7 @@ const navItems = [
     subPaths: ['/auth-demo/signup', '/auth-demo/forgot-password']
   },
   { href: '/auth-demo/roles', label: 'Role-Based Demo'},
+  { href: '/advanced-tools/feature-flag-manager', label: 'Feature Flags'}, // Updated link
   { href: '/docs', label: 'Docs' },
 ];
 
@@ -34,8 +35,8 @@ export function MainNav() {
         let isActive = false;
         if (isMounted) {
           if (item.href === '/auth-demo/login') {
-            isActive = pathname.startsWith('/auth-demo') && !pathname.startsWith('/auth-demo/roles');
-          } else if (item.href === '/auth-demo/roles') {
+            isActive = pathname.startsWith('/auth-demo') && !pathname.startsWith('/auth-demo/roles') && !pathname.startsWith('/advanced-tools');
+          } else if (item.href === '/auth-demo/roles' || item.href === '/advanced-tools/feature-flag-manager') {
             isActive = pathname === item.href;
           }
           else {
