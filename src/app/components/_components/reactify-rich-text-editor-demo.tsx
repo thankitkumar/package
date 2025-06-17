@@ -51,7 +51,7 @@ export default function ReactifyRichTextEditorDemo() {
         <div className="space-y-4 mt-6">
           <div>
             <h3 className="font-semibold text-lg mb-2">Editor Output (HTML)</h3>
-            <CodeBlock code={editorContentHtml} lang="html" scrollAreaClassName="max-h-60" />
+            <CodeBlock code={editorContentHtml} lang="html" scrollAreaClassName="max-h-none" />
           </div>
           <div>
             <h3 className="font-semibold text-lg mb-2">Editor Output (JSON - TipTap format)</h3>
@@ -74,3 +74,4 @@ export default function ReactifyRichTextEditorDemo() {
     </Card>
   );
 }
+
