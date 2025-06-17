@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ThemeSwitcher } from './_components/theme-switcher';
 import { ReactifyButton } from '@/components/reactify/button';
