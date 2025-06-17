@@ -66,7 +66,7 @@ export default function ReactifyRichTextEditorDemo() {
             <CodeBlock 
                 code={editorContentJson ? JSON.stringify(editorContentJson, null, 2) : 'No JSON content yet. Type in the editor.'} 
                 lang="json" 
-                scrollAreaClassName="max-h-60"
+                scrollAreaClassName="max-h-none"
             />
           </div>
         </div>
@@ -74,4 +74,5 @@ export default function ReactifyRichTextEditorDemo() {
     </Card>
   );
 }
+
 
