@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const TransformEditorTextInputSchema = z.object({
+const TransformEditorTextInputSchema = z.object({
   text: z.string().describe('The text content to be transformed.'),
   transformationType: z
     .enum(['summarize', 'makeFormal', 'suggestHeadline'])
@@ -21,7 +21,7 @@ export const TransformEditorTextInputSchema = z.object({
 });
 export type TransformEditorTextInput = z.infer<typeof TransformEditorTextInputSchema>;
 
-export const TransformEditorTextOutputSchema = z.object({
+const TransformEditorTextOutputSchema = z.object({
   transformedText: z
     .string()
     .describe('The text after the specified transformation has been applied.'),
