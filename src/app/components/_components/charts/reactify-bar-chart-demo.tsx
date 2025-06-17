@@ -42,10 +42,11 @@ const stackedConfig = {
   inactive: { label: 'Inactive', color: 'hsl(var(--chart-3))' },
 } satisfies ChartConfig;
 
+// Radius array is [topLeft, topRight, bottomRight, bottomLeft]
 const stackedDataKeys: BarChartDataKey[] = [
-  { key: 'new', stackId: 'a', radius: [0,0,0,0] },
-  { key: 'returning', stackId: 'a', radius: [0,0,0,0] },
-  { key: 'inactive', stackId: 'a', radius: [4,4,0,0] }, // Topmost stack has radius
+  { key: 'new', stackId: 'a', radius: [0,0,4,4] },      // Bottom-most bar: round bottom-left and bottom-right corners
+  { key: 'returning', stackId: 'a', radius: [0,0,0,0] }, // Middle bar: no rounding
+  { key: 'inactive', stackId: 'a', radius: [4,4,0,0] }, // Top-most bar: round top-left and top-right corners
 ];
 
 const horizontalData = [
@@ -88,7 +89,7 @@ export default function ReactifyBarChartDemo() {
       <Card>
         <CardHeader>
           <CardTitle>Stacked Bar Chart</CardTitle>
-          <CardDescription>User segments over time. (Vertical Layout)</CardDescription>
+          <CardDescription>User segments over time. (Vertical Layout, Rounded Stack)</CardDescription>
         </CardHeader>
         <CardContent>
           <ReactifyBarChart
@@ -142,3 +143,4 @@ export default function ReactifyBarChartDemo() {
     </div>
   );
 }
+
