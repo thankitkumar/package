@@ -6,10 +6,10 @@ import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, S
 import { ComponentDisplay } from './_components/component-display';
 import {
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
-  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox, // Added Inbox
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
-  Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2
+  Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2, Table2
 } from 'lucide-react';
 
 import ReactifyAlertDemo from './_components/reactify-alert-demo';
@@ -41,6 +41,7 @@ import ReactifyFormWizardDemo from './_components/reactify-form-wizard-demo';
 import ReactifyProtectedContentDemo from './_components/reactify-protected-content-demo';
 import ReactifyNetworkAwareDemo from './_components/reactify-network-aware-demo';
 import ReactifySmartEmptyStateDemo from './_components/reactify-smart-empty-state-demo';
+import ReactifyAdvancedTableDemo from './_components/reactify-advanced-table-demo';
 
 type ComponentCategory = 'standard' | 'charts' | 'advanced';
 
@@ -1018,7 +1019,7 @@ function BubbleChartExample() {
       "Similar to Bar Chart, relies on Recharts' accessibility features.",
       "Descriptive axis labels (\`xAxisLabel\`, \`yAxisLabel\`) and series labels in \`config\` are crucial.",
       "The \`nameKey\` helps identify individual bubbles in tooltips.",
-      "The \`zKey\` (size) should also have a meaningful label in the \`config\` for tooltips (e.g., \`budget: { label: \"Budget ($K)\" }\`).",
+      "The \`zKey\` (size) should also have a meaningful label in the \`config\` for tooltips (e.g., \`budget: { label: \"Budget (\$K)\" }\`).",
       "Ensure color contrast. Bubble opacity/overlap can be a challenge; consider patterns or distinct outlines if series overlap significantly.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
@@ -1282,7 +1283,7 @@ export default function PageWithProtection() {
       "Ensure that when content appears or disappears dynamically based on roles, it doesn't cause layout shifts that disorient users.",
       "If significant sections of a page are hidden, consider if this impacts the overall page structure or navigation for assistive technologies. Usually, simple conditional rendering is fine.",
       "The `fallback` prop can be used to provide alternative content or an explanation if access is denied, which can be more user-friendly than just hiding content.",
-      "If content appearance/disappearance is frequent or based on rapid user interaction, consider using `aria-live` regions on a container to announce changes, though this is often not necessary for role-based access which changes less frequently.",
+      "If content appearance/disappearance is frequent or based on rapid user interaction, consider using \`aria-live\` regions on a container to announce changes, though this is often not necessary for role-based access which changes less frequently.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },
@@ -1434,6 +1435,94 @@ function MyListComponent() {
       "Icons used in the empty state should be decorative or have appropriate ARIA labels if they convey meaning not present in text.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
+    id: 'advanced-table',
+    name: 'Advanced Table',
+    icon: <Table2 />,
+    category: 'advanced',
+    demo: <ReactifyAdvancedTableDemo />,
+    codeExample: `
+import { ReactifyAdvancedTable, type ColumnDef } from '@/components/reactify/advanced-table';
+import { useState, useEffect, useMemo } from 'react';
+
+interface MyDataType {
+  id: number;
+  name: string;
+  email: string;
+  // ... other fields
+}
+
+// Sample data (in a real app, this would come from an API)
+const sampleData: MyDataType[] = [
+  { id: 1, name: 'Alice', email: 'alice@example.com' },
+  { id: 2, name: 'Bob', email: 'bob@example.com' },
+  // ... more items
+];
+
+function MyTablePage() {
+  const [data, setData] = useState<MyDataType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const pageCount = Math.ceil(totalItems / pageSize);
+
+  useEffect(() => {
+    // Simulate fetching paginated data
+    setIsLoading(true);
+    const fetchPage = () => {
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
+      // In real app, fetch from API: fetch(\`/api/data?page=\${currentPage}&limit=\${pageSize}\`)
+      setData(sampleData.slice(start, end));
+      setTotalItems(sampleData.length);
+      setIsLoading(false);
+    };
+    const timer = setTimeout(fetchPage, 500);
+    return () => clearTimeout(timer);
+  }, [currentPage, pageSize]);
+
+  const columns = useMemo((): ColumnDef<MyDataType>[] => [
+    { key: 'id', header: 'ID', width: 80 },
+    { key: 'name', header: 'Name', minWidth: 150 },
+    { key: 'email', header: 'Email', width: 250 },
+    // Example of custom cell rendering
+    { 
+      key: 'actions', 
+      header: 'Actions', 
+      cell: (row) => (
+        <button onClick={() => alert('Action for ' + row.name)}>Do Action</button>
+      ) 
+    }
+  ], []);
+
+  return (
+    <ReactifyAdvancedTable
+      columns={columns}
+      data={data}
+      isLoading={isLoading}
+      currentPage={currentPage}
+      pageCount={pageCount}
+      onPageChange={setCurrentPage}
+      pageSize={pageSize}
+      onPageSizeChange={setPageSize}
+      caption="List of items"
+    />
+  );
+}
+    `,
+    accessibilityNotes: [
+      "Tables should use proper HTML semantics (\`<table>\`, \`<thead>\`, \`<tbody>\`, \`<th>\`, \`<td>\`).",
+      "\`<th>\` elements should have a \`scope\` attribute (\`col\` or \`row\`).",
+      "Interactive elements within the table (sorting buttons, action buttons in cells) must be keyboard accessible and properly labeled.",
+      "For features like column resizing or reordering, ensure ARIA attributes are used to announce states and provide keyboard alternatives.",
+      "Pagination controls should be clearly labeled and operable via keyboard.",
+      "Loading states should be announced (e.g., \`aria-busy\`).",
+      "Ensure sufficient color contrast for text and interactive elements.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
   }
 ];
 
@@ -1559,4 +1648,3 @@ export default function ComponentsPage() {
     </SidebarProvider>
   );
 }
-

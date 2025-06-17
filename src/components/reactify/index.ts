@@ -31,6 +31,7 @@ export * from './form-wizard';
 export * from './protected-content';
 export * from './network-aware-wrapper';
 export * from './smart-empty-state';
+export * from './advanced-table';
 // Consider if useNetworkState hook should be exported for direct use:
 // export * from '../hooks/use-network-state'; 
 export * from './common-props';
