@@ -6,7 +6,7 @@ import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, S
 import { ComponentDisplay } from './_components/component-display';
 import { 
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, 
-  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Type,
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Type, FileText,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart
 } from 'lucide-react';
@@ -33,6 +33,7 @@ import ReactifyTooltipDemo from './_components/reactify-tooltip-demo';
 import ReactifyBarChartDemo from './_components/charts/reactify-bar-chart-demo';
 import ReactifyLineChartDemo from './_components/charts/reactify-line-chart-demo';
 import ReactifyBubbleChartDemo from './_components/charts/reactify-bubble-chart-demo';
+import ReactifyMarkdownEditorDemo from './_components/reactify-markdown-editor-demo';
 
 
 const components = [
@@ -523,6 +524,37 @@ const dataKeys: LineChartDataKey[] = [
       "Consider providing data in an alternative format (e.g., a table).",
       "Tooltips should be keyboard accessible. \`accessibilityLayer\` prop is active.",
     ],
+  },
+  {
+    id: 'markdown-editor',
+    name: 'Markdown Editor',
+    icon: <FileText />,
+    demo: <ReactifyMarkdownEditorDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyMarkdownEditor } from '@/components/reactify/markdown-editor';
+
+function MyMarkdownComponent() {
+  const [markdown, setMarkdown] = useState("# Hello World\\n\\nThis is **Markdown**.");
+
+  return (
+    <ReactifyMarkdownEditor
+      initialValue={markdown}
+      onValueChange={(newValue) => setMarkdown(newValue)}
+      textareaRows={8}
+    />
+  );
+}
+
+// The component provides a textarea for Markdown input and a basic live HTML preview.
+// Markdown parsing is extremely rudimentary due to no third-party library constraint.
+    `,
+    accessibilityNotes: [
+      "Ensure the textarea for Markdown input has an associated label.",
+      "The preview pane content is dynamically generated via \`dangerouslySetInnerHTML\`. Ensure that if interactive elements are ever generated (currently just links), they are keyboard accessible.",
+      "The rudimentary parser attempts basic sanitization (stripping script tags), but for any sensitive use case, a proper sanitization library would be essential if this component were to be enhanced.",
+      "Consider providing instructions or a legend for the supported Markdown syntax.",
+    ]
   },
   {
     id: 'modal',
