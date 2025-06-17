@@ -1,8 +1,8 @@
 
 'use client';
 
-import React, { useState, type ReactNode, type HTMLAttributes } from 'react';
-import { cn } from '@/lib/utils'; // Changed to project-standard alias
+import React, { useState, useMemo, type ReactNode, type HTMLAttributes } from 'react';
+import { cn } from '@/lib/utils'; // Using project-standard alias
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell, TableCaption } from '@/components/ui/table';
 import { ReactifyButton } from './button';
 import { Input } from '@/components/ui/input';
@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { GripVertical, Filter, Columns, ChevronLeft, ChevronRight, PlusCircle } from 'lucide-react';
 
 export interface ColumnDef<TData> {
-  key: keyof TData | string;
+  key: keyof TData | string; // string for action columns etc.
   header: ReactNode;
   cell?: (row: TData, rowIndex: number) => ReactNode;
   enableResizing?: boolean;
@@ -19,7 +19,7 @@ export interface ColumnDef<TData> {
   width?: number | string;
 }
 
-interface AdvancedTableSpecificProps<TData> {
+interface AdvancedTableSpecificProps<TData extends Record<string, any>> {
   columns: ColumnDef<TData>[];
   data: TData[];
   caption?: string;
@@ -36,9 +36,12 @@ interface AdvancedTableSpecificProps<TData> {
   onRowClick?: (row: TData) => void;
 }
 
+// Props for the ReactifyAdvancedTable component
+// It renders a div as its root, so it accepts div HTML attributes.
+// The 'children' prop is not used by the root div itself.
 interface ReactifyAdvancedTableProps<TData extends Record<string, any>>
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'children'>,
-          AdvancedTableSpecificProps<TData> {}
+  extends AdvancedTableSpecificProps<TData>,
+    Omit<HTMLAttributes<HTMLDivElement>, 'children'> {}
 
 export function ReactifyAdvancedTable<TData extends Record<string, any>>(
   props: ReactifyAdvancedTableProps<TData>
@@ -55,13 +58,14 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
     pageSize = 10,
     onPageSizeChange,
     availablePageSizes = [10, 20, 50, 100],
-    onColumnOrderChange,
-    onColumnResize,
-    onFilterChange,
+    onColumnOrderChange, // Placeholder for future use
+    onColumnResize,      // Placeholder for future use
+    onFilterChange,      // Placeholder for future use
     onRowClick,
     // Standard HTML attributes for the root div
     className,
-    ...htmlDivAttributes // Captures other HTML attributes like id, style, etc.
+    // Capture all other props that could be HTML attributes for the div
+    ...htmlDivAttributes
   } = props;
 
   const [columns, setColumns] = useState(initialColumns);
@@ -129,9 +133,9 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
           <TableBody>
             {isLoading ? (
               Array.from({ length: pageSize }).map((_, rowIndex) => (
-                <TableRow key={`skeleton-${rowIndex}`}>
-                  {columns.map((col) => (
-                    <TableCell key={`skeleton-cell-${String(col.key)}-${rowIndex}`}>
+                <TableRow key={`skeleton-row-${rowIndex}`}>
+                  {columns.map((col, colIndex) => (
+                    <TableCell key={`skeleton-cell-${String(col.key)}-${rowIndex}-${colIndex}`}>
                       <div className="h-5 bg-muted rounded animate-pulse"></div>
                     </TableCell>
                   ))}
@@ -140,7 +144,7 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
             ) : data.length > 0 ? (
               data.map((row, rowIndex) => (
                 <TableRow
-                  key={(row as any).id || `row-${rowIndex}`} // Use row.id if available
+                  key={(row as any).id || `row-${rowIndex}`}
                   onClick={() => onRowClick?.(row)}
                   className={cn(onRowClick && "cursor-pointer")}
                 >
