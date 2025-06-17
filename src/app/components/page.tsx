@@ -6,11 +6,11 @@ import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, S
 import { ComponentDisplay } from './_components/component-display';
 import {
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
-  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox,
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox, Bell, // Added Bell
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
   Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2, Table2,
-  Command as CommandIcon // Added for Shortcut Manager
+  Command as CommandIcon, LayoutList // Added LayoutList for Form Wizard Visualizer
 } from 'lucide-react';
 
 import ReactifyAlertDemo from './_components/reactify-alert-demo';
@@ -33,6 +33,7 @@ import ReactifyTabsDemo from './_components/reactify-tabs-demo';
 import ReactifyTextareaDemo from './_components/reactify-textarea-demo';
 import ReactifyToggleSwitchDemo from './_components/reactify-toggle-switch-demo';
 import ReactifyTooltipDemo from './_components/reactify-tooltip-demo';
+import ReactifyToasterDemo from './_components/reactify-toaster-demo'; // New import
 import ReactifyBarChartDemo from './_components/charts/reactify-bar-chart-demo';
 import ReactifyLineChartDemo from './_components/charts/reactify-line-chart-demo';
 import ReactifyBubbleChartDemo from './_components/charts/reactify-bubble-chart-demo';
@@ -44,6 +45,9 @@ import ReactifyNetworkAwareDemo from './_components/reactify-network-aware-demo'
 import ReactifySmartEmptyStateDemo from './_components/reactify-smart-empty-state-demo';
 import ReactifyAdvancedTableDemo from './_components/reactify-advanced-table-demo';
 import ReactifyKeyboardShortcutManagerDemo from './_components/reactify-keyboard-shortcut-manager-demo';
+import { ReactifyCard, ReactifyCardContent, ReactifyCardDescription, ReactifyCardHeader, ReactifyCardTitle } from '@/components/reactify/card';
+import Link from 'next/link';
+import { ReactifyButton } from '@/components/reactify/button';
 
 
 type ComponentCategory = 'standard' | 'charts' | 'advanced';
@@ -834,6 +838,77 @@ function TextareaExample() {
     codeBlockScrollAreaClassName: "max-h-none",
   },
   {
+    id: 'toaster',
+    name: 'Toaster (Notifications)',
+    icon: <Bell />,
+    category: 'standard',
+    demo: <ReactifyToasterDemo />,
+    codeExample: `
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button'; // Or ReactifyButton
+import { ToastAction } from "@/components/ui/toast";
+
+function MyComponentWithToasts() {
+  const { toast } = useToast();
+
+  return (
+    <div className="flex flex-col space-y-2">
+      <Button
+        onClick={() => {
+          toast({
+            title: "Basic Toast",
+            description: "This is a default notification.",
+          });
+        }}
+      >
+        Show Default Toast
+      </Button>
+
+      <Button
+        variant="destructive"
+        onClick={() => {
+          toast({
+            variant: "destructive",
+            title: "Error Occurred",
+            description: "Something went wrong with your request.",
+          });
+        }}
+      >
+        Show Destructive Toast
+      </Button>
+
+      <Button
+        variant="outline"
+        onClick={() => {
+          toast({
+            title: "Update Complete",
+            description: "Your profile has been updated.",
+            action: <ToastAction altText="Undo update" onClick={() => console.log('Undo toast action!')}>Undo</ToastAction>,
+          });
+        }}
+      >
+        Show Toast with Action
+      </Button>
+    </div>
+  );
+}
+
+// Ensure <Toaster /> is rendered in your root layout (e.g., src/app/layout.tsx)
+// import { Toaster } from "@/components/ui/toaster";
+// ...
+// <Toaster /> // This component renders all the toasts
+// ...
+`,
+    accessibilityNotes: [
+      "Toasts use `role='status'` or `role='alert'` (for destructive variant) to announce messages to screen readers.",
+      "They are designed to be non-intrusive and typically disappear after a timeout (default 5s).",
+      "If toasts contain actions, ensure the action buttons are clearly labeled (e.g., with `altText` for `ToastAction`) and keyboard accessible.",
+      "ShadCN's toast system is built on Radix UI's Toast primitive, which handles focus management and other accessibility concerns.",
+      "Ensure toast content is concise and provides clear information. Avoid overly long descriptions.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
     id: 'toggle-switch', name: 'Toggle Switch', icon: <ToggleLeft />, category: 'standard', demo: <ReactifyToggleSwitchDemo />,
     codeExample: `
 import { ReactifyToggleSwitch } from '@/components/reactify/toggle-switch';
@@ -1073,373 +1148,6 @@ function LineChartExample() {
   },
   // Advanced
   {
-    id: 'form-wizard', name: 'Form Wizard', icon: <ListChecks />, category: 'advanced', demo: <ReactifyFormWizardDemo />,
-    codeExample: `
-import { ReactifyFormWizard, type WizardStepConfig } from '@/components/reactify/form-wizard';
-import { z } from 'zod'; // For schema definition
-import { useState } from 'react';
-
-const stepsConfig: WizardStepConfig[] = [
-  {
-    id: 'personal',
-    title: 'Personal Info',
-    fields: [
-      { name: 'name', label: 'Full Name', type: 'text', placeholder: 'Jane Doe' },
-      { name: 'email', label: 'Email', type: 'email', placeholder: 'jane@example.com' },
-    ],
-    schema: z.object({
-      name: z.string().min(2, 'Name is too short.'),
-      email: z.string().email('Invalid email.'),
-    }),
-  },
-  {
-    id: 'address',
-    title: 'Address',
-    fields: [
-      { name: 'street', label: 'Street', type: 'text' },
-      { name: 'city', label: 'City', type: 'text' },
-    ],
-    schema: z.object({
-      street: z.string().min(5, 'Street is required.'),
-      city: z.string().min(2, 'City is required.'),
-    }),
-  },
-  { // Confirmation step
-    id: 'confirmation',
-    title: 'Review & Submit',
-    description: 'Please review your details.',
-    fields: [], // No fields, will display summary
-    schema: z.object({}), // No validation for confirmation step itself
-  },
-];
-
-function WizardDemo() {
-  const [submittedData, setSubmittedData] = useState(null);
-
-  const handleFinalSubmit = (data: Record<string, any>) => {
-    console.log('Wizard Submitted:', data);
-    setSubmittedData(data);
-    alert('Form submitted! Check console.');
-  };
-
-  return (
-    <div>
-      {!submittedData ? (
-        <ReactifyFormWizard
-          steps={stepsConfig}
-          onFinalSubmit={handleFinalSubmit}
-          // initialData={{ personal: { name: 'Prefilled Name' } }} // Optional
-        />
-      ) : (
-        <div>
-          <h3>Submission Complete!</h3>
-          <pre>{JSON.stringify(submittedData, null, 2)}</pre>
-          <button onClick={() => setSubmittedData(null)}>Start Over</button>
-        </div>
-      )}
-    </div>
-  );
-}
-`,
-    accessibilityNotes: [
-      "Ensure each step (\`ReactifyCardTitle\`, \`ReactifyCardDescription\`) is clearly titled.",
-      "Field labels (\`<Label>\`) must be associated with their inputs.",
-      "Validation errors are displayed and should be announced to screen readers (standard behavior of error messages near inputs).",
-      "Navigation buttons (Previous, Next, Submit) are clear and keyboard accessible.",
-      "The 'Step X of Y' indicator helps users understand their progress.",
-      "The confirmation step should clearly present all entered data for review.",
-    ],
-    codeBlockScrollAreaClassName: "max-h-none",
-  },
-  {
-    id: 'markdown-editor', name: 'Markdown Editor', icon: <FileText />, category: 'advanced', demo: <ReactifyMarkdownEditorDemo />,
-    codeExample: `
-import { ReactifyMarkdownEditor } from '@/components/reactify/markdown-editor';
-import { useState } from 'react';
-
-const initialMarkdown = \`
-# Hello World
-This is **Markdown**.
-## Subheading
-- Item 1
-- Item 2
-\`;
-
-function MarkdownEditorExample() {
-  const [markdown, setMarkdown] = useState(initialMarkdown);
-
-  return (
-    <ReactifyMarkdownEditor
-      initialValue={markdown}
-      onValueChange={setMarkdown} // Optional: to get updated markdown
-      textareaRows={15}
-    />
-  );
-}
-`,
-    accessibilityNotes: [
-      "The textarea for Markdown input is labeled 'Markdown Input'.",
-      "The HTML preview area is labeled 'HTML Preview' and uses \`aria-live='polite'\` to announce changes, though this might be noisy for rapid typing; consider refining if needed.",
-      "The Table of Contents (ToC) items are buttons that scroll to the relevant section. They are keyboard focusable and activatable.",
-      "Ensure the generated HTML in the preview is itself accessible (e.g., headings have correct levels, links are descriptive). The basic parser aims for this.",
-      "The textarea itself is a standard accessible form control.",
-    ],
-    codeBlockScrollAreaClassName: "max-h-none",
-  },
-  {
-    id: 'rich-text-editor', name: 'Rich Text Editor', icon: <PilcrowSquare />, category: 'advanced', demo: <ReactifyRichTextEditorDemo />,
-    codeExample: `
-import { ReactifyRichTextEditor } from '@/components/reactify/rich-text-editor';
-import { useState } from 'react';
-
-const initialHtmlContent = \`
-<h2>Hello TipTap!</h2>
-<p>This is a <strong>rich text editor</strong> example.</p>
-<p>Try the AI features in the toolbar like <em>Summarize</em> or <em>Make Formal</em> on selected text!</p>
-<div data-latex-block="true"><span data-latex="E = mc^2"></span><div></div></div>
-\`;
-
-function RichTextEditorExample() {
-  const [content, setContent] = useState({ html: initialHtmlContent, json: {} });
-
-  const handleUpdate = (newContent: { html: string; json: any }) => {
-    setContent(newContent);
-    // console.log('HTML:', newContent.html);
-    // console.log('JSON:', newContent.json);
-  };
-
-  return (
-    <ReactifyRichTextEditor
-      initialContent={initialHtmlContent}
-      onUpdate={handleUpdate}
-      editable={true}
-    />
-  );
-}
-`,
-    accessibilityNotes: [
-      "Relies heavily on TipTap's (and underlying ProseMirror's) accessibility features.",
-      "Toolbar buttons should have clear \`title\` attributes or \`aria-label\`s for icon-only buttons (ReactifyButton handles this if title is passed). Current demo uses \`title\`.",
-      "The editor content area itself should be navigable and editable using standard keyboard commands.",
-      "Ensure AI transformation features provide clear feedback (e.g., via toasts) about success or failure.",
-      "LaTeX blocks: The input is via a prompt. The rendered output within the editor should be perceivable (KaTeX aims for accessible math rendering).",
-      "Semantic HTML is generated by TipTap (e.g., \`<strong>\` for bold, \`<h1>\` for headings).",
-    ],
-    codeBlockScrollAreaClassName: "max-h-none",
-  },
-  {
-    id: 'protected-content', name: 'Protected Content', icon: <ShieldCheck />, category: 'advanced', demo: <ReactifyProtectedContentDemo />,
-    codeExample: `
-import { ProtectedContent } from '@/components/reactify/protected-content';
-import { MockAuthProvider, useMockAuth, type UserRole } from '@/contexts/mock-auth-context'; // For demo
-import { Button } from '@/components/ui/button'; // For demo role switching
-
-// --- In your page/component using ProtectedContent ---
-// Ensure MockAuthProvider (or your actual AuthProvider) is an ancestor
-
-function MySecurePage() {
-  // const { currentRole, setCurrentRole } = useMockAuth(); // If you need to switch roles for testing
-
-  return (
-    <div>
-      <h2>Public Area</h2>
-      <p>This is visible to everyone.</p>
-
-      <ProtectedContent requiredRole="user">
-        <section>
-          <h3>User Dashboard</h3>
-          <p>Welcome, valued user!</p>
-        </section>
-      </ProtectedContent>
-
-      <ProtectedContent requiredRole="editor" fallback={<p>Content restricted to editors.</p>}>
-        <section>
-          <h3>Editor Tools</h3>
-          <Button>Edit Page</Button>
-        </section>
-      </ProtectedContent>
-
-      <ProtectedContent requiredRole="admin">
-        <section>
-          <h3>Admin Panel</h3>
-          <p>Full administrative controls here.</p>
-        </section>
-      </ProtectedContent>
-      
-      <ProtectedContent requiredRole={['user', 'editor']}>
-        <p>This content is visible to users OR editors (and admins due to hierarchy).</p>
-      </ProtectedContent>
-    </div>
-  );
-}
-
-// --- Example of setting up the context for the demo (usually done in layout) ---
-export default function PageWithProtection() {
-  return (
-    <MockAuthProvider>
-      <MySecurePage />
-    </MockAuthProvider>
-  );
-}
-`,
-    accessibilityNotes: [
-      "Ensure that when content appears or disappears dynamically based on roles, it doesn't cause layout shifts that disorient users.",
-      "If significant sections of a page are hidden, consider if this impacts the overall page structure or navigation for assistive technologies. Usually, simple conditional rendering is fine.",
-      "The `fallback` prop can be used to provide alternative content or an explanation if access is denied, which can be more user-friendly than just hiding content.",
-      "If content appearance/disappearance is frequent or based on rapid user interaction, consider using \`aria-live\` regions on a container to announce changes, though this is often not necessary for role-based access which changes less frequently.",
-    ],
-    codeBlockScrollAreaClassName: "max-h-none",
-  },
-  {
-    id: 'network-aware-wrapper',
-    name: 'Network Aware Wrapper',
-    icon: <Wifi />,
-    category: 'advanced',
-    demo: <ReactifyNetworkAwareDemo />,
-    codeExample: `
-import { NetworkAwareWrapper } from '@/components/reactify/network-aware-wrapper';
-import { ReactifyButton } from '@/components/reactify/button';
-import { WifiOff, Wifi } from 'lucide-react';
-
-function MyAppContent() {
-  const handleRetry = () => {
-    alert('Retry logic would run here! For example, re-fetch data.');
-  };
-
-  const MyOfflineBanner = (
-    <div style={{ 
-        position: 'fixed', bottom: '0', left: '0', right: '0',
-        background: 'rgba(220, 53, 69, 0.9)', color: 'white', 
-        padding: '12px', textAlign: 'center', zIndex: 1000,
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px'
-    }}>
-      <WifiOff size={20} />
-      <span>You are currently offline. Some features might be unavailable.</span>
-      <ReactifyButton 
-        onClick={handleRetry} 
-        variant="outline"
-        size="sm"
-        className="bg-white text-destructive hover:bg-gray-100 border-destructive hover:border-destructive"
-      >
-        Retry Action
-      </ReactifyButton>
-    </div>
-  );
-
-  const MyOnlineBanner = (
-    <div style={{ 
-        position: 'fixed', bottom: '0', left: '0', right: '0',
-        background: 'rgba(25, 135, 84, 0.9)', color: 'white', 
-        padding: '12px', textAlign: 'center', zIndex: 1000,
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px'
-    }}>
-      <Wifi size={20} />
-      <span>You are back online!</span>
-    </div>
-  );
-
-  return (
-    <NetworkAwareWrapper
-      offlineBanner={MyOfflineBanner}
-      onlineBanner={MyOnlineBanner}
-      showOnlineBannerDuration={4000} // Show "back online" for 4 seconds
-    >
-      {/* Your main app content goes here */}
-      <h1>Welcome to My App</h1>
-      <p>This content is wrapped and will show banners based on network state.</p>
-      <p>Try toggling your network connection or using the simulation buttons in the demo.</p>
-    </NetworkAwareWrapper>
-  );
-}
-
-// To use the default banners (which also appear at the bottom):
-// <NetworkAwareWrapper>
-//   <p>Content using default banners.</p>
-// </NetworkAwareWrapper>
-`,
-    accessibilityNotes: [
-      "Network status banners should be announced by screen readers. The default banners use \`role='status'\` and \`aria-live\` attributes. Ensure custom banners also provide appropriate ARIA feedback.",
-      "Content within banners, especially interactive elements like a 'Retry' button, must be keyboard accessible and clearly labeled.",
-      "Ensure sufficient color contrast for text and icons within the banners.",
-      "The wrapper itself does not add specific ARIA roles to the main children content, as it primarily controls the visibility of banners. The accessibility of the banners themselves is key.",
-      "Test with screen readers to ensure transitions between online/offline states are clearly communicated."
-    ],
-    codeBlockScrollAreaClassName: "max-h-none",
-  },
-  {
-    id: 'smart-empty-state',
-    name: 'Smart Empty State',
-    icon: <Inbox />,
-    category: 'advanced',
-    demo: <ReactifySmartEmptyStateDemo />,
-    codeExample: `
-import { ReactifySmartEmptyState } from '@/components/reactify/smart-empty-state';
-import { ReactifyButton } from '@/components/reactify/button';
-import { useState, useEffect } from 'react';
-import { PlusCircle, Ghost, Loader2 } from 'lucide-react';
-
-interface MyItem { id: string; name: string; }
-
-function MyListComponent() {
-  const [items, setItems] = useState<MyItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate API call
-    setIsLoading(true);
-    setTimeout(() => {
-      // setItems([{ id: '1', name: 'Initial Item' }]); // To test with data
-      setItems([]); // To test empty state
-      setIsLoading(false);
-    }, 2000);
-  }, []);
-
-  const handleAddItem = () => {
-    setItems(prev => [...prev, { id: \`\${prev.length + 1}\`, name: \`New Item \${prev.length + 1}\` }]);
-  };
-
-  const customLoading = (
-    <div className="flex flex-col items-center p-6">
-      <Loader2 className="h-10 w-10 animate-spin text-primary mb-3" />
-      <p className="text-muted-foreground">Fetching your awesome data...</p>
-    </div>
-  );
-
-  return (
-    <ReactifySmartEmptyState
-      data={items}
-      isLoading={isLoading}
-      // loadingStateContent={customLoading} // Optional custom loading
-      emptyStateTitle="No Items Yet!"
-      emptyStateDescription="It looks a bit lonely here. Why not add something?"
-      emptyStateIcon={<Ghost className="h-12 w-12 text-muted-foreground/80" />}
-      emptyStateActions={
-        <ReactifyButton onClick={handleAddItem} leftIcon={<PlusCircle size={16} />}>
-          Add Your First Item
-        </ReactifyButton>
-      }
-    >
-      <ul className="space-y-2">
-        {items.map(item => (
-          <li key={item.id} className="p-3 border rounded-md bg-background">
-            {item.name}
-          </li>
-        ))}
-      </ul>
-    </ReactifySmartEmptyState>
-  );
-}
-    `,
-    accessibilityNotes: [
-      "Ensure the empty state provides clear information and guidance to the user.",
-      "If the empty state includes interactive elements (like an 'Add Item' button), ensure they are keyboard accessible and properly labeled.",
-      "If the transition from loading to empty or to data state is abrupt, consider using \`aria-live\` regions on a container to announce changes, though the component itself focuses on conditional rendering rather than live announcements.",
-      "Default loading skeleton uses \`aria-busy\` on its container if wrapped appropriately by the parent application.",
-      "Icons used in the empty state should be decorative or have appropriate ARIA labels if they convey meaning not present in text.",
-    ],
-    codeBlockScrollAreaClassName: "max-h-none",
-  },
-  {
     id: 'advanced-table',
     name: 'Advanced Table',
     icon: <Table2 />,
@@ -1534,6 +1242,154 @@ function MyTablePage() {
     codeBlockScrollAreaClassName: "max-h-none",
   },
   {
+    id: 'form-wizard', name: 'Form Wizard', icon: <ListChecks />, category: 'advanced', demo: <ReactifyFormWizardDemo />,
+    codeExample: `
+import { ReactifyFormWizard, type WizardStepConfig } from '@/components/reactify/form-wizard';
+import { z } from 'zod'; // For schema definition
+import { useState } from 'react';
+
+const stepsConfig: WizardStepConfig[] = [
+  {
+    id: 'personal',
+    title: 'Personal Info',
+    fields: [
+      { name: 'name', label: 'Full Name', type: 'text', placeholder: 'Jane Doe' },
+      { name: 'email', label: 'Email', type: 'email', placeholder: 'jane@example.com' },
+    ],
+    schema: z.object({
+      name: z.string().min(2, 'Name is too short.'),
+      email: z.string().email('Invalid email.'),
+    }),
+  },
+  {
+    id: 'address',
+    title: 'Address',
+    fields: [
+      { name: 'street', label: 'Street', type: 'text' },
+      { name: 'city', label: 'City', type: 'text' },
+    ],
+    schema: z.object({
+      street: z.string().min(5, 'Street is required.'),
+      city: z.string().min(2, 'City is required.'),
+    }),
+  },
+  { // Confirmation step
+    id: 'confirmation',
+    title: 'Review & Submit',
+    description: 'Please review your details.',
+    fields: [], // No fields, will display summary
+    schema: z.object({}), // No validation for confirmation step itself
+  },
+];
+
+function WizardDemo() {
+  const [submittedData, setSubmittedData] = useState(null);
+
+  const handleFinalSubmit = (data: Record<string, any>) => {
+    console.log('Wizard Submitted:', data);
+    setSubmittedData(data);
+    alert('Form submitted! Check console.');
+  };
+
+  return (
+    <div>
+      {!submittedData ? (
+        <ReactifyFormWizard
+          steps={stepsConfig}
+          onFinalSubmit={handleFinalSubmit}
+          // initialData={{ personal: { name: 'Prefilled Name' } }} // Optional
+        />
+      ) : (
+        <div>
+          <h3>Submission Complete!</h3>
+          <pre>{JSON.stringify(submittedData, null, 2)}</pre>
+          <button onClick={() => setSubmittedData(null)}>Start Over</button>
+        </div>
+      )}
+    </div>
+  );
+}
+`,
+    accessibilityNotes: [
+      "Ensure each step (\`ReactifyCardTitle\`, \`ReactifyCardDescription\`) is clearly titled.",
+      "Field labels (\`<Label>\`) must be associated with their inputs.",
+      "Validation errors are displayed and should be announced to screen readers (standard behavior of error messages near inputs).",
+      "Navigation buttons (Previous, Next, Submit) are clear and keyboard accessible.",
+      "The 'Step X of Y' indicator helps users understand their progress.",
+      "The confirmation step should clearly present all entered data for review.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
+    id: 'form-wizard-visualizer', name: 'Form Wizard Visualizer', icon: <LayoutList />, category: 'advanced',
+    demo: (
+      <ReactifyCard>
+        <ReactifyCardHeader>
+          <ReactifyCardTitle>Form Wizard State Visualizer</ReactifyCardTitle>
+          <ReactifyCardDescription>
+            This tool provides a live visualization of the Form Wizard's internal state as you interact with it.
+          </ReactifyCardDescription>
+        </ReactifyCardHeader>
+        <ReactifyCardContent>
+          <p className="text-muted-foreground mb-4">
+            See how the wizard manages data across multiple steps, handles validation, and tracks the current active step.
+          </p>
+          <ReactifyButton asChild>
+            <Link href="/advanced-tools/form-wizard-visualizer">
+              Open Visualizer Tool
+            </Link>
+          </ReactifyButton>
+        </ReactifyCardContent>
+      </ReactifyCard>
+    ),
+    codeExample: `
+// This component is a page demonstrating the Form Wizard's state.
+// See /advanced-tools/form-wizard-visualizer for the actual implementation.
+//
+// Key aspects:
+// 1. Use ReactifyFormWizard component.
+// 2. Provide an 'onStateChange' callback to the wizard.
+// 3. Display the received state (currentStepIndex, allStepsData, etc.).
+
+import { ReactifyFormWizard, type WizardStepConfig } from '@/components/reactify/form-wizard';
+import { useState } from 'react';
+
+function WizardVisualizerPage() {
+  const [wizardState, setWizardState] = useState(null);
+  
+  const steps: WizardStepConfig[] = [ /* ... your steps config ... */ ];
+
+  const handleStateChange = (newState: any) => {
+    setWizardState(newState);
+  };
+
+  const handleFinalSubmit = (data: Record<string, any>) => {
+    console.log("Final wizard data:", data);
+    alert("Wizard submitted! Check console.");
+  };
+
+  return (
+    <div className="grid md:grid-cols-2 gap-8">
+      <ReactifyFormWizard
+        steps={steps}
+        onFinalSubmit={handleFinalSubmit}
+        onStateChange={handleStateChange} 
+      />
+      <div>
+        <h3>Live Wizard State:</h3>
+        {wizardState ? <pre>{JSON.stringify(wizardState, null, 2)}</pre> : <p>Interact with the wizard...</p>}
+      </div>
+    </div>
+  );
+}
+    `,
+    accessibilityNotes: [
+      "The visualizer itself should ensure its displayed information is accessible (e.g., good contrast for text, proper ARIA attributes for dynamic regions if content updates very frequently).",
+      "The underlying Form Wizard component's accessibility notes still apply.",
+      "Primarily a development/learning tool, so its own accessibility is simpler but still important for developers using it.",
+    ],
+  },
+  {
     id: 'keyboard-shortcut-manager',
     name: 'Shortcut Manager',
     icon: <CommandIcon />,
@@ -1562,32 +1418,17 @@ function MyComponentWithShortcuts() {
       group: 'My Custom Group' // Optional: for organizing in the palette
     };
 
-    const anotherShortcut: Shortcut = {
-      id: 'another-action',
-      name: 'Log to console',
-      keys: ['Shift', 'c'], // Shift+C (main key is 'c' or 'C')
-      action: (event) => {
-        event.preventDefault();
-        console.log('Shift+C pressed!');
-        toast({title: 'Logged to console'});
-      },
-      group: 'Debugging'
-    };
-
     registerShortcut(myShortcut);
-    registerShortcut(anotherShortcut);
 
     // Clean up shortcuts when component unmounts
     return () => {
       unregisterShortcut(myShortcut.id);
-      unregisterShortcut(anotherShortcut.id);
     };
   }, [registerShortcut, unregisterShortcut, toast]);
 
   return (
     <div>
       <p>Try pressing Ctrl+Alt+M (or Cmd+Option+M on Mac).</p>
-      <p>Try pressing Shift+C.</p>
       <p>Press Ctrl+K (or Cmd+K) to open the shortcut palette.</p>
       <ReactifyButton onClick={openPalette} variant="outline" className="mt-2">
         Open Palette Manually
@@ -1627,7 +1468,295 @@ export default MyComponentWithShortcuts;
       "When a shortcut triggers an action, provide clear feedback to the user (e.g., toast, visual change).",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
-  }
+  },
+  {
+    id: 'markdown-editor', name: 'Markdown Editor', icon: <FileText />, category: 'advanced', demo: <ReactifyMarkdownEditorDemo />,
+    codeExample: `
+import { ReactifyMarkdownEditor } from '@/components/reactify/markdown-editor';
+import { useState } from 'react';
+
+const initialMarkdown = \`
+# Hello World
+This is **Markdown**.
+## Subheading
+- Item 1
+- Item 2
+\`;
+
+function MarkdownEditorExample() {
+  const [markdown, setMarkdown] = useState(initialMarkdown);
+
+  return (
+    <ReactifyMarkdownEditor
+      initialValue={markdown}
+      onValueChange={setMarkdown} // Optional: to get updated markdown
+      textareaRows={15}
+    />
+  );
+}
+`,
+    accessibilityNotes: [
+      "The textarea for Markdown input is labeled 'Markdown Input'.",
+      "The HTML preview area is labeled 'HTML Preview' and uses \`aria-live='polite'\` to announce changes, though this might be noisy for rapid typing; consider refining if needed.",
+      "The Table of Contents (ToC) items are buttons that scroll to the relevant section. They are keyboard focusable and activatable.",
+      "Ensure the generated HTML in the preview is itself accessible (e.g., headings have correct levels, links are descriptive). The basic parser aims for this.",
+      "The textarea itself is a standard accessible form control.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
+    id: 'network-aware-wrapper',
+    name: 'Network Aware Wrapper',
+    icon: <Wifi />,
+    category: 'advanced',
+    demo: <ReactifyNetworkAwareDemo />,
+    codeExample: `
+import { NetworkAwareWrapper } from '@/components/reactify/network-aware-wrapper';
+import { ReactifyButton } from '@/components/reactify/button';
+import { WifiOff, Wifi } from 'lucide-react';
+
+function MyAppContent() {
+  const handleRetry = () => {
+    alert('Retry logic would run here! For example, re-fetch data.');
+  };
+
+  const MyOfflineBanner = (
+    <div style={{ 
+        position: 'fixed', bottom: '0', left: '0', right: '0',
+        background: 'rgba(220, 53, 69, 0.9)', color: 'white', 
+        padding: '12px', textAlign: 'center', zIndex: 1000,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px'
+    }}>
+      <WifiOff size={20} />
+      <span>You are currently offline. Some features might be unavailable.</span>
+      <ReactifyButton 
+        onClick={handleRetry} 
+        variant="outline"
+        size="sm"
+        className="bg-white text-destructive hover:bg-gray-100 border-destructive hover:border-destructive"
+      >
+        Retry Action
+      </ReactifyButton>
+    </div>
+  );
+
+  const MyOnlineBanner = (
+    <div style={{ 
+        position: 'fixed', bottom: '0', left: '0', right: '0',
+        background: 'rgba(25, 135, 84, 0.9)', color: 'white', 
+        padding: '12px', textAlign: 'center', zIndex: 1000,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px'
+    }}>
+      <Wifi size={20} />
+      <span>You are back online!</span>
+    </div>
+  );
+
+  return (
+    <NetworkAwareWrapper
+      offlineBanner={MyOfflineBanner}
+      onlineBanner={MyOnlineBanner}
+      showOnlineBannerDuration={4000} // Show "back online" for 4 seconds
+    >
+      {/* Your main app content goes here */}
+      <h1>Welcome to My App</h1>
+      <p>This content is wrapped and will show banners based on network state.</p>
+      <p>Try toggling your network connection or using the simulation buttons in the demo.</p>
+    </NetworkAwareWrapper>
+  );
+}
+
+// To use the default banners (which also appear at the bottom):
+// <NetworkAwareWrapper>
+//   <p>Content using default banners.</p>
+// </NetworkAwareWrapper>
+`,
+    accessibilityNotes: [
+      "Network status banners should be announced by screen readers. The default banners use \`role='status'\` and \`aria-live\` attributes. Ensure custom banners also provide appropriate ARIA feedback.",
+      "Content within banners, especially interactive elements like a 'Retry' button, must be keyboard accessible and clearly labeled.",
+      "Ensure sufficient color contrast for text and icons within the banners.",
+      "The wrapper itself does not add specific ARIA roles to the main children content, as it primarily controls the visibility of banners. The accessibility of the banners themselves is key.",
+      "Test with screen readers to ensure transitions between online/offline states are clearly communicated."
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
+    id: 'protected-content', name: 'Protected Content', icon: <ShieldCheck />, category: 'advanced', demo: <ReactifyProtectedContentDemo />,
+    codeExample: `
+import { ProtectedContent } from '@/components/reactify/protected-content';
+import { MockAuthProvider, useMockAuth, type UserRole } from '@/contexts/mock-auth-context'; // For demo
+import { Button } from '@/components/ui/button'; // For demo role switching
+
+// --- In your page/component using ProtectedContent ---
+// Ensure MockAuthProvider (or your actual AuthProvider) is an ancestor
+
+function MySecurePage() {
+  // const { currentRole, setCurrentRole } = useMockAuth(); // If you need to switch roles for testing
+
+  return (
+    <div>
+      <h2>Public Area</h2>
+      <p>This is visible to everyone.</p>
+
+      <ProtectedContent requiredRole="user">
+        <section>
+          <h3>User Dashboard</h3>
+          <p>Welcome, valued user!</p>
+        </section>
+      </ProtectedContent>
+
+      <ProtectedContent requiredRole="editor" fallback={<p>Content restricted to editors.</p>}>
+        <section>
+          <h3>Editor Tools</h3>
+          <Button>Edit Page</Button>
+        </section>
+      </ProtectedContent>
+
+      <ProtectedContent requiredRole="admin">
+        <section>
+          <h3>Admin Panel</h3>
+          <p>Full administrative controls here.</p>
+        </section>
+      </ProtectedContent>
+      
+      <ProtectedContent requiredRole={['user', 'editor']}>
+        <p>This content is visible to users OR editors (and admins due to hierarchy).</p>
+      </ProtectedContent>
+    </div>
+  );
+}
+
+// --- Example of setting up the context for the demo (usually done in layout) ---
+export default function PageWithProtection() {
+  return (
+    <MockAuthProvider>
+      <MySecurePage />
+    </MockAuthProvider>
+  );
+}
+`,
+    accessibilityNotes: [
+      "Ensure that when content appears or disappears dynamically based on roles, it doesn't cause layout shifts that disorient users.",
+      "If significant sections of a page are hidden, consider if this impacts the overall page structure or navigation for assistive technologies. Usually, simple conditional rendering is fine.",
+      "The `fallback` prop can be used to provide alternative content or an explanation if access is denied, which can be more user-friendly than just hiding content.",
+      "If content appearance/disappearance is frequent or based on rapid user interaction, consider using \`aria-live\` regions on a container to announce changes, though this is often not necessary for role-based access which changes less frequently.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
+    id: 'rich-text-editor', name: 'Rich Text Editor', icon: <PilcrowSquare />, category: 'advanced', demo: <ReactifyRichTextEditorDemo />,
+    codeExample: `
+import { ReactifyRichTextEditor } from '@/components/reactify/rich-text-editor';
+import { useState } from 'react';
+
+const initialHtmlContent = \`
+<h2>Hello TipTap!</h2>
+<p>This is a <strong>rich text editor</strong> example.</p>
+<p>Try the AI features in the toolbar like <em>Summarize</em> or <em>Make Formal</em> on selected text!</p>
+<div data-latex-block="true"><span data-latex="E = mc^2"></span><div></div></div>
+\`;
+
+function RichTextEditorExample() {
+  const [content, setContent] = useState({ html: initialHtmlContent, json: {} });
+
+  const handleUpdate = (newContent: { html: string; json: any }) => {
+    setContent(newContent);
+    // console.log('HTML:', newContent.html);
+    // console.log('JSON:', newContent.json);
+  };
+
+  return (
+    <ReactifyRichTextEditor
+      initialContent={initialHtmlContent}
+      onUpdate={handleUpdate}
+      editable={true}
+    />
+  );
+}
+`,
+    accessibilityNotes: [
+      "Relies heavily on TipTap's (and underlying ProseMirror's) accessibility features.",
+      "Toolbar buttons should have clear \`title\` attributes or \`aria-label\`s for icon-only buttons (ReactifyButton handles this if title is passed). Current demo uses \`title\`.",
+      "The editor content area itself should be navigable and editable using standard keyboard commands.",
+      "Ensure AI transformation features provide clear feedback (e.g., via toasts) about success or failure.",
+      "LaTeX blocks: The input is via a prompt. The rendered output within the editor should be perceivable (KaTeX aims for accessible math rendering).",
+      "Semantic HTML is generated by TipTap (e.g., \`<strong>\` for bold, \`<h1>\` for headings).",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
+    id: 'smart-empty-state',
+    name: 'Smart Empty State',
+    icon: <Inbox />,
+    category: 'advanced',
+    demo: <ReactifySmartEmptyStateDemo />,
+    codeExample: `
+import { ReactifySmartEmptyState } from '@/components/reactify/smart-empty-state';
+import { ReactifyButton } from '@/components/reactify/button';
+import { useState, useEffect } from 'react';
+import { PlusCircle, Ghost, Loader2 } from 'lucide-react';
+
+interface MyItem { id: string; name: string; }
+
+function MyListComponent() {
+  const [items, setItems] = useState<MyItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate API call
+    setIsLoading(true);
+    setTimeout(() => {
+      // setItems([{ id: '1', name: 'Initial Item' }]); // To test with data
+      setItems([]); // To test empty state
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
+  const handleAddItem = () => {
+    setItems(prev => [...prev, { id: \`\${prev.length + 1}\`, name: \`New Item \${prev.length + 1}\` }]);
+  };
+
+  const customLoading = (
+    <div className="flex flex-col items-center p-6">
+      <Loader2 className="h-10 w-10 animate-spin text-primary mb-3" />
+      <p className="text-muted-foreground">Fetching your awesome data...</p>
+    </div>
+  );
+
+  return (
+    <ReactifySmartEmptyState
+      data={items}
+      isLoading={isLoading}
+      // loadingStateContent={customLoading} // Optional custom loading
+      emptyStateTitle="No Items Yet!"
+      emptyStateDescription="It looks a bit lonely here. Why not add something?"
+      emptyStateIcon={<Ghost className="h-12 w-12 text-muted-foreground/80" />}
+      emptyStateActions={
+        <ReactifyButton onClick={handleAddItem} leftIcon={<PlusCircle size={16} />}>
+          Add Your First Item
+        </ReactifyButton>
+      }
+    >
+      <ul className="space-y-2">
+        {items.map(item => (
+          <li key={item.id} className="p-3 border rounded-md bg-background">
+            {item.name}
+          </li>
+        ))}
+      </ul>
+    </ReactifySmartEmptyState>
+  );
+}
+    `,
+    accessibilityNotes: [
+      "Ensure the empty state provides clear information and guidance to the user.",
+      "If the empty state includes interactive elements (like an 'Add Item' button), ensure they are keyboard accessible and properly labeled.",
+      "If the transition from loading to empty or to data state is abrupt, consider using \`aria-live\` regions on a container to announce changes, though the component itself focuses on conditional rendering rather than live announcements.",
+      "Default loading skeleton uses \`aria-busy\` on its container if wrapped appropriately by the parent application.",
+      "Icons used in the empty state should be decorative or have appropriate ARIA labels if they convey meaning not present in text.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
 ];
 
 
