@@ -6,7 +6,7 @@ import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, S
 import { ComponentDisplay } from './_components/component-display';
 import {
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
-  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma,
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
   Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2
@@ -38,6 +38,7 @@ import ReactifyBubbleChartDemo from './_components/charts/reactify-bubble-chart-
 import ReactifyMarkdownEditorDemo from './_components/reactify-markdown-editor-demo';
 import ReactifyRichTextEditorDemo from './_components/reactify-rich-text-editor-demo';
 import ReactifyFormWizardDemo from './_components/reactify-form-wizard-demo';
+import ReactifyProtectedContentDemo from './_components/reactify-protected-content-demo';
 
 type ComponentCategory = 'standard' | 'charts' | 'advanced';
 
@@ -1220,6 +1221,69 @@ function RichTextEditorExample() {
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },
+  {
+    id: 'protected-content', name: 'Protected Content', icon: <ShieldCheck />, category: 'advanced', demo: <ReactifyProtectedContentDemo />,
+    codeExample: `
+import { ProtectedContent } from '@/components/reactify/protected-content';
+import { MockAuthProvider, useMockAuth, type UserRole } from '@/contexts/mock-auth-context'; // For demo
+import { Button } from '@/components/ui/button'; // For demo role switching
+
+// --- In your page/component using ProtectedContent ---
+// Ensure MockAuthProvider (or your actual AuthProvider) is an ancestor
+
+function MySecurePage() {
+  // const { currentRole, setCurrentRole } = useMockAuth(); // If you need to switch roles for testing
+
+  return (
+    <div>
+      <h2>Public Area</h2>
+      <p>This is visible to everyone.</p>
+
+      <ProtectedContent requiredRole="user">
+        <section>
+          <h3>User Dashboard</h3>
+          <p>Welcome, valued user!</p>
+        </section>
+      </ProtectedContent>
+
+      <ProtectedContent requiredRole="editor" fallback={<p>Content restricted to editors.</p>}>
+        <section>
+          <h3>Editor Tools</h3>
+          <Button>Edit Page</Button>
+        </section>
+      </ProtectedContent>
+
+      <ProtectedContent requiredRole="admin">
+        <section>
+          <h3>Admin Panel</h3>
+          <p>Full administrative controls here.</p>
+        </section>
+      </ProtectedContent>
+      
+      <ProtectedContent requiredRole={['user', 'editor']}>
+        <p>This content is visible to users OR editors (and admins due to hierarchy).</p>
+      </ProtectedContent>
+    </div>
+  );
+}
+
+// --- Example of setting up the context for the demo (usually done in layout) ---
+export default function PageWithProtection() {
+  return (
+    <MockAuthProvider>
+      <MySecurePage />
+    </MockAuthProvider>
+  );
+}
+`,
+    accessibilityNotes: [
+      "Ensure that when content appears or disappears dynamically based on roles, it doesn't cause layout shifts that disorient users.",
+      "If significant sections of a page are hidden, consider if this impacts the overall page structure or navigation for assistive technologies. Usually, simple conditional rendering is fine.",
+      "The `fallback` prop can be used to provide alternative content or an explanation if access is denied, which can be more user-friendly than just hiding content.",
+      "If content appearance/disappearance is frequent or based on rapid user interaction, consider using `aria-live` regions on a container to announce changes, though this is often not necessary for role-based access which changes less frequently.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
 ];
 
 
@@ -1344,3 +1408,4 @@ export default function ComponentsPage() {
     </SidebarProvider>
   );
 }
+
