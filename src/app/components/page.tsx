@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
 import { 
-  SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare,
-  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, // Added Sigma
+  SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
   Briefcase, Heading as HeadingLucideIcon, AlignJustify
@@ -36,6 +36,7 @@ import ReactifyLineChartDemo from './_components/charts/reactify-line-chart-demo
 import ReactifyBubbleChartDemo from './_components/charts/reactify-bubble-chart-demo';
 import ReactifyMarkdownEditorDemo from './_components/reactify-markdown-editor-demo';
 import ReactifyRichTextEditorDemo from './_components/reactify-rich-text-editor-demo';
+import ReactifySkeletonLoaderDemo from './_components/reactify-skeleton-loader-demo';
 
 
 const components = [
@@ -759,6 +760,38 @@ function MyPageWithSidebar() {
       "Provide a clear way to close the sidebar (e.g., close button, Escape key - Esc key not auto-implemented, but close button is).",
       "Manage focus appropriately: when opened, focus should move into the sidebar; when closed, focus should return to the trigger element (requires developer to handle).",
       "Overlay is dismissible on click if present.",
+    ]
+  },
+  {
+    id: 'skeleton-loader',
+    name: 'Skeleton Loader',
+    icon: <Square />,
+    demo: <ReactifySkeletonLoaderDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifySkeletonLoader } from '@/components/reactify/skeleton-loader';
+
+// Basic usage (rectangle)
+<ReactifySkeletonLoader className="h-4 w-3/4" />
+<ReactifySkeletonLoader className="h-20 w-full mt-2" />
+
+// Circle (for avatar placeholder)
+<ReactifySkeletonLoader className="h-12 w-12 rounded-full" />
+
+// Combine for complex layouts
+<div className="flex items-center space-x-4">
+  <ReactifySkeletonLoader className="h-10 w-10 rounded-full" />
+  <div className="space-y-2 flex-1">
+    <ReactifySkeletonLoader className="h-3 w-4/5" />
+    <ReactifySkeletonLoader className="h-3 w-3/5" />
+  </div>
+</div>
+    `,
+    accessibilityNotes: [
+      "Skeleton loaders are visual placeholders and should not convey semantic information themselves.",
+      "The container of the content being loaded (which shows skeletons) should ideally have \`aria-busy='true'\` to inform assistive technologies that content is updating.",
+      "Ensure sufficient contrast between the skeleton's \`bg-muted\` color and its parent background if it's not directly on \`bg-background\`.",
+      "Skeletons are purely decorative; they don't need focus or ARIA labels themselves.",
     ]
   },
   {
