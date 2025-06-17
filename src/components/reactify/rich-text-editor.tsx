@@ -2,7 +2,7 @@
 'use client';
 
 import type { HTMLAttributes } from 'react';
-import { useEditor, EditorContent, type Editor, BubbleMenu } from '@tiptap/react';
+import { useEditor, EditorContent, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { cn } from './utils';
 import type { ReactifyComponentProps } from './common-props';
@@ -10,11 +10,12 @@ import { ReactifyButton } from './button';
 import { 
   Bold, Italic, Strikethrough, Heading1, Heading2, Heading3, 
   List, ListOrdered, Pilcrow, Minus, Quote, Code, RemoveFormatting,
-  Sparkles, Loader2, AlignJustify, Briefcase, Heading as HeadingIcon
+  Sparkles, Loader2, AlignJustify, Briefcase, Heading as HeadingIcon, Sigma // Added Sigma for LaTeX
 } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { transformEditorText, type TransformEditorTextInput } from '@/ai/flows/transform-editor-text';
+import LatexBlockNode from './tiptap-extensions/latex-block'; // Import the new LaTeX node
 
 
 interface ReactifyRichTextEditorProps extends ReactifyComponentProps {
@@ -54,6 +55,18 @@ const EditorToolbar = ({ editor, onAiTransform, isAiLoading, aiActionLoading }: 
     { type: 'suggestHeadline', icon: <HeadingIcon size={16} />, title: 'Suggest Headline'},
   ];
 
+  const handleLatexInsert = () => {
+    const currentLatex = editor.getAttributes('latexBlock').latex || '';
+    const latexInput = window.prompt('Enter LaTeX code (block display):', currentLatex);
+    if (latexInput !== null) { // User provided input (empty string is valid for clearing)
+      if (editor.isActive('latexBlock')) {
+        editor.chain().focus().updateAttributes('latexBlock', { latex: latexInput }).run();
+      } else {
+        editor.chain().focus().insertLatexBlock({ latex: latexInput }).run();
+      }
+    }
+  };
+
   return (
     <div className="flex flex-wrap items-center gap-1 border border-input rounded-t-md p-2 bg-muted/50">
       <ToolbarButton title="Bold" onClick={() => editor.chain().focus().toggleBold().run()} isActive={editor.isActive('bold')}>
@@ -67,6 +80,9 @@ const EditorToolbar = ({ editor, onAiTransform, isAiLoading, aiActionLoading }: 
       </ToolbarButton>
       <ToolbarButton title="Code" onClick={() => editor.chain().focus().toggleCode().run()} isActive={editor.isActive('code')}>
         <Code size={16} />
+      </ToolbarButton>
+       <ToolbarButton title="LaTeX Block" onClick={handleLatexInsert} isActive={editor.isActive('latexBlock')}>
+        <Sigma size={16} />
       </ToolbarButton>
       <ToolbarButton title="Clear Formatting" onClick={() => editor.chain().focus().unsetAllMarks().run()}>
         <RemoveFormatting size={16} />
@@ -115,8 +131,6 @@ const EditorToolbar = ({ editor, onAiTransform, isAiLoading, aiActionLoading }: 
         </ToolbarButton>
       ))}
       {isAiLoading && !aiActionLoading && <Loader2 size={16} className="animate-spin ml-1" title="AI processing..."/>}
-
-
     </div>
   );
 };
@@ -140,6 +154,9 @@ export function ReactifyRichTextEditor({
     extensions: [
       StarterKit.configure({
         // placeholder: { placeholder: 'Start writing...' } // If needed
+      }),
+      LatexBlockNode.configure({
+        // HTMLAttributes for the node wrapper, if needed
       }),
     ],
     content: initialContent,
@@ -169,10 +186,10 @@ export function ReactifyRichTextEditor({
 
     if (!empty) {
       textToTransform = editor.state.doc.textBetween(from, to, ' ');
-    } else if (transformationType !== 'suggestHeadline') { // For summarize/formal, require selection
+    } else if (transformationType !== 'suggestHeadline') { 
         toast({ title: 'AI Transform Error', description: 'Please select some text to transform.', variant: 'destructive' });
         return;
-    } else { // For suggestHeadline, can use current paragraph if no selection
+    } else { 
         const $from = editor.state.selection.$from;
         const node = $from.parent;
         if (node.isTextblock && node.textContent.trim().length > 0) {
@@ -182,7 +199,6 @@ export function ReactifyRichTextEditor({
             return;
         }
     }
-
 
     if (!textToTransform.trim()) {
       toast({ title: 'AI Transform Error', description: 'No text selected to transform.', variant: 'destructive' });
@@ -196,13 +212,13 @@ export function ReactifyRichTextEditor({
       const { transformedText } = result;
 
       if (transformedText) {
-        editor.chain().focus().insertContentAt(empty && transformationType !== 'suggestHeadline' ? {from, to: from} : {from, to}, transformedText).run();
-        if(transformationType === 'suggestHeadline' && empty) { // Insert headline at current pos if no selection
+        // editor.chain().focus().insertContentAt(empty && transformationType !== 'suggestHeadline' ? {from, to: from} : {from, to}, transformedText).run();
+        if(transformationType === 'suggestHeadline' && empty) { 
             editor.chain().focus().insertContentAt(from, `<h2>${transformedText}</h2>`).run();
-        } else if (transformationType === 'suggestHeadline' && !empty) { // Replace selection with headline
+        } else if (transformationType === 'suggestHeadline' && !empty) { 
              editor.chain().focus().deleteRange({from, to}).insertContentAt(from, `<h2>${transformedText}</h2>`).run();
         }
-        else { // Replace selection for other types
+        else { 
             editor.chain().focus().deleteRange({from, to}).insertContentAt(from, transformedText).run();
         }
 
@@ -218,7 +234,6 @@ export function ReactifyRichTextEditor({
       setCurrentAiAction(null);
     }
   };
-
 
   return (
     <Component className={cn('w-full', className)} {...props}>

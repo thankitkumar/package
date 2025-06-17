@@ -13,6 +13,11 @@ const initialDemoContent = `
 <p>Features include standard text formatting like bold, italic, headings, lists, and more. Select some text and try the AI transformation buttons in the toolbar (e.g., Summarize, Make Formal, Suggest Headline)!</p>
 <h3>Example Text for AI:</h3>
 <p>The quick brown fox jumps over the lazy dog. This sentence is often used to display font samples because it contains all letters of the alphabet. It's a classic pangram. We can explore various ways to rephrase or condense this information for different contexts.</p>
+<h3>LaTeX Block Example:</h3>
+<p>You can insert mathematical formulas using LaTeX. Click the Sigma (Σ) icon in the toolbar. For example:</p>
+<div data-latex-block="true"><span data-latex="E = mc^2" style="display:none;"></span><div></div></div>
+<p>And another one:</p>
+<div data-latex-block="true"><span data-latex="\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}" style="display:none;"></span><div></div></div>
 <ul>
   <li>Basic text formatting (bold, italic, strikethrough)</li>
   <li>Headings (H1, H2, H3)</li>
@@ -21,6 +26,7 @@ const initialDemoContent = `
   <li>Code blocks</li>
   <li>Horizontal rules</li>
   <li><strong>New:</strong> AI Text Transformations (Summarize, Make Formal, Suggest Headline)</li>
+  <li><strong>New:</strong> LaTeX Block Support (via KaTeX)</li>
 </ul>
 <p>Try it out!</p>
 `;
@@ -37,9 +43,9 @@ export default function ReactifyRichTextEditorDemo() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Rich Text Editor (with AI Features)</CardTitle>
+        <CardTitle>Rich Text Editor (with AI & LaTeX)</CardTitle>
         <CardDescription>
-          A TipTap-based rich text editor with standard formatting and integrated AI text transformation tools.
+          A TipTap-based rich text editor with standard formatting, integrated AI text transformation tools, and LaTeX block support via KaTeX.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -74,5 +80,3 @@ export default function ReactifyRichTextEditorDemo() {
     </Card>
   );
 }
-
-

@@ -1,3 +1,4 @@
+
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
@@ -14,7 +15,8 @@ export default defineConfig({
     'recharts',
     '@tiptap/react',
     '@tiptap/pm',
-    '@tiptap/starter-kit'
+    '@tiptap/starter-kit',
+    'katex'
   ], // Externalize peer dependencies
   // tsup will automatically pick up tsconfig.json paths for aliases like @/*
   // Ensure your tsconfig.json's baseUrl and paths are set up if you use such aliases internally.
