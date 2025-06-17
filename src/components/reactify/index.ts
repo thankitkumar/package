@@ -32,7 +32,10 @@ export * from './protected-content';
 export * from './network-aware-wrapper';
 export * from './smart-empty-state';
 export * from './advanced-table';
+export * from './keyboard-shortcut-manager';
 // Consider if useNetworkState hook should be exported for direct use:
 // export * from '../hooks/use-network-state'; 
+// Export context and types if they are intended for external use by consumers of the library
+// export * from '../contexts/keyboard-shortcut-context'; 
 export * from './common-props';
 export * from './utils';

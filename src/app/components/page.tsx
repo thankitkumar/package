@@ -9,7 +9,8 @@ import {
   MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
-  Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2, Table2
+  Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2, Table2,
+  Command as CommandIcon // Added for Shortcut Manager
 } from 'lucide-react';
 
 import ReactifyAlertDemo from './_components/reactify-alert-demo';
@@ -42,6 +43,8 @@ import ReactifyProtectedContentDemo from './_components/reactify-protected-conte
 import ReactifyNetworkAwareDemo from './_components/reactify-network-aware-demo';
 import ReactifySmartEmptyStateDemo from './_components/reactify-smart-empty-state-demo';
 import ReactifyAdvancedTableDemo from './_components/reactify-advanced-table-demo';
+import ReactifyKeyboardShortcutManagerDemo from './_components/reactify-keyboard-shortcut-manager-demo';
+
 
 type ComponentCategory = 'standard' | 'charts' | 'advanced';
 
@@ -1485,13 +1488,14 @@ function MyTablePage() {
   }, [currentPage, pageSize]);
 
   const columns = useMemo((): ColumnDef<MyDataType>[] => [
-    { key: 'id', header: 'ID', width: 80 },
+    { key: 'id', header: 'ID', width: 80, enableReordering: false }, // Example: ID not reorderable
     { key: 'name', header: 'Name', minWidth: 150 },
-    { key: 'email', header: 'Email', width: 250 },
-    // Example of custom cell rendering
+    { key: 'email', header: 'Email', width: 250, enableResizing: false }, // Example: Email not resizable
     { 
       key: 'actions', 
       header: 'Actions', 
+      enableReordering: false, // Actions column usually not reorderable
+      enableResizing: false,   // Or resizable
       cell: (row) => (
         <button onClick={() => alert('Action for ' + row.name)}>Do Action</button>
       ) 
@@ -1509,18 +1513,118 @@ function MyTablePage() {
       pageSize={pageSize}
       onPageSizeChange={setPageSize}
       caption="List of items"
+      // Optional global controls:
+      // enableColumnResizing={true} 
+      // enableColumnReordering={true}
+      // onColumnOrderChange={(newOrder) => console.log('New column order:', newOrder)}
+      // onColumnResize={(key, width) => console.log(\`Column \${key} resized to \${width}\`)}
     />
   );
 }
     `,
     accessibilityNotes: [
       "Tables should use proper HTML semantics (\`<table>\`, \`<thead>\`, \`<tbody>\`, \`<th>\`, \`<td>\`).",
-      "\`<th>\` elements should have a \`scope\` attribute (\`col\` or \`row\`).",
-      "Interactive elements within the table (sorting buttons, action buttons in cells) must be keyboard accessible and properly labeled.",
-      "For features like column resizing or reordering, ensure ARIA attributes are used to announce states and provide keyboard alternatives.",
+      "\`<th>\` elements should have a \`scope\` attribute (\`col\` or \`row\`). The component implies scope='col'.",
+      "Interactive elements within the table (sorting buttons, action buttons in cells, resize handles, drag handles) must be keyboard accessible and properly labeled (e.g., using \`aria-label\` or visually hidden text).",
+      "For column resizing and reordering, ensure ARIA attributes are used to announce states and provide keyboard alternatives if drag-and-drop is not accessible to all users. (Keyboard alternatives are not yet implemented in this version).",
       "Pagination controls should be clearly labeled and operable via keyboard.",
       "Loading states should be announced (e.g., \`aria-busy\`).",
       "Ensure sufficient color contrast for text and interactive elements.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
+    id: 'keyboard-shortcut-manager',
+    name: 'Shortcut Manager',
+    icon: <CommandIcon />,
+    category: 'advanced',
+    demo: <ReactifyKeyboardShortcutManagerDemo />,
+    codeExample: `
+import { useEffect } from 'react';
+import { useKeyboardShortcuts, type Shortcut } from '@/contexts/keyboard-shortcut-context';
+import { useToast } from '@/hooks/use-toast';
+import { ReactifyButton } from '@/components/reactify/button'; // For manual palette trigger
+
+function MyComponentWithShortcuts() {
+  const { registerShortcut, unregisterShortcut, openPalette } = useKeyboardShortcuts();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const myShortcut: Shortcut = {
+      id: 'my-custom-action',
+      name: 'Perform My Custom Action',
+      keys: ['Control', 'Alt', 'm'], // Define for non-Mac
+      macKeys: ['Meta', 'Alt', 'm'],   // Define for Mac (Cmd+Option+M)
+      action: (event) => {
+        event.preventDefault(); 
+        toast({ title: 'Custom Action Triggered!', description: 'You pressed the magic keys!' });
+      },
+      group: 'My Custom Group' // Optional: for organizing in the palette
+    };
+
+    const anotherShortcut: Shortcut = {
+      id: 'another-action',
+      name: 'Log to console',
+      keys: ['Shift', 'c'], // Shift+C (main key is 'c' or 'C')
+      action: (event) => {
+        event.preventDefault();
+        console.log('Shift+C pressed!');
+        toast({title: 'Logged to console'});
+      },
+      group: 'Debugging'
+    };
+
+    registerShortcut(myShortcut);
+    registerShortcut(anotherShortcut);
+
+    // Clean up shortcuts when component unmounts
+    return () => {
+      unregisterShortcut(myShortcut.id);
+      unregisterShortcut(anotherShortcut.id);
+    };
+  }, [registerShortcut, unregisterShortcut, toast]);
+
+  return (
+    <div>
+      <p>Try pressing Ctrl+Alt+M (or Cmd+Option+M on Mac).</p>
+      <p>Try pressing Shift+C.</p>
+      <p>Press Ctrl+K (or Cmd+K) to open the shortcut palette.</p>
+      <ReactifyButton onClick={openPalette} variant="outline" className="mt-2">
+        Open Palette Manually
+      </ReactifyButton>
+    </div>
+  );
+}
+
+// IMPORTANT: Ensure KeyboardShortcutProvider is an ancestor in your app layout:
+// // In your src/app/layout.tsx or equivalent:
+// import { KeyboardShortcutProvider } from '@/contexts/keyboard-shortcut-context';
+// import { KeyboardShortcutManager } from '@/components/reactify/keyboard-shortcut-manager';
+//
+// export default function RootLayout({ children }) {
+//   return (
+//     <html lang="en">
+//       <body>
+//         <KeyboardShortcutProvider>
+//           {/* Your app structure, e.g., Header, main content */}
+//           {children}
+//           <KeyboardShortcutManager /> {/* Renders the palette UI globally */}
+//         </KeyboardShortcutProvider>
+//       </body>
+//     </html>
+//   );
+// }
+export default MyComponentWithShortcuts;
+`,
+    accessibilityNotes: [
+      "Ensure shortcut combinations do not conflict with common browser or assistive technology shortcuts. Test thoroughly.",
+      "Provide clear, concise, and user-friendly names for each shortcut in the palette.",
+      "The shortcut palette UI itself must be keyboard navigable (search input, list items, close button).",
+      "Use appropriate ARIA roles (e.g., `dialog`, `listbox`, `option`) and states (e.g., `aria-modal`, `aria-activedescendant`) within the palette.",
+      "The palette should be closeable via the Escape key.",
+      "Clearly indicate modifier keys (Ctrl, Cmd, Alt, Shift) and the main action key. Use platform-conventional symbols (e.g., ⌘ for Command on Mac).",
+      "Consider allowing users to customize or disable shortcuts, especially if they conflict with user-defined or assistive tech shortcuts (not implemented in this version).",
+      "When a shortcut triggers an action, provide clear feedback to the user (e.g., toast, visual change).",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   }
