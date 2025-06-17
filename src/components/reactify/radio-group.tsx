@@ -1,6 +1,6 @@
 
 'use client';
-import { createContext, useContext, type InputHTMLAttributes, type ReactNode } from 'react';
+import { useState, createContext, useContext, type InputHTMLAttributes, type ReactNode } from 'react';
 import { cn } from './utils';
 import type { ReactifyComponentProps } from './common-props';
 
@@ -43,11 +43,11 @@ export function ReactifyRadioGroup({
   as: Component = 'div',
   ...props
 }: ReactifyRadioGroupProps) {
-  const [internalValue, setInternalValue] = React.useState(defaultValue);
+  const [internalValue, setInternalValue] = useState(defaultValue);
   const controlledValue = value !== undefined ? value : internalValue;
 
   const handleChange = (newValue: string) => {
-    if (!value) { // If uncontrolled
+    if (value === undefined) { // If uncontrolled
       setInternalValue(newValue);
     }
     onChange?.(newValue);
@@ -143,3 +143,4 @@ export function ReactifyRadioButton({
     </label>
   );
 }
+
