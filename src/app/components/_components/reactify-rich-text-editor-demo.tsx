@@ -10,7 +10,9 @@ import { ReactifyButton } from '@/components/reactify/button';
 const initialDemoContent = `
 <h2>Welcome to Reactify Rich Text Editor!</h2>
 <p>This editor uses <strong>TipTap</strong> (a headless wrapper around <a href="https://prosemirror.net/" target="_blank" rel="noopener noreferrer">ProseMirror</a>) to provide a rich text editing experience.</p>
-<p>Features include:</p>
+<p>Features include standard text formatting like bold, italic, headings, lists, and more. Select some text and try the AI transformation buttons in the toolbar (e.g., Summarize, Make Formal, Suggest Headline)!</p>
+<h3>Example Text for AI:</h3>
+<p>The quick brown fox jumps over the lazy dog. This sentence is often used to display font samples because it contains all letters of the alphabet. It's a classic pangram. We can explore various ways to rephrase or condense this information for different contexts.</p>
 <ul>
   <li>Basic text formatting (bold, italic, strikethrough)</li>
   <li>Headings (H1, H2, H3)</li>
@@ -18,6 +20,7 @@ const initialDemoContent = `
   <li>Blockquotes</li>
   <li>Code blocks</li>
   <li>Horizontal rules</li>
+  <li><strong>New:</strong> AI Text Transformations (Summarize, Make Formal, Suggest Headline)</li>
 </ul>
 <p>Try it out!</p>
 `;
@@ -34,9 +37,9 @@ export default function ReactifyRichTextEditorDemo() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Rich Text Editor (using TipTap)</CardTitle>
+        <CardTitle>Rich Text Editor (with AI Features)</CardTitle>
         <CardDescription>
-          A basic implementation of a rich text editor using TipTap with the StarterKit extension.
+          A TipTap-based rich text editor with standard formatting and integrated AI text transformation tools.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">

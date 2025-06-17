@@ -2,15 +2,20 @@
 'use client';
 
 import type { HTMLAttributes } from 'react';
-import { useEditor, EditorContent, type Editor } from '@tiptap/react';
+import { useEditor, EditorContent, type Editor, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { cn } from './utils';
 import type { ReactifyComponentProps } from './common-props';
 import { ReactifyButton } from './button';
 import { 
   Bold, Italic, Strikethrough, Heading1, Heading2, Heading3, 
-  List, ListOrdered, Pilcrow, Minus, Quote, Code, RemoveFormatting 
+  List, ListOrdered, Pilcrow, Minus, Quote, Code, RemoveFormatting,
+  Sparkles, Loader2, AlignJustify, Briefcase, Heading as HeadingIcon
 } from 'lucide-react';
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { transformEditorText, type TransformEditorTextInput } from '@/ai/flows/transform-editor-text';
+
 
 interface ReactifyRichTextEditorProps extends ReactifyComponentProps {
   initialContent?: string;
@@ -20,22 +25,34 @@ interface ReactifyRichTextEditorProps extends ReactifyComponentProps {
   toolbarClassName?: string;
 }
 
-const ToolbarButton = ({ onClick, isActive, children, title }: { onClick: () => void; isActive?: boolean; children: React.ReactNode, title?: string }) => (
+const ToolbarButton = ({ onClick, isActive, children, title, disabled }: { onClick: () => void; isActive?: boolean; children: React.ReactNode; title?: string; disabled?: boolean; }) => (
   <ReactifyButton
     variant={isActive ? 'secondary' : 'ghost'}
     size="sm"
     onClick={onClick}
     className={cn("p-2 h-auto", isActive && "bg-accent text-accent-foreground")}
     title={title}
+    disabled={disabled}
   >
     {children}
   </ReactifyButton>
 );
 
-const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
+const EditorToolbar = ({ editor, onAiTransform, isAiLoading, aiActionLoading }: { 
+  editor: Editor | null; 
+  onAiTransform: (type: TransformEditorTextInput['transformationType']) => void;
+  isAiLoading: boolean;
+  aiActionLoading: TransformEditorTextInput['transformationType'] | null;
+}) => {
   if (!editor) {
     return null;
   }
+
+  const aiButtons: Array<{type: TransformEditorTextInput['transformationType'], icon: React.ReactNode, title: string}> = [
+    { type: 'summarize', icon: <AlignJustify size={16} />, title: 'Summarize Selection'},
+    { type: 'makeFormal', icon: <Briefcase size={16} />, title: 'Make Formal'},
+    { type: 'suggestHeadline', icon: <HeadingIcon size={16} />, title: 'Suggest Headline'},
+  ];
 
   return (
     <div className="flex flex-wrap items-center gap-1 border border-input rounded-t-md p-2 bg-muted/50">
@@ -84,6 +101,22 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
        <ToolbarButton title="Horizontal Rule" onClick={() => editor.chain().focus().setHorizontalRule().run()}>
         <Minus size={16} />
       </ToolbarButton>
+
+      <span className="h-5 w-px bg-border mx-1"></span>
+      
+      {aiButtons.map(aiButton => (
+        <ToolbarButton 
+          key={aiButton.type}
+          title={aiButton.title} 
+          onClick={() => onAiTransform(aiButton.type)} 
+          disabled={isAiLoading}
+        >
+          {isAiLoading && aiActionLoading === aiButton.type ? <Loader2 size={16} className="animate-spin" /> : aiButton.icon}
+        </ToolbarButton>
+      ))}
+      {isAiLoading && !aiActionLoading && <Loader2 size={16} className="animate-spin ml-1" title="AI processing..."/>}
+
+
     </div>
   );
 };
@@ -96,14 +129,17 @@ export function ReactifyRichTextEditor({
   editable = true,
   editorClassName,
   toolbarClassName,
-  as: Component = 'div', // The wrapper div
+  as: Component = 'div', 
   ...props
 }: ReactifyRichTextEditorProps & HTMLAttributes<HTMLDivElement>) {
+  const { toast } = useToast();
+  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [currentAiAction, setCurrentAiAction] = useState<TransformEditorTextInput['transformationType'] | null>(null);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        // Disable extensions if needed, e.g. history: false
-        // Or configure them, e.g. heading: { levels: [1, 2, 3] }
+        // placeholder: { placeholder: 'Start writing...' } // If needed
       }),
     ],
     content: initialContent,
@@ -118,15 +154,75 @@ export function ReactifyRichTextEditor({
       attributes: {
         class: cn(
           'prose prose-sm dark:prose-invert max-w-none p-3 focus:outline-none min-h-[150px] border border-input rounded-b-md focus:border-ring',
+          !editable && 'bg-muted/50 cursor-not-allowed',
           editorClassName
         ),
       },
     },
   });
 
+  const handleAiTransform = async (transformationType: TransformEditorTextInput['transformationType']) => {
+    if (!editor || isAiLoading) return;
+
+    const { from, to, empty } = editor.state.selection;
+    let textToTransform = '';
+
+    if (!empty) {
+      textToTransform = editor.state.doc.textBetween(from, to, ' ');
+    } else if (transformationType !== 'suggestHeadline') { // For summarize/formal, require selection
+        toast({ title: 'AI Transform Error', description: 'Please select some text to transform.', variant: 'destructive' });
+        return;
+    } else { // For suggestHeadline, can use current paragraph if no selection
+        const $from = editor.state.selection.$from;
+        const node = $from.parent;
+        if (node.isTextblock && node.textContent.trim().length > 0) {
+            textToTransform = node.textContent;
+        } else {
+             toast({ title: 'AI Transform Error', description: 'No text found to suggest a headline. Select text or place cursor in a paragraph.', variant: 'destructive' });
+            return;
+        }
+    }
+
+
+    if (!textToTransform.trim()) {
+      toast({ title: 'AI Transform Error', description: 'No text selected to transform.', variant: 'destructive' });
+      return;
+    }
+
+    setIsAiLoading(true);
+    setCurrentAiAction(transformationType);
+    try {
+      const result = await transformEditorText({ text: textToTransform, transformationType });
+      const { transformedText } = result;
+
+      if (transformedText) {
+        editor.chain().focus().insertContentAt(empty && transformationType !== 'suggestHeadline' ? {from, to: from} : {from, to}, transformedText).run();
+        if(transformationType === 'suggestHeadline' && empty) { // Insert headline at current pos if no selection
+            editor.chain().focus().insertContentAt(from, `<h2>${transformedText}</h2>`).run();
+        } else if (transformationType === 'suggestHeadline' && !empty) { // Replace selection with headline
+             editor.chain().focus().deleteRange({from, to}).insertContentAt(from, `<h2>${transformedText}</h2>`).run();
+        }
+        else { // Replace selection for other types
+            editor.chain().focus().deleteRange({from, to}).insertContentAt(from, transformedText).run();
+        }
+
+        toast({ title: 'AI Transformation Complete', description: `${transformationType.charAt(0).toUpperCase() + transformationType.slice(1)} applied.` });
+      } else {
+        toast({ title: 'AI Transform Error', description: 'AI did not return any text.', variant: 'destructive' });
+      }
+    } catch (error) {
+      console.error('AI transformation error:', error);
+      toast({ title: 'AI Transform Error', description: 'Failed to transform text. Please try again.', variant: 'destructive' });
+    } finally {
+      setIsAiLoading(false);
+      setCurrentAiAction(null);
+    }
+  };
+
+
   return (
     <Component className={cn('w-full', className)} {...props}>
-      <EditorToolbar editor={editor} />
+      <EditorToolbar editor={editor} onAiTransform={handleAiTransform} isAiLoading={isAiLoading} aiActionLoading={currentAiAction}/>
       <EditorContent editor={editor} />
     </Component>
   );
