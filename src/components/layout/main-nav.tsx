@@ -10,10 +10,11 @@ const navItems = [
   { href: '/components', label: 'Components' },
   { href: '/theming', label: 'Theming' },
   { href: '/ai-generator', label: 'AI Generator' },
-  { 
-    href: '/auth-demo/login', 
+  { href: '/micro-animations', label: 'Micro Animations' },
+  {
+    href: '/auth-demo/login',
     label: 'Auth Forms Demo',
-    subPaths: ['/auth-demo/signup', '/auth-demo/forgot-password'] 
+    subPaths: ['/auth-demo/signup', '/auth-demo/forgot-password']
   },
   { href: '/auth-demo/roles', label: 'Role-Based Demo'},
   { href: '/docs', label: 'Docs' },
