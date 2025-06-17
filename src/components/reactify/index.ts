@@ -28,5 +28,6 @@ export * from './markdown-editor';
 export * from './rich-text-editor';
 export * from './skeleton-loader';
 export * from './form-wizard';
+export * from './protected-content';
 export * from './common-props';
 export * from './utils';
