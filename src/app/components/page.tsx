@@ -9,7 +9,7 @@ import {
   MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
-  Briefcase, Heading as HeadingLucideIcon, AlignJustify
+  Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks
 } from 'lucide-react';
 
 import ReactifyAlertDemo from './_components/reactify-alert-demo';
@@ -37,6 +37,7 @@ import ReactifyBubbleChartDemo from './_components/charts/reactify-bubble-chart-
 import ReactifyMarkdownEditorDemo from './_components/reactify-markdown-editor-demo';
 import ReactifyRichTextEditorDemo from './_components/reactify-rich-text-editor-demo';
 import ReactifySkeletonLoaderDemo from './_components/reactify-skeleton-loader-demo';
+import ReactifyFormWizardDemo from './_components/reactify-form-wizard-demo';
 
 
 const components = [
@@ -391,6 +392,74 @@ function MyDropdownComponent() {
       "Keyboard navigation within the dropdown (basic Esc to close is implemented). Full arrow key navigation may require more complex focus management.",
       "Focus should be managed correctly when opening and closing the dropdown.",
     ]
+  },
+  {
+    id: 'form-wizard',
+    name: 'Form Wizard',
+    icon: <ListChecks />,
+    demo: <ReactifyFormWizardDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyFormWizard, type WizardStepConfig } from '@/components/reactify/form-wizard';
+import { z } from 'zod';
+
+const steps: WizardStepConfig[] = [
+  {
+    id: 'personal',
+    title: 'Personal Information',
+    description: 'Tell us a bit about yourself.',
+    fields: [
+      { name: 'fullName', label: 'Full Name', type: 'text', placeholder: 'John Doe', defaultValue: '' },
+      { name: 'email', label: 'Email Address', type: 'email', placeholder: 'john@example.com', defaultValue: '' },
+    ],
+    schema: z.object({
+      fullName: z.string().min(3, 'Full name must be at least 3 characters'),
+      email: z.string().email('Invalid email address'),
+    }),
+  },
+  {
+    id: 'address',
+    title: 'Address Details',
+    description: 'Where can we reach you?',
+    fields: [
+      { name: 'street', label: 'Street Address', type: 'text', placeholder: '123 Main St', defaultValue: '' },
+      { name: 'city', label: 'City', type: 'text', placeholder: 'Anytown', defaultValue: '' },
+    ],
+    schema: z.object({
+      street: z.string().min(5, 'Street address is too short'),
+      city: z.string().min(2, 'City name is too short'),
+    }),
+  },
+  {
+    id: 'confirmation',
+    title: 'Confirmation',
+    description: 'Review your details before submitting.',
+    fields: [], // No new fields, typically shows a summary
+    schema: z.object({}), // No validation needed for this step
+  },
+];
+
+function MyFormWizardComponent() {
+  const handleWizardSubmit = (data: Record<string, any>) => {
+    console.log('Wizard submitted:', data);
+    alert('Form wizard submitted! Check console for data.');
+  };
+
+  return (
+    <ReactifyFormWizard
+      steps={steps}
+      onFinalSubmit={handleWizardSubmit}
+    />
+  );
+}
+  `,
+    accessibilityNotes: [
+      "Ensure each step has a clear title and description.",
+      "Form fields within each step must have associated labels.",
+      "Focus should be managed when navigating between steps, ideally landing on the first focusable element of the new step.",
+      "Validation errors should be clearly announced and visually indicated.",
+      "Progress indicators should be accessible (e.g., 'Step 1 of 3').",
+    ],
   },
   {
     id: 'footer',
@@ -976,7 +1045,7 @@ export default function ComponentsPage() {
             </div>
           </SidebarHeader>
           <SidebarContent>
-            <SidebarMenu className="px-4 pt-2"> {/* Added padding here */}
+            <SidebarMenu className="px-4 pt-2">
               {filteredComponents.map((component) => (
                 <SidebarMenuItem key={component.id}>
                   <SidebarMenuButton
@@ -1000,7 +1069,7 @@ export default function ComponentsPage() {
         <SidebarInset>
           <div className="p-4 md:p-8">
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-3xl font-headline font-bold">Component Library</h1>
+              <h1 className="text-3xl font-headline font-bold">Advanced Component Library</h1>
               <SidebarTrigger className="md:hidden" />
             </div>
             <p className="text-muted-foreground mb-8">
