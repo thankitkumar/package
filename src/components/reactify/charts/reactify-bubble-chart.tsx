@@ -1,15 +1,15 @@
 
 'use client';
 
-import type { ReactNode } from 'react';
+import React, { type ReactNode, useId } from 'react';
 import {
   ScatterChart as RechartsScatterChart,
   CartesianGrid,
   XAxis,
   YAxis,
   ZAxis,
-  Tooltip as RechartsTooltip, // Renamed to avoid conflict if ChartTooltip is used locally
-  Legend as RechartsLegend,   // Renamed
+  Tooltip as RechartsTooltip,
+  Legend as RechartsLegend,
   Scatter,
   Label,
 } from 'recharts';
@@ -23,7 +23,6 @@ import type { ReactifyComponentProps } from '../common-props';
 import { cn } from '../utils';
 
 interface BubblePoint {
-  // Dynamic keys based on props
   [key: string]: any; 
 }
 
@@ -33,7 +32,7 @@ interface ReactifyBubbleChartProps extends ReactifyComponentProps {
   xKey: string;
   yKey: string;
   zKey: string;
-  nameKey: string; // For individual bubble name in tooltip
+  nameKey: string; 
   xAxisLabel?: string;
   yAxisLabel?: string;
   sizeRange?: [number, number];
@@ -53,7 +52,7 @@ export function ReactifyBubbleChart({
   nameKey,
   xAxisLabel,
   yAxisLabel,
-  sizeRange = [64, 750], // Default bubble area range (approx radius 4 to 15)
+  sizeRange = [64, 750], 
   className,
   chartClassName,
   showGrid = true,
@@ -63,9 +62,19 @@ export function ReactifyBubbleChart({
   as: Component = 'div',
   ...props
 }: ReactifyBubbleChartProps) {
+  const chartId = useId();
+  const filterId = `bubble-shadow-${chartId.replace(/:/g, '')}`;
+
   return (
     <Component className={cn('w-full h-[350px] md:h-[450px]', className)} {...props}>
       <ChartContainer config={config} className={cn("w-full h-full", chartClassName)}>
+        <svg style={{ width: 0, height: 0, position: 'absolute' }}>
+          <defs>
+            <filter id={filterId} x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="2" dy="2" stdDeviation="2" floodColor="rgb(0 0 0 / 0.2)" />
+            </filter>
+          </defs>
+        </svg>
         <RechartsScatterChart
           margin={compact ? { top: 5, right: 10, left: -20, bottom: xAxisLabel ? 5 : -10 } : { top: 20, right: 20, left: 0, bottom: xAxisLabel ? 20 : 5 }}
         >
@@ -97,7 +106,7 @@ export function ReactifyBubbleChart({
             type="number" 
             dataKey={zKey} 
             range={sizeRange} 
-            name={config[zKey]?.label || zKey} // Use config for zKey label if available
+            name={config[zKey]?.label || zKey} 
           />
 
           {showTooltip && (
@@ -108,14 +117,12 @@ export function ReactifyBubbleChart({
                 nameKey={nameKey} 
                 formatter={(value, name, entry) => {
                   if (name === xKey || name === yKey || name === zKey) {
-                     // For X, Y, Z values, show their original key name from props
                     let displayName = name;
                     if (name === xKey) displayName = xAxisLabel || xKey;
                     if (name === yKey) displayName = yAxisLabel || yKey;
                     if (name === zKey) displayName = config[zKey]?.label || zKey;
                     return [value, displayName];
                   }
-                  // For the main "name" of the bubble from nameKey
                   if (entry.payload && entry.payload[nameKey]) {
                      return [entry.payload[nameKey], config[entry.name]?.label || entry.name];
                   }
@@ -132,8 +139,9 @@ export function ReactifyBubbleChart({
               key={seriesId}
               data={data[seriesId]}
               name={config[seriesId]?.label || seriesId}
-              fill={`var(--color-${seriesId})`} // Uses ChartConfig to resolve color
-              shape="circle" // Default shape, can be prop
+              fill={`var(--color-${seriesId})`} 
+              shape="circle" 
+              filter={`url(#${filterId})`}
             />
           ))}
         </RechartsScatterChart>
@@ -141,3 +149,4 @@ export function ReactifyBubbleChart({
     </Component>
   );
 }
+
