@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useState, type ReactNode, type HTMLAttributes } from 'react';
-import { cn } from './utils';
+import React, { useState, type ReactNode, type HTMLAttributes } from 'react';
+import { cn } from '@/lib/utils'; // Changed to project-standard alias
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell, TableCaption } from '@/components/ui/table';
 import { ReactifyButton } from './button';
 import { Input } from '@/components/ui/input';
@@ -30,35 +30,40 @@ interface AdvancedTableSpecificProps<TData> {
   pageSize?: number;
   onPageSizeChange?: (size: number) => void;
   availablePageSizes?: number[];
-  onColumnOrderChange?: (newOrder: string[]) => void; // Placeholder
-  onColumnResize?: (columnKey: string, newWidth: number) => void; // Placeholder
-  onFilterChange?: (filters: any) => void; // Placeholder
+  onColumnOrderChange?: (newOrder: string[]) => void;
+  onColumnResize?: (columnKey: string, newWidth: number) => void;
+  onFilterChange?: (filters: any) => void;
   onRowClick?: (row: TData) => void;
 }
 
 interface ReactifyAdvancedTableProps<TData extends Record<string, any>>
-  extends AdvancedTableSpecificProps<TData>,
-          Omit<HTMLAttributes<HTMLDivElement>, 'children'> {}
+  extends Omit<HTMLAttributes<HTMLDivElement>, 'children'>,
+          AdvancedTableSpecificProps<TData> {}
 
+export function ReactifyAdvancedTable<TData extends Record<string, any>>(
+  props: ReactifyAdvancedTableProps<TData>
+): JSX.Element {
+  const {
+    // Specific functional props
+    columns: initialColumns,
+    data,
+    caption,
+    isLoading = false,
+    pageCount = 1,
+    currentPage = 1,
+    onPageChange,
+    pageSize = 10,
+    onPageSizeChange,
+    availablePageSizes = [10, 20, 50, 100],
+    onColumnOrderChange,
+    onColumnResize,
+    onFilterChange,
+    onRowClick,
+    // Standard HTML attributes for the root div
+    className,
+    ...htmlDivAttributes // Captures other HTML attributes like id, style, etc.
+  } = props;
 
-export function ReactifyAdvancedTable<TData extends Record<string, any>>({
-  columns: initialColumns,
-  data,
-  caption,
-  isLoading = false,
-  pageCount = 1,
-  currentPage = 1,
-  onPageChange,
-  pageSize = 10,
-  onPageSizeChange,
-  availablePageSizes = [10, 20, 50, 100],
-  onColumnOrderChange,
-  onColumnResize,
-  onFilterChange,
-  onRowClick,
-  className,
-  ...htmlDivAttributes // Collect remaining props for the div
-}: ReactifyAdvancedTableProps<TData>): JSX.Element {
   const [columns, setColumns] = useState(initialColumns);
 
   const handlePreviousPage = () => {
@@ -134,13 +139,13 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>({
               ))
             ) : data.length > 0 ? (
               data.map((row, rowIndex) => (
-                <TableRow 
-                  key={`row-${row.id || rowIndex}`} 
-                  onClick={() => onRowClick?.(row)} 
+                <TableRow
+                  key={(row as any).id || `row-${rowIndex}`} // Use row.id if available
+                  onClick={() => onRowClick?.(row)}
                   className={cn(onRowClick && "cursor-pointer")}
                 >
                   {columns.map((col) => (
-                    <TableCell key={`cell-${String(col.key)}-${row.id || rowIndex}`} className="whitespace-nowrap">
+                    <TableCell key={`cell-${String(col.key)}-${(row as any).id || rowIndex}`} className="whitespace-nowrap">
                       {col.cell ? col.cell(row, rowIndex) : String(row[col.key as keyof TData] ?? '')}
                     </TableCell>
                   ))}
