@@ -10,12 +10,14 @@ import { ReactifyButton } from './button';
 import { 
   Bold, Italic, Strikethrough, Heading1, Heading2, Heading3, 
   List, ListOrdered, Pilcrow, Minus, Quote, Code, RemoveFormatting,
-  Sparkles, Loader2, AlignJustify, Briefcase, Heading as HeadingIcon, Sigma // Added Sigma for LaTeX
+  Sparkles, Loader2, AlignJustify, Briefcase, Heading as HeadingIcon, Sigma
 } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { transformEditorText, type TransformEditorTextInput } from '@/ai/flows/transform-editor-text';
-import LatexBlockNode from './tiptap-extensions/latex-block'; // Import the new LaTeX node
+import LatexBlockNode from './tiptap-extensions/latex-block'; 
+import katex from 'katex'; // Import katex directly for HTML generation in toast
+import { CodeBlock } from '@/components/ui/code-block'; // For displaying HTML in toast
 
 
 interface ReactifyRichTextEditorProps extends ReactifyComponentProps {
@@ -39,11 +41,12 @@ const ToolbarButton = ({ onClick, isActive, children, title, disabled }: { onCli
   </ReactifyButton>
 );
 
-const EditorToolbar = ({ editor, onAiTransform, isAiLoading, aiActionLoading }: { 
+const EditorToolbar = ({ editor, onAiTransform, isAiLoading, aiActionLoading, handleLatexInsert }: { 
   editor: Editor | null; 
   onAiTransform: (type: TransformEditorTextInput['transformationType']) => void;
   isAiLoading: boolean;
   aiActionLoading: TransformEditorTextInput['transformationType'] | null;
+  handleLatexInsert: () => void; // Pass LaTeX handler
 }) => {
   if (!editor) {
     return null;
@@ -54,18 +57,6 @@ const EditorToolbar = ({ editor, onAiTransform, isAiLoading, aiActionLoading }: 
     { type: 'makeFormal', icon: <Briefcase size={16} />, title: 'Make Formal'},
     { type: 'suggestHeadline', icon: <HeadingIcon size={16} />, title: 'Suggest Headline'},
   ];
-
-  const handleLatexInsert = () => {
-    const currentLatex = editor.getAttributes('latexBlock').latex || '';
-    const latexInput = window.prompt('Enter LaTeX code (block display):', currentLatex);
-    if (latexInput !== null) { // User provided input (empty string is valid for clearing)
-      if (editor.isActive('latexBlock')) {
-        editor.chain().focus().updateAttributes('latexBlock', { latex: latexInput }).run();
-      } else {
-        editor.chain().focus().insertLatexBlock({ latex: latexInput }).run();
-      }
-    }
-  };
 
   return (
     <div className="flex flex-wrap items-center gap-1 border border-input rounded-t-md p-2 bg-muted/50">
@@ -81,7 +72,7 @@ const EditorToolbar = ({ editor, onAiTransform, isAiLoading, aiActionLoading }: 
       <ToolbarButton title="Code" onClick={() => editor.chain().focus().toggleCode().run()} isActive={editor.isActive('code')}>
         <Code size={16} />
       </ToolbarButton>
-       <ToolbarButton title="LaTeX Block" onClick={handleLatexInsert} isActive={editor.isActive('latexBlock')}>
+       <ToolbarButton title="Insert/Edit LaTeX Block" onClick={handleLatexInsert} isActive={editor.isActive('latexBlock')}>
         <Sigma size={16} />
       </ToolbarButton>
       <ToolbarButton title="Clear Formatting" onClick={() => editor.chain().focus().unsetAllMarks().run()}>
@@ -178,6 +169,46 @@ export function ReactifyRichTextEditor({
     },
   });
 
+  const handleLatexInsert = () => {
+    if (!editor) return;
+    const currentLatex = editor.getAttributes('latexBlock').latex || '';
+    const latexInput = window.prompt('Enter LaTeX code (block display):', currentLatex);
+    
+    if (latexInput !== null) { // User provided input (empty string is valid for clearing)
+      if (editor.isActive('latexBlock')) {
+        editor.chain().focus().updateAttributes('latexBlock', { latex: latexInput }).run();
+      } else {
+        editor.chain().focus().insertLatexBlock({ latex: latexInput }).run();
+      }
+
+      // Explicitly generate and show HTML for the entered LaTeX in a toast
+      try {
+        const htmlForToast = katex.renderToString(latexInput, {
+          displayMode: true,
+          throwOnError: true, // Throw to catch rendering errors for the toast
+          output: 'html',
+        });
+        toast({
+          title: 'LaTeX to HTML Output',
+          description: (
+            <div className="w-full max-w-md text-left">
+              <p className="mb-1 text-xs text-muted-foreground">HTML for: <code className="text-xs bg-slate-700 text-slate-200 p-0.5 rounded-sm">{latexInput.substring(0, 30)}{latexInput.length > 30 ? '...' : ''}</code></p>
+              <CodeBlock code={htmlForToast} lang="html" scrollAreaClassName="max-h-32 text-xs" className="text-xs" />
+            </div>
+          ),
+          duration: 15000, // Longer duration for code viewing
+        });
+      } catch (e: any) {
+        toast({
+          title: 'KaTeX HTML Generation Error',
+          description: `Could not generate HTML for toast preview: ${e.message}. The block in editor might still render if KaTeX handles the error gracefully there.`,
+          variant: 'destructive',
+          duration: 7000,
+        });
+      }
+    }
+  };
+
   const handleAiTransform = async (transformationType: TransformEditorTextInput['transformationType']) => {
     if (!editor || isAiLoading) return;
 
@@ -212,7 +243,6 @@ export function ReactifyRichTextEditor({
       const { transformedText } = result;
 
       if (transformedText) {
-        // editor.chain().focus().insertContentAt(empty && transformationType !== 'suggestHeadline' ? {from, to: from} : {from, to}, transformedText).run();
         if(transformationType === 'suggestHeadline' && empty) { 
             editor.chain().focus().insertContentAt(from, `<h2>${transformedText}</h2>`).run();
         } else if (transformationType === 'suggestHeadline' && !empty) { 
@@ -237,8 +267,15 @@ export function ReactifyRichTextEditor({
 
   return (
     <Component className={cn('w-full', className)} {...props}>
-      <EditorToolbar editor={editor} onAiTransform={handleAiTransform} isAiLoading={isAiLoading} aiActionLoading={currentAiAction}/>
+      <EditorToolbar 
+        editor={editor} 
+        onAiTransform={handleAiTransform} 
+        isAiLoading={isAiLoading} 
+        aiActionLoading={currentAiAction}
+        handleLatexInsert={handleLatexInsert} // Pass the handler
+      />
       <EditorContent editor={editor} />
     </Component>
   );
 }
+
