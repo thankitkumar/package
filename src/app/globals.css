@@ -120,3 +120,30 @@ body {
   }
 
 }
+
+/* Custom Scrollbar for Webkit-based browsers (targeting sidebar content area) */
+[data-sidebar="content"]::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+  height: 8px; /* Height of the scrollbar (for horizontal) */
+}
+
+[data-sidebar="content"]::-webkit-scrollbar-track {
+  background: hsl(var(--sidebar-background));
+  border-radius: 10px;
+}
+
+[data-sidebar="content"]::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--sidebar-border)); /* Color of the scroll thumb */
+  border-radius: 10px;
+  border: 2px solid hsl(var(--sidebar-background)); /* Creates padding around thumb */
+}
+
+[data-sidebar="content"]::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--sidebar-accent)); /* Color on hover */
+}
+
+/* Custom Scrollbar for Firefox (targeting sidebar content area) */
+[data-sidebar="content"] {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: hsl(var(--sidebar-border)) hsl(var(--sidebar-background)); /* thumb and track color */
+}

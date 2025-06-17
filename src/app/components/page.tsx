@@ -976,7 +976,7 @@ export default function ComponentsPage() {
             </div>
           </SidebarHeader>
           <SidebarContent>
-            <SidebarMenu>
+            <SidebarMenu className="px-4 pt-2"> {/* Added padding here */}
               {filteredComponents.map((component) => (
                 <SidebarMenuItem key={component.id}>
                   <SidebarMenuButton
