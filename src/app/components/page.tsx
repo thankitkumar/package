@@ -27,6 +27,7 @@ import ReactifyModalDemo from './_components/reactify-modal-demo';
 import ReactifyProgressBarDemo from './_components/reactify-progress-bar-demo';
 import ReactifyRadioGroupDemo from './_components/reactify-radio-group-demo';
 import ReactifySidebarDemo from './_components/reactify-sidebar-demo';
+import ReactifySkeletonLoaderDemo from './_components/reactify-skeleton-loader-demo';
 import ReactifyTabsDemo from './_components/reactify-tabs-demo';
 import ReactifyTextareaDemo from './_components/reactify-textarea-demo';
 import ReactifyToggleSwitchDemo from './_components/reactify-toggle-switch-demo';
@@ -36,7 +37,6 @@ import ReactifyLineChartDemo from './_components/charts/reactify-line-chart-demo
 import ReactifyBubbleChartDemo from './_components/charts/reactify-bubble-chart-demo';
 import ReactifyMarkdownEditorDemo from './_components/reactify-markdown-editor-demo';
 import ReactifyRichTextEditorDemo from './_components/reactify-rich-text-editor-demo';
-import ReactifySkeletonLoaderDemo from './_components/reactify-skeleton-loader-demo';
 import ReactifyFormWizardDemo from './_components/reactify-form-wizard-demo';
 
 type ComponentCategory = 'standard' | 'charts' | 'advanced';
@@ -47,8 +47,8 @@ interface ComponentDefinition {
   icon: React.ReactElement;
   category: ComponentCategory;
   demo: React.ReactElement;
-  codeExample: string;
-  accessibilityNotes: string[];
+  codeExample?: string;
+  accessibilityNotes?: string[];
   codeBlockScrollAreaClassName?: string;
 }
 
@@ -71,12 +71,87 @@ const components: ComponentDefinition[] = [
   {
     id: 'button', name: 'Button', icon: <SquareStack />, category: 'standard', demo: <ReactifyButtonDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `...`, accessibilityNotes: [`...`]
+    codeExample: `
+import { ReactifyButton } from '@/components/reactify/button';
+import { Heart, Upload, AlertTriangle } from 'lucide-react';
+
+// Primary Button
+<ReactifyButton variant="primary">Primary Action</ReactifyButton>
+
+// Secondary Button
+<ReactifyButton variant="secondary">Secondary Action</ReactifyButton>
+
+// Outline Button
+<ReactifyButton variant="outline">Outline Action</ReactifyButton>
+
+// Ghost Button
+<ReactifyButton variant="ghost">Ghost Action</ReactifyButton>
+
+// Destructive Button
+<ReactifyButton variant="destructive" leftIcon={<AlertTriangle />}>
+  Delete Item
+</ReactifyButton>
+
+// Button with Icon
+<ReactifyButton variant="primary" leftIcon={<Heart />}>
+  Like
+</ReactifyButton>
+
+// Loading State Button
+<ReactifyButton variant="primary" isLoading={true}>
+  Processing
+</ReactifyButton>
+
+// Disabled Button
+<ReactifyButton variant="primary" disabled>
+  Disabled
+</ReactifyButton>
+
+// Different Sizes
+<ReactifyButton variant="primary" size="sm">Small</ReactifyButton>
+<ReactifyButton variant="secondary" size="lg">Large</ReactifyButton>
+  `, 
+    accessibilityNotes: [
+      "Ensure buttons have clear, descriptive text content.",
+      "Use \`aria-label\` for icon-only buttons or if the text is not descriptive enough.",
+      "Buttons are focusable and can be activated using Enter or Space keys.",
+      "Loading state is announced via \`aria-busy\` and \`aria-live\`.",
+      "Disabled state is handled with the \`disabled\` attribute, making it unfocusable and unclickable.",
+    ]
   },
   {
     id: 'card', name: 'Card', icon: <LayoutGrid />, category: 'standard', demo: <ReactifyCardDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
-    codeExample: `...`, accessibilityNotes: [`...`]
+    codeExample: `
+import { 
+  ReactifyCard,
+  ReactifyCardHeader,
+  ReactifyCardTitle,
+  ReactifyCardDescription,
+  ReactifyCardContent,
+  ReactifyCardFooter
+} from '@/components/reactify/card';
+import { ReactifyButton } from '@/components/reactify/button';
+
+// Basic Card
+<ReactifyCard>
+  <ReactifyCardHeader>
+    <ReactifyCardTitle>Card Title</ReactifyCardTitle>
+    <ReactifyCardDescription>A short description for the card.</ReactifyCardDescription>
+  </ReactifyCardHeader>
+  <ReactifyCardContent>
+    <p>This is the main content of the card. It can contain any elements you need.</p>
+  </ReactifyCardContent>
+  <ReactifyCardFooter>
+    <ReactifyButton variant="primary">Action</ReactifyButton>
+  </ReactifyCardFooter>
+</ReactifyCard>
+  `, 
+    accessibilityNotes: [
+      "Ensure card titles are meaningful (e.g., using appropriate heading levels like <h3> within the card).",
+      "If cards are interactive (e.g., clickable as a whole), ensure they have proper focus indicators and ARIA roles (e.g., \`role='link'\` or \`role='button'\`).",
+      "Content within the card should follow general accessibility guidelines for text, images, and interactive elements.",
+    ]
   },
   {
     id: 'checkbox', name: 'Checkbox', icon: <CheckSquare />, category: 'standard', demo: <ReactifyCheckboxDemo />,
@@ -185,11 +260,7 @@ const components: ComponentDefinition[] = [
     codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `...`, accessibilityNotes: [`...`]
   },
-].map(comp => ({ // Fill in boilerplate for example and notes if missing
-  ...comp,
-  codeExample: comp.codeExample || `Code example for ${comp.name}`,
-  accessibilityNotes: comp.accessibilityNotes || [`Standard accessibility notes for ${comp.name}.`],
-}));
+];
 
 
 const displayCategories: Array<{ id: ComponentCategory; title: string }> = [
