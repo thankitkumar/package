@@ -3,14 +3,15 @@
 
 import { ReactifyMarkdownEditor } from '@/components/reactify/markdown-editor';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
 
 const sampleMarkdown = `
 # Welcome to the Reactify Markdown Editor!
 
-This is a **basic** example of what you can do.
+This is a **basic** example of what you can do. The Table of Contents (ToC) above the preview will list headings from this document.
 
 ## Features (very limited)
-- Headings
+- Headings (used for ToC)
 - **Bold text**
 - *Italic text*
 - [Links to other sites](https://example.com)
@@ -20,8 +21,13 @@ This is a **basic** example of what you can do.
     - Nested items are not well supported by this basic parser.
   - Item 3
 
+## Another H2 for ToC
 Paragraphs are separated by a blank line.
 This is another paragraph.
+
+### A Sub-heading (H3)
+More details here.
+
 A line break can be done with two spaces at the end,  
 or simply a newline for basic <br> in this rudimentary parser.
 
@@ -30,19 +36,22 @@ or simply a newline for basic <br> in this rudimentary parser.
 `;
 
 export default function ReactifyMarkdownEditorDemo() {
+  // const [markdownContent, setMarkdownContent] = useState(sampleMarkdown);
+
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Markdown Editor Demo</CardTitle>
+        <CardTitle>Markdown Editor with Table of Contents</CardTitle>
         <CardDescription>
-          A simple textarea for Markdown input with a live HTML preview. 
+          A simple textarea for Markdown input with a live HTML preview and an auto-generated Table of Contents. 
           Parsing is extremely basic.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <ReactifyMarkdownEditor 
           initialValue={sampleMarkdown} 
-          textareaRows={15}
+          // onValueChange={setMarkdownContent} // Example of handling value change
+          textareaRows={18}
         />
       </CardContent>
     </Card>
