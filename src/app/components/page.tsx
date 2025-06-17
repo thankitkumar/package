@@ -6,7 +6,7 @@ import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, S
 import { ComponentDisplay } from './_components/component-display';
 import {
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
-  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi,
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox, // Added Inbox
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
   Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2
@@ -40,6 +40,7 @@ import ReactifyRichTextEditorDemo from './_components/reactify-rich-text-editor-
 import ReactifyFormWizardDemo from './_components/reactify-form-wizard-demo';
 import ReactifyProtectedContentDemo from './_components/reactify-protected-content-demo';
 import ReactifyNetworkAwareDemo from './_components/reactify-network-aware-demo';
+import ReactifySmartEmptyStateDemo from './_components/reactify-smart-empty-state-demo';
 
 type ComponentCategory = 'standard' | 'charts' | 'advanced';
 
@@ -1017,7 +1018,7 @@ function BubbleChartExample() {
       "Similar to Bar Chart, relies on Recharts' accessibility features.",
       "Descriptive axis labels (\`xAxisLabel\`, \`yAxisLabel\`) and series labels in \`config\` are crucial.",
       "The \`nameKey\` helps identify individual bubbles in tooltips.",
-      "The \`zKey\` (size) should also have a meaningful label in the \`config\` for tooltips (e.g., \`budget: { label: \\\"Budget ($K)\\\" }\`).",
+      "The \`zKey\` (size) should also have a meaningful label in the \`config\` for tooltips (e.g., \`budget: { label: \"Budget ($K)\" }\`).",
       "Ensure color contrast. Bubble opacity/overlap can be a challenge; consider patterns or distinct outlines if series overlap significantly.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
@@ -1353,7 +1354,7 @@ function MyAppContent() {
 // </NetworkAwareWrapper>
 `,
     accessibilityNotes: [
-      "Network status banners should be announced by screen readers. The default banners use `role='status'` and `aria-live` attributes. Ensure custom banners also provide appropriate ARIA feedback.",
+      "Network status banners should be announced by screen readers. The default banners use \`role='status'\` and \`aria-live\` attributes. Ensure custom banners also provide appropriate ARIA feedback.",
       "Content within banners, especially interactive elements like a 'Retry' button, must be keyboard accessible and clearly labeled.",
       "Ensure sufficient color contrast for text and icons within the banners.",
       "The wrapper itself does not add specific ARIA roles to the main children content, as it primarily controls the visibility of banners. The accessibility of the banners themselves is key.",
@@ -1361,6 +1362,79 @@ function MyAppContent() {
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },
+  {
+    id: 'smart-empty-state',
+    name: 'Smart Empty State',
+    icon: <Inbox />,
+    category: 'advanced',
+    demo: <ReactifySmartEmptyStateDemo />,
+    codeExample: `
+import { ReactifySmartEmptyState } from '@/components/reactify/smart-empty-state';
+import { ReactifyButton } from '@/components/reactify/button';
+import { useState, useEffect } from 'react';
+import { PlusCircle, Ghost, Loader2 } from 'lucide-react';
+
+interface MyItem { id: string; name: string; }
+
+function MyListComponent() {
+  const [items, setItems] = useState<MyItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate API call
+    setIsLoading(true);
+    setTimeout(() => {
+      // setItems([{ id: '1', name: 'Initial Item' }]); // To test with data
+      setItems([]); // To test empty state
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
+  const handleAddItem = () => {
+    setItems(prev => [...prev, { id: \`\${prev.length + 1}\`, name: \`New Item \${prev.length + 1}\` }]);
+  };
+
+  const customLoading = (
+    <div className="flex flex-col items-center p-6">
+      <Loader2 className="h-10 w-10 animate-spin text-primary mb-3" />
+      <p className="text-muted-foreground">Fetching your awesome data...</p>
+    </div>
+  );
+
+  return (
+    <ReactifySmartEmptyState
+      data={items}
+      isLoading={isLoading}
+      // loadingStateContent={customLoading} // Optional custom loading
+      emptyStateTitle="No Items Yet!"
+      emptyStateDescription="It looks a bit lonely here. Why not add something?"
+      emptyStateIcon={<Ghost className="h-12 w-12 text-muted-foreground/80" />}
+      emptyStateActions={
+        <ReactifyButton onClick={handleAddItem} leftIcon={<PlusCircle size={16} />}>
+          Add Your First Item
+        </ReactifyButton>
+      }
+    >
+      <ul className="space-y-2">
+        {items.map(item => (
+          <li key={item.id} className="p-3 border rounded-md bg-background">
+            {item.name}
+          </li>
+        ))}
+      </ul>
+    </ReactifySmartEmptyState>
+  );
+}
+    `,
+    accessibilityNotes: [
+      "Ensure the empty state provides clear information and guidance to the user.",
+      "If the empty state includes interactive elements (like an 'Add Item' button), ensure they are keyboard accessible and properly labeled.",
+      "If the transition from loading to empty or to data state is abrupt, consider using \`aria-live\` regions on a container to announce changes, though the component itself focuses on conditional rendering rather than live announcements.",
+      "Default loading skeleton uses \`aria-busy\` on its container if wrapped appropriately by the parent application.",
+      "Icons used in the empty state should be decorative or have appropriate ARIA labels if they convey meaning not present in text.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  }
 ];
 
 
