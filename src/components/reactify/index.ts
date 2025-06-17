@@ -25,5 +25,6 @@ export * from './charts/reactify-bar-chart';
 export * from './charts/reactify-line-chart';
 export * from './charts/reactify-bubble-chart';
 export * from './markdown-editor';
+export * from './rich-text-editor';
 export * from './common-props';
 export * from './utils';

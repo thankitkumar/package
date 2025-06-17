@@ -5,10 +5,10 @@ import React, { useState } from 'react';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
 import { 
-  SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, 
-  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Type, FileText,
+  SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare,
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
-  SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart
+  SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText
 } from 'lucide-react';
 
 import ReactifyAlertDemo from './_components/reactify-alert-demo';
@@ -34,6 +34,7 @@ import ReactifyBarChartDemo from './_components/charts/reactify-bar-chart-demo';
 import ReactifyLineChartDemo from './_components/charts/reactify-line-chart-demo';
 import ReactifyBubbleChartDemo from './_components/charts/reactify-bubble-chart-demo';
 import ReactifyMarkdownEditorDemo from './_components/reactify-markdown-editor-demo';
+import ReactifyRichTextEditorDemo from './_components/reactify-rich-text-editor-demo';
 
 
 const components = [
@@ -214,6 +215,7 @@ const projectConfig: ChartConfig = {
       "Consider data tables as an alternative for complex datasets.",
       "Tooltips should be keyboard accessible.",
       "Clearly label axes and explain what bubble size represents.",
+      "Bubble charts include a subtle drop shadow effect for better visual separation."
     ],
   },
   {
@@ -533,6 +535,7 @@ const dataKeys: LineChartDataKey[] = [
     codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `
 import { ReactifyMarkdownEditor } from '@/components/reactify/markdown-editor';
+import { useState } from 'react';
 
 function MyMarkdownComponent() {
   const [markdown, setMarkdown] = useState("# Hello World\\n\\nThis is **Markdown**.");
@@ -541,19 +544,17 @@ function MyMarkdownComponent() {
     <ReactifyMarkdownEditor
       initialValue={markdown}
       onValueChange={(newValue) => setMarkdown(newValue)}
-      textareaRows={8}
+      textareaRows={8} // Controls the height of the textarea
+      // Includes auto-generated Table of Contents based on H1, H2, H3
     />
   );
 }
-
-// The component provides a textarea for Markdown input and a basic live HTML preview.
-// Markdown parsing is extremely rudimentary due to no third-party library constraint.
     `,
     accessibilityNotes: [
-      "Ensure the textarea for Markdown input has an associated label.",
-      "The preview pane content is dynamically generated via \`dangerouslySetInnerHTML\`. Ensure that if interactive elements are ever generated (currently just links), they are keyboard accessible.",
-      "The rudimentary parser attempts basic sanitization (stripping script tags), but for any sensitive use case, a proper sanitization library would be essential if this component were to be enhanced.",
-      "Consider providing instructions or a legend for the supported Markdown syntax.",
+      "Ensure the textarea for Markdown input has an associated label (handled internally for basic structure).",
+      "The preview pane content is dynamically generated. Ensure proper heading structure for the ToC.",
+      "The Table of Contents provides keyboard-navigable links to sections.",
+      "This editor uses a very simple, custom Markdown parser. For robust & secure parsing/sanitization, external libraries are usually recommended.",
     ]
   },
   {
@@ -678,6 +679,40 @@ function MyRadioGroupComponent() {
     ]
   },
   {
+    id: 'rich-text-editor',
+    name: 'Rich Text Editor',
+    icon: <PilcrowSquare />, // Or TypeIcon
+    demo: <ReactifyRichTextEditorDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyRichTextEditor } from '@/components/reactify/rich-text-editor';
+import { useState } from 'react';
+
+function MyRichEditorComponent() {
+  const [content, setContent] = useState('<p>Hello <strong>World</strong>!</p>');
+
+  const handleUpdate = (newContent: { html: string; json: any }) => {
+    setContent(newContent.html);
+    console.log("JSON:", newContent.json); // TipTap's internal format
+  };
+
+  return (
+    <ReactifyRichTextEditor
+      initialContent={content}
+      onUpdate={handleUpdate}
+      editable={true}
+    />
+  );
+}
+  `,
+    accessibilityNotes: [
+      "TipTap (the underlying library) is built with accessibility in mind.",
+      "The editor content area is focusable and editable using standard keyboard interactions.",
+      "Toolbar buttons are standard ReactifyButtons with titles for tooltips, enhancing accessibility.",
+      "Ensure semantic HTML is generated by the editor for best accessibility.",
+    ],
+  },
+  {
     id: 'sidebar',
     name: 'Sidebar',
     icon: <PanelLeft />,
@@ -755,7 +790,7 @@ import { ReactifyTabs, ReactifyTab } from '@/components/reactify/tabs';
   {
     id: 'textarea',
     name: 'Textarea',
-    icon: <Type />,
+    icon: <TypeIcon />,
     demo: <ReactifyTextareaDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `
