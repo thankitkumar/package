@@ -7,7 +7,8 @@ import { ComponentDisplay } from './_components/component-display';
 import { 
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, 
   MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Type,
-  PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft
+  PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
+  SeparatorHorizontal, Gauge
 } from 'lucide-react';
 
 import ReactifyAlertDemo from './_components/reactify-alert-demo';
@@ -16,11 +17,13 @@ import ReactifyBadgeDemo from './_components/reactify-badge-demo';
 import ReactifyButtonDemo from './_components/reactify-button-demo';
 import ReactifyCardDemo from './_components/reactify-card-demo';
 import ReactifyCheckboxDemo from './_components/reactify-checkbox-demo';
+import ReactifyDividerDemo from './_components/reactify-divider-demo';
 import ReactifyDropdownDemo from './_components/reactify-dropdown-demo';
 import ReactifyFooterDemo from './_components/reactify-footer-demo';
 import ReactifyHeaderDemo from './_components/reactify-header-demo';
 import ReactifyInputDemo from './_components/reactify-input-demo';
 import ReactifyModalDemo from './_components/reactify-modal-demo';
+import ReactifyProgressBarDemo from './_components/reactify-progress-bar-demo';
 import ReactifyRadioGroupDemo from './_components/reactify-radio-group-demo';
 import ReactifySidebarDemo from './_components/reactify-sidebar-demo';
 import ReactifyTabsDemo from './_components/reactify-tabs-demo';
@@ -210,6 +213,37 @@ function MyCheckboxComponent() {
     ]
   },
   {
+    id: 'divider',
+    name: 'Divider',
+    icon: <SeparatorHorizontal />,
+    demo: <ReactifyDividerDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyDivider } from '@/components/reactify/divider';
+
+// Horizontal Divider (default)
+<p>Content above</p>
+<ReactifyDivider />
+<p>Content below</p>
+
+// Vertical Divider
+<div className="flex items-center h-20"> {/* Use Tailwind for layout */}
+  <span>Left</span>
+  <ReactifyDivider orientation="vertical" /> {/* self-stretch is applied for flex context */}
+  <span>Right</span>
+</div>
+
+// Custom styling
+<ReactifyDivider className="my-8 border-dashed border-primary" />
+  `,
+    accessibilityNotes: [
+      "If the divider is purely decorative, ensure it does not receive focus.",
+      "If it semantically separates content, it uses `role='separator'` and `aria-orientation` (handled by component).",
+      "Horizontal dividers default to using `<hr>` tag for inherent semantics.",
+      "Vertical dividers use a `<div>` and rely on ARIA attributes for semantics if decorative is true.",
+    ]
+  },
+  {
     id: 'dropdown',
     name: 'Dropdown Menu',
     icon: <ChevronDownCircle />,
@@ -387,6 +421,41 @@ function MyModalComponent() {
       "The modal should be closable via the Escape key and an explicit close button.",
       "When the modal closes, focus should ideally return to the element that triggered it (requires manual management by the calling component).",
       "Overlay click to close is provided.",
+    ]
+  },
+  {
+    id: 'progress-bar',
+    name: 'Progress Bar',
+    icon: <Gauge />,
+    demo: <ReactifyProgressBarDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyProgressBar } from '@/components/reactify/progress-bar';
+import { useState, useEffect } from 'react'; // For dynamic demo
+
+function MyProgressComponent() {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    // Simulate progress
+    const interval = setInterval(() => {
+      setValue((prev) => (prev >= 100 ? 0 : prev + 10));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <>
+      <ReactifyProgressBar value={value} label="Content loading progress" />
+      <ReactifyProgressBar value={75} variant="success" size="lg" className="mt-4" />
+    </>
+  );
+}
+  `,
+    accessibilityNotes: [
+      "Uses `role='progressbar'`, `aria-valuenow`, `aria-valuemin`, `aria-valuemax` for screen readers.",
+      "Provide a descriptive `label` prop for `aria-label`.",
+      "If the progress value is displayed visually, ensure it's also accessible to screen readers (e.g., via `aria-valuetext` or visually hidden text if `showValueLabel` is used for visual text). Our current `showValueLabel` puts it in `sr-only` span.",
     ]
   },
    {
