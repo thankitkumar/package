@@ -61,15 +61,15 @@ export function ReactifyBarChart({
   ...props
 }: ReactifyBarChartProps) {
   return (
-    <Component className={cn('w-full h-[300px] md:h-[400px]', className)} {...props}>
+    <Component className={cn('w-full h-[300px] md:h-[350px]', className)} {...props}>
       <ChartContainer config={config} className={cn("w-full h-full", chartClassName)}>
         <RechartsBarChart
           accessibilityLayer
           data={data}
           layout={layout}
-          margin={compact ? { top: 5, right: 5, left: -25, bottom: -10 } : { top: 5, right: 20, left: 0, bottom: 5 }}
+          margin={compact ? { top: 5, right: 5, left: -25, bottom: -10 } : { top: 5, right: 20, left: compact ? -10 : 0, bottom: xAxisLabel ? 15 : 5 }}
         >
-          {showGrid && <CartesianGrid vertical={layout === 'vertical'} horizontal={layout === 'horizontal'} strokeDasharray="3 3" />}
+          {showGrid && <CartesianGrid vertical={layout === 'vertical'} horizontal={layout === 'horizontal'} strokeDasharray="3 3" opacity={0.5} />}
           
           {layout === 'vertical' ? (
             <>
@@ -79,14 +79,15 @@ export function ReactifyBarChart({
                 axisLine={false}
                 tickMargin={compact ? 2 : 8}
                 fontSize={compact ? 10 : 12}
-                label={xAxisLabel ? { value: xAxisLabel, position: 'insideBottom', offset: -5, fontSize: compact ? 10 : 12 } : undefined}
+                label={xAxisLabel && !compact ? { value: xAxisLabel, position: 'insideBottom', offset: -15, fontSize: compact ? 10 : 12 } : undefined}
+                interval={compact && data.length > 10 ? 'preserveStartEnd' : 0}
               />
               <YAxis 
                 tickLine={false}
                 axisLine={false}
                 tickMargin={compact ? 2 : 5}
                 fontSize={compact ? 10 : 12}
-                label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft', offset: 10, fontSize: compact ? 10 : 12 } : undefined}
+                label={yAxisLabel && !compact ? { value: yAxisLabel, angle: -90, position: 'insideLeft', offset: compact ? 5 : 10, fontSize: compact ? 10 : 12 } : undefined}
               />
             </>
           ) : (
@@ -97,7 +98,7 @@ export function ReactifyBarChart({
                 axisLine={false}
                 tickMargin={compact ? 2 : 8}
                 fontSize={compact ? 10 : 12}
-                label={xAxisLabel ? { value: xAxisLabel, position: 'insideBottom', offset: -5, fontSize: compact ? 10 : 12 } : undefined}
+                label={xAxisLabel && !compact ? { value: xAxisLabel, position: 'insideBottom', offset: -15, fontSize: compact ? 10 : 12 } : undefined}
               />
               <YAxis
                 dataKey={categoryKey}
@@ -106,24 +107,26 @@ export function ReactifyBarChart({
                 axisLine={false}
                 tickMargin={compact ? 2 : 5}
                 fontSize={compact ? 10 : 12}
-                 label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft', offset: 10, fontSize: compact ? 10 : 12 } : undefined}
+                width={compact ? 60 : 80}
+                interval={compact && data.length > 7 ? 'preserveStartEnd' : 0}
+                label={yAxisLabel && !compact ? { value: yAxisLabel, angle: -90, position: 'insideLeft', offset: compact ? 5 : 10, fontSize: compact ? 10 : 12 } : undefined}
               />
             </>
           )}
 
           {showTooltip && <ChartTooltip content={<ChartTooltipContent hideLabel={compact} />} cursor={!compact} />}
           
-          {showLegend && <ChartLegend content={<ChartLegendContent />} wrapperStyle={compact ? { fontSize: '0.75rem', paddingTop: '10px' } : {}} />}
+          {showLegend && <ChartLegend content={<ChartLegendContent />} wrapperStyle={compact ? { fontSize: '0.7rem', paddingTop: '10px', paddingBottom: '0px' } : {paddingTop: '10px'}} />}
           
           {dataKeys.map((dk) => (
             <Bar
               key={dk.key}
               dataKey={dk.key}
-              name={dk.label || dk.key}
+              name={dk.label || config[dk.key]?.label || dk.key}
               fill={dk.color || `var(--color-${dk.key})`}
               stackId={dk.stackId}
-              radius={dk.radius || (compact ? [2,2,0,0] : [4, 4, 0, 0])}
-              barSize={compact ? 10 : undefined}
+              radius={dk.radius !== undefined ? dk.radius : (layout === 'horizontal' ? (compact ? [0,2,2,0] : [0,4,4,0]) : (compact ? [2,2,0,0] : [4, 4, 0, 0]))}
+              barSize={compact ? (layout === 'horizontal' ? 10 : 12) : undefined}
             />
           ))}
         </RechartsBarChart>

@@ -121,12 +121,11 @@ import { ReactifyBadge } from '@/components/reactify/badge';
     codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `
 import { ReactifyBarChart, type BarChartDataKey } from '@/components/reactify/charts/reactify-bar-chart';
-import type { ChartConfig } from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart'; // ShadCN chart config
 
 const sampleData = [
   { month: "Jan", desktop: 186, mobile: 80 },
   { month: "Feb", desktop: 305, mobile: 200 },
-  { month: "Mar", desktop: 237, mobile: 120 },
 ];
 
 const sampleConfig: ChartConfig = {
@@ -134,24 +133,37 @@ const sampleConfig: ChartConfig = {
   mobile: { label: "Mobile", color: "hsl(var(--chart-2))" },
 };
 
-const sampleDataKeys: BarChartDataKey[] = [
-  { key: 'desktop' },
-  { key: 'mobile' },
+// For basic bar chart
+const dataKeys: BarChartDataKey[] = [
+  { key: 'desktop', radius: [4,4,0,0] }, // Optional: Apply radius to bars
+  { key: 'mobile', radius: [4,4,0,0] },
 ];
+
+// For stacked bar chart
+const stackedDataKeys: BarChartDataKey[] = [
+  { key: 'new', stackId: 'a' }, // 'a' is the stack identifier
+  { key: 'returning', stackId: 'a' },
+  { key: 'inactive', stackId: 'a', radius: [4,4,0,0] }, // Radius on top bar of stack
+];
+
 
 <ReactifyBarChart
   data={sampleData}
   config={sampleConfig}
-  categoryKey="month"
-  dataKeys={sampleDataKeys}
-  className="h-[350px]"
+  categoryKey="month" // Key in data for X-axis categories
+  dataKeys={dataKeys}   // Defines the bars to render
+  className="h-[350px]" // Set height for the chart container
+  layout="vertical"   // "vertical" (default) or "horizontal"
+  compact={false}     // For a more minimal look
+  xAxisLabel="Month"
+  yAxisLabel="Active Users"
 />
   `,
     accessibilityNotes: [
-      "Ensure charts have descriptive titles or surrounding text for context.",
-      "Provide sufficient color contrast for bars and text elements (handled by theme variables).",
+      "Ensure charts have descriptive titles or surrounding text for context (e.g., using CardHeader).",
+      "Provide sufficient color contrast for bars and text elements (colors are from theme via ChartConfig).",
       "Consider providing data in an alternative format (e.g., a table) for users who cannot perceive the chart visually.",
-      "Tooltips should be keyboard accessible (Recharts default behavior).",
+      "Tooltips should be keyboard accessible (Recharts default behavior). `accessibilityLayer` prop is active.",
     ],
   },
   {
@@ -322,7 +334,7 @@ function MyDropdownComponent() {
       "Use \`aria-haspopup='true'\` and \`aria-expanded\` on the trigger element (handled by the component).",
       "The dropdown menu should have \`role='menu'\` (handled by the component).",
       "Dropdown items should have \`role='menuitem'\` (handled by ReactifyDropdownItem).",
-      "Keyboard navigation within the dropdown (Up/Down arrows, Enter/Space to select, Esc to close) should be implemented (basic Esc to close is implemented). Full arrow key navigation may require more complex focus management.",
+      "Keyboard navigation within the dropdown (basic Esc to close is implemented). Full arrow key navigation may require more complex focus management.",
       "Focus should be managed correctly when opening and closing the dropdown.",
     ]
   },
@@ -427,12 +439,11 @@ import { Label } from '@/components/ui/label'; // Assuming a Label component
     codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `
 import { ReactifyLineChart, type LineChartDataKey } from '@/components/reactify/charts/reactify-line-chart';
-import type { ChartConfig } from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart'; // ShadCN chart config
 
 const sampleData = [
   { date: "2024-01", value1: 100, value2: 150 },
   { date: "2024-02", value1: 120, value2: 170 },
-  { date: "2024-03", value1: 90, value2: 130 },
 ];
 
 const sampleConfig: ChartConfig = {
@@ -440,25 +451,28 @@ const sampleConfig: ChartConfig = {
   value2: { label: "Metric B", color: "hsl(var(--chart-2))" },
 };
 
-const sampleDataKeys: LineChartDataKey[] = [
-  { key: 'value1' },
-  { key: 'value2', strokeDasharray: "5 5" },
+const dataKeys: LineChartDataKey[] = [
+  { key: 'value1', type: 'monotone' }, // type: 'monotone', 'linear', 'step', etc.
+  { key: 'value2', strokeDasharray: "5 5" }, // Optional: dashed line
 ];
 
 <ReactifyLineChart
   data={sampleData}
   config={sampleConfig}
-  categoryKey="date"
-  dataKeys={sampleDataKeys}
-  className="h-[350px]"
+  categoryKey="date"    // Key in data for X-axis categories
+  dataKeys={dataKeys}     // Defines the lines to render
+  className="h-[350px]"   // Set height for the chart container
+  compact={false}       // For a more minimal look
+  xAxisLabel="Date"
+  yAxisLabel="Value Count"
 />
   `,
     accessibilityNotes: [
       "Ensure charts have descriptive titles or surrounding text for context.",
       "Provide sufficient color contrast for lines, points, and text elements.",
-      "Data points and lines should be distinguishable, especially for users with color vision deficiencies (consider using different line styles or point shapes).",
+      "Data points and lines should be distinguishable, especially for users with color vision deficiencies (consider using different line styles or point shapes if colors are too similar).",
       "Consider providing data in an alternative format (e.g., a table).",
-      "Tooltips should be keyboard accessible.",
+      "Tooltips should be keyboard accessible. `accessibilityLayer` prop is active.",
     ],
   },
   {
@@ -529,6 +543,9 @@ function MyProgressComponent() {
     <>
       <ReactifyProgressBar value={value} label="Content loading progress" />
       <ReactifyProgressBar value={75} variant="success" size="lg" className="mt-4" />
+      {/* Other variants: primary, warning, destructive, default */}
+      {/* Sizes: sm, md, lg */}
+      {/* showValueLabel for sr-only text of value */}
     </>
   );
 }

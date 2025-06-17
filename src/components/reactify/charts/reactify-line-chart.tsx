@@ -22,10 +22,11 @@ import { cn } from '../utils';
 
 export interface LineChartDataKey {
   key: string;
-  label?: string;
-  color?: string; // e.g., 'hsl(var(--chart-1))'
+  label?: string; // Will be taken from ChartConfig if not provided here
+  color?: string; // e.g., 'hsl(var(--chart-1))', will be taken from ChartConfig if not here
   strokeDasharray?: string; // e.g., "5 5" for dashed line
   type?: 'monotone' | 'linear' | 'step' | 'natural'; // Recharts line types
+  connectNulls?: boolean;
 }
 
 interface ReactifyLineChartProps extends ReactifyComponentProps {
@@ -59,42 +60,44 @@ export function ReactifyLineChart({
   ...props
 }: ReactifyLineChartProps) {
   return (
-    <Component className={cn('w-full h-[300px] md:h-[400px]', className)} {...props}>
+    <Component className={cn('w-full h-[300px] md:h-[350px]', className)} {...props}>
       <ChartContainer config={config} className={cn("w-full h-full", chartClassName)}>
         <RechartsLineChart
           accessibilityLayer
           data={data}
-          margin={compact ? { top: 5, right: 5, left: -25, bottom: -10 } : { top: 5, right: 20, left: 0, bottom: 5 }}
+          margin={compact ? { top: 5, right: 5, left: -25, bottom: -10 } : { top: 5, right: 20, left: compact ? -10: 0, bottom: xAxisLabel ? 15 : 5 }}
         >
-          {showGrid && <CartesianGrid strokeDasharray="3 3" />}
+          {showGrid && <CartesianGrid strokeDasharray="3 3" opacity={0.5} />}
           <XAxis
             dataKey={categoryKey}
             tickLine={false}
             axisLine={false}
             tickMargin={compact ? 2 : 8}
             fontSize={compact ? 10 : 12}
-            label={xAxisLabel ? { value: xAxisLabel, position: 'insideBottom', offset: -5, fontSize: compact ? 10 : 12 } : undefined}
+            label={xAxisLabel && !compact ? { value: xAxisLabel, position: 'insideBottom', offset: -15, fontSize: compact ? 10 : 12 } : undefined}
+            interval={compact && data.length > 10 ? 'preserveStartEnd' : 0}
           />
           <YAxis
             tickLine={false}
             axisLine={false}
             tickMargin={compact ? 2 : 5}
             fontSize={compact ? 10 : 12}
-            label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft', offset: 10, fontSize: compact ? 10 : 12 } : undefined}
+            label={yAxisLabel && !compact ? { value: yAxisLabel, angle: -90, position: 'insideLeft', offset: compact ? 5 : 10, fontSize: compact ? 10 : 12 } : undefined}
           />
           {showTooltip && <ChartTooltip content={<ChartTooltipContent hideLabel={compact}/>} cursor={!compact} />}
-          {showLegend && <ChartLegend content={<ChartLegendContent />} wrapperStyle={compact ? { fontSize: '0.75rem', paddingTop: '10px' } : {}} />}
+          {showLegend && <ChartLegend content={<ChartLegendContent />} wrapperStyle={compact ? { fontSize: '0.7rem', paddingTop: '10px', paddingBottom: '0px' } : {paddingTop: '10px'}} />}
           {dataKeys.map((dk) => (
             <Line
               key={dk.key}
               dataKey={dk.key}
-              name={dk.label || dk.key}
+              name={dk.label || config[dk.key]?.label || dk.key}
               type={dk.type || "monotone"}
               stroke={dk.color || `var(--color-${dk.key})`}
               strokeWidth={2}
-              dot={compact ? false : { r: 4, fill: dk.color || `var(--color-${dk.key})`, strokeWidth: 2, fillOpacity: 1 }}
-              activeDot={compact ? undefined : { r: 6, fill: dk.color || `var(--color-${dk.key})`, strokeWidth: 2 }}
+              dot={compact ? false : { r: 3, fill: dk.color || `var(--color-${dk.key})`, strokeWidth: 1 }}
+              activeDot={compact ? false : { r: 5, fill: dk.color || `var(--color-${dk.key})`, strokeWidth: 1 }}
               strokeDasharray={dk.strokeDasharray}
+              connectNulls={dk.connectNulls}
             />
           ))}
         </RechartsLineChart>

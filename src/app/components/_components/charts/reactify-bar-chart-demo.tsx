@@ -25,24 +25,42 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const dataKeys: BarChartDataKey[] = [
-  { key: 'desktop', label: 'Desktop Users', color: 'hsl(var(--chart-1))', radius: [4,4,0,0] },
-  { key: 'mobile', label: 'Mobile Users', color: 'hsl(var(--chart-2))', radius: [4,4,0,0] },
+  { key: 'desktop', radius: [4,4,0,0] },
+  { key: 'mobile', radius: [4,4,0,0] },
 ];
 
 const stackedData = [
-  { date: '2024-01', new: 50, returning: 30, inactive: 10 },
-  { date: '2024-02', new: 65, returning: 40, inactive: 12 },
-  { date: '2024-03', new: 70, returning: 55, inactive: 8 },
+  { date: 'Jan', new: 50, returning: 30, inactive: 10 },
+  { date: 'Feb', new: 65, returning: 40, inactive: 12 },
+  { date: 'Mar', new: 70, returning: 55, inactive: 8 },
+  { date: 'Apr', new: 60, returning: 45, inactive: 15 },
+  { date: 'May', new: 75, returning: 60, inactive: 5 },
 ];
 const stackedConfig = {
   new: { label: 'New', color: 'hsl(var(--chart-1))' },
   returning: { label: 'Returning', color: 'hsl(var(--chart-2))' },
   inactive: { label: 'Inactive', color: 'hsl(var(--chart-3))' },
 } satisfies ChartConfig;
+
 const stackedDataKeys: BarChartDataKey[] = [
   { key: 'new', stackId: 'a', radius: [0,0,0,0] },
   { key: 'returning', stackId: 'a', radius: [0,0,0,0] },
   { key: 'inactive', stackId: 'a', radius: [4,4,0,0] }, // Topmost stack has radius
+];
+
+const horizontalData = [
+  { feature: "Feature A", usage: 75, adoption: 90 },
+  { feature: "Feature B", usage: 90, adoption: 60 },
+  { feature: "Feature C", usage: 45, adoption: 70 },
+  { feature: "Feature D", usage: 60, adoption: 50 },
+];
+const horizontalConfig = {
+  usage: { label: "Usage Score", color: "hsl(var(--chart-4))" },
+  adoption: { label: "Adoption Rate", color: "hsl(var(--chart-5))" },
+} satisfies ChartConfig;
+const horizontalDataKeys: BarChartDataKey[] = [
+  { key: 'usage', radius: [0,4,4,0] },
+  { key: 'adoption', radius: [0,4,4,0] },
 ];
 
 
@@ -52,7 +70,7 @@ export default function ReactifyBarChartDemo() {
       <Card>
         <CardHeader>
           <CardTitle>Basic Bar Chart</CardTitle>
-          <CardDescription>Monthly active users by device type.</CardDescription>
+          <CardDescription>Monthly active users by device type. (Vertical Layout)</CardDescription>
         </CardHeader>
         <CardContent>
           <ReactifyBarChart
@@ -61,6 +79,8 @@ export default function ReactifyBarChartDemo() {
             categoryKey="month"
             dataKeys={dataKeys}
             yAxisLabel="Active Users"
+            xAxisLabel="Month"
+            className="h-[350px]"
           />
         </CardContent>
       </Card>
@@ -68,7 +88,7 @@ export default function ReactifyBarChartDemo() {
       <Card>
         <CardHeader>
           <CardTitle>Stacked Bar Chart</CardTitle>
-          <CardDescription>User segments over time.</CardDescription>
+          <CardDescription>User segments over time. (Vertical Layout)</CardDescription>
         </CardHeader>
         <CardContent>
           <ReactifyBarChart
@@ -77,6 +97,8 @@ export default function ReactifyBarChartDemo() {
             categoryKey="date"
             dataKeys={stackedDataKeys}
             yAxisLabel="User Count"
+            xAxisLabel="Month"
+            className="h-[350px]"
           />
         </CardContent>
       </Card>
@@ -84,21 +106,18 @@ export default function ReactifyBarChartDemo() {
       <Card>
         <CardHeader>
           <CardTitle>Horizontal Bar Chart</CardTitle>
-          <CardDescription>Feature usage comparison.</CardDescription>
+          <CardDescription>Feature comparison. (Horizontal Layout)</CardDescription>
         </CardHeader>
         <CardContent>
            <ReactifyBarChart
-            data={[
-              { feature: "Feature A", usage: 75 },
-              { feature: "Feature B", usage: 90 },
-              { feature: "Feature C", usage: 45 },
-            ]}
-            config={{ usage: { label: "Usage", color: "hsl(var(--chart-3))" } }}
+            data={horizontalData}
+            config={horizontalConfig}
             categoryKey="feature"
-            dataKeys={[{ key: 'usage', radius: [0,4,4,0] }]}
+            dataKeys={horizontalDataKeys}
             layout="horizontal"
-            xAxisLabel="Usage Score"
-            className="h-[250px]"
+            xAxisLabel="Score / Rate"
+            yAxisLabel="Feature"
+            className="h-[350px]"
           />
         </CardContent>
       </Card>
@@ -106,7 +125,7 @@ export default function ReactifyBarChartDemo() {
       <Card>
         <CardHeader>
           <CardTitle>Compact Bar Chart</CardTitle>
-          <CardDescription>Quick overview of sales figures (compact mode).</CardDescription>
+          <CardDescription>Quick overview of sales figures (compact mode, vertical).</CardDescription>
         </CardHeader>
         <CardContent>
           <ReactifyBarChart
@@ -114,7 +133,7 @@ export default function ReactifyBarChartDemo() {
             config={chartConfig}
             categoryKey="month"
             dataKeys={dataKeys.map(dk => ({...dk, radius: [2,2,0,0]}))}
-            className="h-[200px]"
+            className="h-[250px]"
             compact
             showLegend={false}
           />
