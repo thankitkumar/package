@@ -8,7 +8,7 @@ import {
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, 
   MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Type,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
-  SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon
+  SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart
 } from 'lucide-react';
 
 import ReactifyAlertDemo from './_components/reactify-alert-demo';
@@ -32,6 +32,7 @@ import ReactifyToggleSwitchDemo from './_components/reactify-toggle-switch-demo'
 import ReactifyTooltipDemo from './_components/reactify-tooltip-demo';
 import ReactifyBarChartDemo from './_components/charts/reactify-bar-chart-demo';
 import ReactifyLineChartDemo from './_components/charts/reactify-line-chart-demo';
+import ReactifyBubbleChartDemo from './_components/charts/reactify-bubble-chart-demo';
 
 
 const components = [
@@ -135,15 +136,15 @@ const sampleConfig: ChartConfig = {
 
 // For basic bar chart
 const dataKeys: BarChartDataKey[] = [
-  { key: 'desktop', radius: [4,4,0,0] }, // Optional: Apply radius to bars
+  { key: 'desktop', radius: [4,4,0,0] }, // Optional: Apply radius to bars [TL, TR, BR, BL]
   { key: 'mobile', radius: [4,4,0,0] },
 ];
 
-// For stacked bar chart
+// For stacked bar chart with rounded top/bottom
 const stackedDataKeys: BarChartDataKey[] = [
-  { key: 'new', stackId: 'a' }, // 'a' is the stack identifier
-  { key: 'returning', stackId: 'a' },
-  { key: 'inactive', stackId: 'a', radius: [4,4,0,0] }, // Radius on top bar of stack
+  { key: 'newUsers', stackId: 'users', radius: [0,0,4,4] },      // Bottom-most
+  { key: 'returningUsers', stackId: 'users', radius: [0,0,0,0] }, // Middle
+  { key: 'activeUsers', stackId: 'users', radius: [4,4,0,0] },   // Top-most
 ];
 
 
@@ -164,6 +165,54 @@ const stackedDataKeys: BarChartDataKey[] = [
       "Provide sufficient color contrast for bars and text elements (colors are from theme via ChartConfig).",
       "Consider providing data in an alternative format (e.g., a table) for users who cannot perceive the chart visually.",
       "Tooltips should be keyboard accessible (Recharts default behavior). `accessibilityLayer` prop is active.",
+    ],
+  },
+  {
+    id: 'bubble-chart',
+    name: 'Bubble Chart',
+    icon: <ScatterChart />,
+    demo: <ReactifyBubbleChartDemo />,
+    codeBlockScrollAreaClassName: 'max-h-[600px]', // Bubble chart code can be longer
+    codeExample: `
+import { ReactifyBubbleChart } from '@/components/reactify/charts/reactify-bubble-chart';
+import type { ChartConfig } from '@/components/ui/chart';
+
+// Data format: { seriesName: [{xKey, yKey, zKey, nameKey}, ...], ... }
+const projectData = {
+  seriesA: [
+    { id: "A1", devEffort: 10, userImpact: 8, budget: 50000, feature: "New Dashboard" },
+    { id: "A2", devEffort: 6, userImpact: 9, budget: 30000, feature: "AI Integration" },
+  ],
+  seriesB: [
+    { id: "B1", devEffort: 8, userImpact: 6, budget: 70000, feature: "Mobile App" },
+  ],
+};
+
+const projectConfig: ChartConfig = {
+  seriesA: { label: "Q1 Initiatives", color: "hsl(var(--chart-1))" },
+  seriesB: { label: "Q2 Roadmap", color: "hsl(var(--chart-2))" },
+  budget: { label: "Budget ($)" } // Used for Z-axis tooltip label
+};
+
+<ReactifyBubbleChart
+  data={projectData}
+  config={projectConfig}
+  xKey="devEffort"      // Key in data objects for X-axis value
+  yKey="userImpact"     // Key for Y-axis value
+  zKey="budget"         // Key for Z-axis value (bubble size)
+  nameKey="feature"     // Key for individual bubble name in tooltip
+  xAxisLabel="Development Effort (Story Points)"
+  yAxisLabel="User Impact (1-10)"
+  sizeRange={[100, 2500]} // Min/max bubble area in pixels
+  className="h-[450px]"
+/>
+  `,
+    accessibilityNotes: [
+      "Ensure charts have descriptive titles or surrounding text.",
+      "Provide sufficient color contrast for bubbles and text.",
+      "Consider data tables as an alternative for complex datasets.",
+      "Tooltips should be keyboard accessible.",
+      "Clearly label axes and explain what bubble size represents.",
     ],
   },
   {
@@ -453,7 +502,7 @@ const sampleConfig: ChartConfig = {
 
 const dataKeys: LineChartDataKey[] = [
   { key: 'value1', type: 'monotone' }, // type: 'monotone', 'linear', 'step', etc.
-  { key: 'value2', strokeDasharray: "5 5" }, // Optional: dashed line
+  { key: 'value2', strokeDasharray: "5 5", connectNulls: true }, // Optional: dashed line, connect nulls
 ];
 
 <ReactifyLineChart
