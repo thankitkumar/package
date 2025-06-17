@@ -6,11 +6,11 @@ import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, S
 import { ComponentDisplay } from './_components/component-display';
 import {
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
-  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox, Bell, // Added Bell
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox, Bell,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
   Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2, Table2,
-  Command as CommandIcon, LayoutList // Added LayoutList for Form Wizard Visualizer
+  Command as CommandIcon
 } from 'lucide-react';
 
 import ReactifyAlertDemo from './_components/reactify-alert-demo';
@@ -33,7 +33,7 @@ import ReactifyTabsDemo from './_components/reactify-tabs-demo';
 import ReactifyTextareaDemo from './_components/reactify-textarea-demo';
 import ReactifyToggleSwitchDemo from './_components/reactify-toggle-switch-demo';
 import ReactifyTooltipDemo from './_components/reactify-tooltip-demo';
-import ReactifyToasterDemo from './_components/reactify-toaster-demo'; // New import
+import ReactifyToasterDemo from './_components/reactify-toaster-demo';
 import ReactifyBarChartDemo from './_components/charts/reactify-bar-chart-demo';
 import ReactifyLineChartDemo from './_components/charts/reactify-line-chart-demo';
 import ReactifyBubbleChartDemo from './_components/charts/reactify-bubble-chart-demo';
@@ -45,9 +45,6 @@ import ReactifyNetworkAwareDemo from './_components/reactify-network-aware-demo'
 import ReactifySmartEmptyStateDemo from './_components/reactify-smart-empty-state-demo';
 import ReactifyAdvancedTableDemo from './_components/reactify-advanced-table-demo';
 import ReactifyKeyboardShortcutManagerDemo from './_components/reactify-keyboard-shortcut-manager-demo';
-import { ReactifyCard, ReactifyCardContent, ReactifyCardDescription, ReactifyCardHeader, ReactifyCardTitle } from '@/components/reactify/card';
-import Link from 'next/link';
-import { ReactifyButton } from '@/components/reactify/button';
 
 
 type ComponentCategory = 'standard' | 'charts' | 'advanced';
@@ -900,9 +897,9 @@ function MyComponentWithToasts() {
 // ...
 `,
     accessibilityNotes: [
-      "Toasts use `role='status'` or `role='alert'` (for destructive variant) to announce messages to screen readers.",
+      "Toasts use \`role='status'\` or \`role='alert'\` (for destructive variant) to announce messages to screen readers.",
       "They are designed to be non-intrusive and typically disappear after a timeout (default 5s).",
-      "If toasts contain actions, ensure the action buttons are clearly labeled (e.g., with `altText` for `ToastAction`) and keyboard accessible.",
+      "If toasts contain actions, ensure the action buttons are clearly labeled (e.g., with \`altText\` for \`ToastAction\`) and keyboard accessible.",
       "ShadCN's toast system is built on Radix UI's Toast primitive, which handles focus management and other accessibility concerns.",
       "Ensure toast content is concise and provides clear information. Avoid overly long descriptions.",
     ],
@@ -1319,75 +1316,6 @@ function WizardDemo() {
       "The confirmation step should clearly present all entered data for review.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
-  },
-  {
-    id: 'form-wizard-visualizer', name: 'Form Wizard Visualizer', icon: <LayoutList />, category: 'advanced',
-    demo: (
-      <ReactifyCard>
-        <ReactifyCardHeader>
-          <ReactifyCardTitle>Form Wizard State Visualizer</ReactifyCardTitle>
-          <ReactifyCardDescription>
-            This tool provides a live visualization of the Form Wizard's internal state as you interact with it.
-          </ReactifyCardDescription>
-        </ReactifyCardHeader>
-        <ReactifyCardContent>
-          <p className="text-muted-foreground mb-4">
-            See how the wizard manages data across multiple steps, handles validation, and tracks the current active step.
-          </p>
-          <ReactifyButton asChild>
-            <Link href="/advanced-tools/form-wizard-visualizer">
-              Open Visualizer Tool
-            </Link>
-          </ReactifyButton>
-        </ReactifyCardContent>
-      </ReactifyCard>
-    ),
-    codeExample: `
-// This component is a page demonstrating the Form Wizard's state.
-// See /advanced-tools/form-wizard-visualizer for the actual implementation.
-//
-// Key aspects:
-// 1. Use ReactifyFormWizard component.
-// 2. Provide an 'onStateChange' callback to the wizard.
-// 3. Display the received state (currentStepIndex, allStepsData, etc.).
-
-import { ReactifyFormWizard, type WizardStepConfig } from '@/components/reactify/form-wizard';
-import { useState } from 'react';
-
-function WizardVisualizerPage() {
-  const [wizardState, setWizardState] = useState(null);
-  
-  const steps: WizardStepConfig[] = [ /* ... your steps config ... */ ];
-
-  const handleStateChange = (newState: any) => {
-    setWizardState(newState);
-  };
-
-  const handleFinalSubmit = (data: Record<string, any>) => {
-    console.log("Final wizard data:", data);
-    alert("Wizard submitted! Check console.");
-  };
-
-  return (
-    <div className="grid md:grid-cols-2 gap-8">
-      <ReactifyFormWizard
-        steps={steps}
-        onFinalSubmit={handleFinalSubmit}
-        onStateChange={handleStateChange} 
-      />
-      <div>
-        <h3>Live Wizard State:</h3>
-        {wizardState ? <pre>{JSON.stringify(wizardState, null, 2)}</pre> : <p>Interact with the wizard...</p>}
-      </div>
-    </div>
-  );
-}
-    `,
-    accessibilityNotes: [
-      "The visualizer itself should ensure its displayed information is accessible (e.g., good contrast for text, proper ARIA attributes for dynamic regions if content updates very frequently).",
-      "The underlying Form Wizard component's accessibility notes still apply.",
-      "Primarily a development/learning tool, so its own accessibility is simpler but still important for developers using it.",
-    ],
   },
   {
     id: 'keyboard-shortcut-manager',
@@ -1811,6 +1739,9 @@ export default function ComponentsPage() {
                 const componentsInCategory = globallyFilteredComponents.filter(
                   comp => comp.category === category.id
                 );
+                if (componentsInCategory.length === 0 && !searchTerm) { // Only skip if not searching and category empty
+                    // return null; // Skip rendering category if no components and not searching
+                }
                 return (
                   <div key={category.id} className="mb-4">
                     <h3 className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider group-data-[collapsible=icon]:hidden">
@@ -1830,7 +1761,7 @@ export default function ComponentsPage() {
                         </SidebarMenuItem>
                       ))
                     ) : (
-                      searchTerm && (
+                      searchTerm && ( // Only show "no matching" if actually searching
                         <div className="px-2 py-1 text-sm text-muted-foreground group-data-[collapsible=icon]:hidden">
                           No matching components in this category.
                         </div>
