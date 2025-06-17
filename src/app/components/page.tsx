@@ -8,7 +8,7 @@ import {
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, 
   MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Type,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft,
-  SeparatorHorizontal, Gauge
+  SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon
 } from 'lucide-react';
 
 import ReactifyAlertDemo from './_components/reactify-alert-demo';
@@ -30,6 +30,8 @@ import ReactifyTabsDemo from './_components/reactify-tabs-demo';
 import ReactifyTextareaDemo from './_components/reactify-textarea-demo';
 import ReactifyToggleSwitchDemo from './_components/reactify-toggle-switch-demo';
 import ReactifyTooltipDemo from './_components/reactify-tooltip-demo';
+import ReactifyBarChartDemo from './_components/charts/reactify-bar-chart-demo';
+import ReactifyLineChartDemo from './_components/charts/reactify-line-chart-demo';
 
 
 const components = [
@@ -83,7 +85,7 @@ import { User } from 'lucide-react'; // Example for custom fallback
 <ReactifyAvatar alt="Big User" size="xl" />
   `,
     accessibilityNotes: [
-      "Ensure `alt` text is descriptive if the image is meaningful. If decorative, provide an empty `alt=''`.",
+      "Ensure \`alt\` text is descriptive if the image is meaningful. If decorative, provide an empty \`alt=''\`.",
       "Fallback content (initials or custom) should be clear and provide context.",
       "Avatars are typically not interactive on their own; if wrapped in a button or link, ensure that element is accessible.",
     ]
@@ -110,6 +112,47 @@ import { ReactifyBadge } from '@/components/reactify/badge';
       "Ensure badge text is descriptive or used in a context that provides meaning.",
       "Good color contrast is important for readability, handled by predefined variants.",
     ]
+  },
+  {
+    id: 'bar-chart',
+    name: 'Bar Chart',
+    icon: <BarChartBig />,
+    demo: <ReactifyBarChartDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyBarChart, type BarChartDataKey } from '@/components/reactify/charts/reactify-bar-chart';
+import type { ChartConfig } from '@/components/ui/chart';
+
+const sampleData = [
+  { month: "Jan", desktop: 186, mobile: 80 },
+  { month: "Feb", desktop: 305, mobile: 200 },
+  { month: "Mar", desktop: 237, mobile: 120 },
+];
+
+const sampleConfig: ChartConfig = {
+  desktop: { label: "Desktop", color: "hsl(var(--chart-1))" },
+  mobile: { label: "Mobile", color: "hsl(var(--chart-2))" },
+};
+
+const sampleDataKeys: BarChartDataKey[] = [
+  { key: 'desktop' },
+  { key: 'mobile' },
+];
+
+<ReactifyBarChart
+  data={sampleData}
+  config={sampleConfig}
+  categoryKey="month"
+  dataKeys={sampleDataKeys}
+  className="h-[350px]"
+/>
+  `,
+    accessibilityNotes: [
+      "Ensure charts have descriptive titles or surrounding text for context.",
+      "Provide sufficient color contrast for bars and text elements (handled by theme variables).",
+      "Consider providing data in an alternative format (e.g., a table) for users who cannot perceive the chart visually.",
+      "Tooltips should be keyboard accessible (Recharts default behavior).",
+    ],
   },
   {
     id: 'button',
@@ -142,8 +185,8 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react'; // Example icons
     accessibilityNotes: [
       "Ensure buttons have clear, descriptive text content or an aria-label for icon-only buttons.",
       "Buttons are focusable and activatable using Enter or Space keys.",
-      "Loading state is announced via `aria-busy` and `aria-live` (handled by the component).",
-      "Disabled state uses the `disabled` attribute, making it unfocusable and unclickable.",
+      "Loading state is announced via \`aria-busy\` and \`aria-live\` (handled by the component).",
+      "Disabled state uses the \`disabled\` attribute, making it unfocusable and unclickable.",
     ]
   },
   {
@@ -174,7 +217,7 @@ import { ReactifyButton } from '@/components/reactify/button'; // Example
   `,
     accessibilityNotes: [
       "Ensure card titles are meaningful and use appropriate heading levels (ReactifyCardTitle renders as <h3>).",
-      "If cards are interactive (e.g., clickable as a whole), ensure they have proper focus indicators and ARIA roles (e.g., wrap in a link or button, or add `role` and `tabindex` to the card itself if it acts as one large interactive element).",
+      "If cards are interactive (e.g., clickable as a whole), ensure they have proper focus indicators and ARIA roles (e.g., wrap in a link or button, or add \`role\` and \`tabindex\` to the card itself if it acts as one large interactive element).",
       "Content within the card should follow general accessibility guidelines for text, images, and interactive elements.",
     ]
   },
@@ -206,7 +249,7 @@ function MyCheckboxComponent() {
 // <ReactifyCheckbox id="largeDisabled" label="Large Disabled" size="lg" disabled checked />
   `,
     accessibilityNotes: [
-      "Always associate with a `<label>`. The `label` prop links the visual label to the input.",
+      "Always associate with a \`<label>\`. The \`label\` prop links the visual label to the input.",
       "Ensure a visible focus indicator (handled by default styles).",
       "State (checked/unchecked) should be clear visually and to assistive technologies.",
       "The hidden native input handles most ARIA attributes.",
@@ -238,9 +281,9 @@ import { ReactifyDivider } from '@/components/reactify/divider';
   `,
     accessibilityNotes: [
       "If the divider is purely decorative, ensure it does not receive focus.",
-      "If it semantically separates content, it uses `role='separator'` and `aria-orientation` (handled by component).",
-      "Horizontal dividers default to using `<hr>` tag for inherent semantics.",
-      "Vertical dividers use a `<div>` and rely on ARIA attributes for semantics if decorative is true.",
+      "If it semantically separates content, it uses \`role='separator'\` and \`aria-orientation\` (handled by component).",
+      "Horizontal dividers default to using \`<hr>\` tag for inherent semantics.",
+      "Vertical dividers use a \`<div>\` and rely on ARIA attributes for semantics if decorative is true.",
     ]
   },
   {
@@ -276,9 +319,9 @@ function MyDropdownComponent() {
   `,
     accessibilityNotes: [
       "The dropdown trigger should be focusable and activatable via keyboard (Enter/Space).",
-      "Use `aria-haspopup='true'` and `aria-expanded` on the trigger element (handled by the component).",
-      "The dropdown menu should have `role='menu'` (handled by the component).",
-      "Dropdown items should have `role='menuitem'` (handled by ReactifyDropdownItem).",
+      "Use \`aria-haspopup='true'\` and \`aria-expanded\` on the trigger element (handled by the component).",
+      "The dropdown menu should have \`role='menu'\` (handled by the component).",
+      "Dropdown items should have \`role='menuitem'\` (handled by ReactifyDropdownItem).",
       "Keyboard navigation within the dropdown (Up/Down arrows, Enter/Space to select, Esc to close) should be implemented (basic Esc to close is implemented). Full arrow key navigation may require more complex focus management.",
       "Focus should be managed correctly when opening and closing the dropdown.",
     ]
@@ -371,10 +414,52 @@ import { Label } from '@/components/ui/label'; // Assuming a Label component
     accessibilityNotes: [
       "Always associate inputs with a \`<label>\` element using `htmlFor` and `id` attributes.",
       "Provide clear placeholder text or instructions.",
-      "Use `aria-invalid='true'` to indicate an error state (handled by the component's `error` prop).",
+      "Use \`aria-invalid='true'\` to indicate an error state (handled by the component's \`error\` prop).",
       "Ensure sufficient color contrast for borders and text, especially in error states (handled by default styles).",
       "Disabled inputs are not focusable or editable.",
     ]
+  },
+   {
+    id: 'line-chart',
+    name: 'Line Chart',
+    icon: <LineChartIcon />,
+    demo: <ReactifyLineChartDemo />,
+    codeBlockScrollAreaClassName: "max-h-none",
+    codeExample: `
+import { ReactifyLineChart, type LineChartDataKey } from '@/components/reactify/charts/reactify-line-chart';
+import type { ChartConfig } from '@/components/ui/chart';
+
+const sampleData = [
+  { date: "2024-01", value1: 100, value2: 150 },
+  { date: "2024-02", value1: 120, value2: 170 },
+  { date: "2024-03", value1: 90, value2: 130 },
+];
+
+const sampleConfig: ChartConfig = {
+  value1: { label: "Metric A", color: "hsl(var(--chart-1))" },
+  value2: { label: "Metric B", color: "hsl(var(--chart-2))" },
+};
+
+const sampleDataKeys: LineChartDataKey[] = [
+  { key: 'value1' },
+  { key: 'value2', strokeDasharray: "5 5" },
+];
+
+<ReactifyLineChart
+  data={sampleData}
+  config={sampleConfig}
+  categoryKey="date"
+  dataKeys={sampleDataKeys}
+  className="h-[350px]"
+/>
+  `,
+    accessibilityNotes: [
+      "Ensure charts have descriptive titles or surrounding text for context.",
+      "Provide sufficient color contrast for lines, points, and text elements.",
+      "Data points and lines should be distinguishable, especially for users with color vision deficiencies (consider using different line styles or point shapes).",
+      "Consider providing data in an alternative format (e.g., a table).",
+      "Tooltips should be keyboard accessible.",
+    ],
   },
   {
     id: 'modal',
@@ -383,40 +468,36 @@ import { Label } from '@/components/ui/label'; // Assuming a Label component
     demo: <ReactifyModalDemo />,
     codeBlockScrollAreaClassName: "max-h-none",
     codeExample: `
+import { useState } from 'react';
 import { ReactifyModal } from '@/components/reactify/modal';
-import { ReactifyButton } from '@/components/reactify/button'; // For trigger and footer
-import { useState } from 'react'; // For controlling modal state
+import { ReactifyButton } from '@/components/reactify/button';
 
-function MyModalComponent() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+function MyComponent() {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <ReactifyButton onClick={() => setIsModalOpen(true)}>Open Modal</ReactifyButton>
+      <ReactifyButton onClick={() => setIsOpen(true)}>Open Modal</ReactifyButton>
       <ReactifyModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="My Awesome Modal"
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="My Modal Title"
         footer={
           <>
-            <ReactifyButton variant="outline" onClick={() => setIsModalOpen(false)}>
-              Cancel
-            </ReactifyButton>
-            <ReactifyButton variant="primary" onClick={() => { setIsModalOpen(false); alert('Confirmed!'); }}>
-              Confirm
-            </ReactifyButton>
+            <ReactifyButton variant="outline" onClick={() => setIsOpen(false)}>Cancel</ReactifyButton>
+            <ReactifyButton variant="primary" onClick={() => { alert('Confirmed!'); setIsOpen(false); }}>Confirm</ReactifyButton>
           </>
         }
       >
-        <p>This is the main content of the modal. You can place any React nodes here, like forms, text, or images.</p>
+        <p>This is the content of the modal. You can put any React nodes here.</p>
       </ReactifyModal>
     </>
   );
 }
   `,
     accessibilityNotes: [
-      "Modals should be announced by screen readers when opened. Uses `role='dialog'` and `aria-modal='true'`.",
-      "Provide a clear title for the modal using the `title` prop, which sets `aria-labelledby`.",
+      "Modals should be announced by screen readers when opened. Uses \`role='dialog'\` and \`aria-modal='true'\`.",
+      "Provide a clear title for the modal using the \`title\` prop, which sets \`aria-labelledby\`.",
       "Focus should be trapped within the modal when it's open (basic focus on modal itself implemented).",
       "The modal should be closable via the Escape key and an explicit close button.",
       "When the modal closes, focus should ideally return to the element that triggered it (requires manual management by the calling component).",
@@ -453,9 +534,9 @@ function MyProgressComponent() {
 }
   `,
     accessibilityNotes: [
-      "Uses `role='progressbar'`, `aria-valuenow`, `aria-valuemin`, `aria-valuemax` for screen readers.",
-      "Provide a descriptive `label` prop for `aria-label`.",
-      "If the progress value is displayed visually, ensure it's also accessible to screen readers (e.g., via `aria-valuetext` or visually hidden text if `showValueLabel` is used for visual text). Our current `showValueLabel` puts it in `sr-only` span.",
+      "Uses \`role='progressbar'\`, \`aria-valuenow\`, \`aria-valuemin\`, \`aria-valuemax\` for screen readers.",
+      "Provide a descriptive \`label\` prop for \`aria-label\`.",
+      "If the progress value is displayed visually, ensure it's also accessible to screen readers (e.g., via \`aria-valuetext\` or visually hidden text if \`showValueLabel\` is used for visual text). Our current \`showValueLabel\` puts it in \`sr-only\` span.",
     ]
   },
    {
@@ -491,9 +572,9 @@ function MyRadioGroupComponent() {
 }
   `,
     accessibilityNotes: [
-      "The `ReactifyRadioGroup` has `role='radiogroup'`.",
-      "Each `ReactifyRadioButton` is associated with its label.",
-      "Use `aria-labelledby` on the group to associate it with a visible label.",
+      "The \`ReactifyRadioGroup\` has \`role='radiogroup'\`.",
+      "Each \`ReactifyRadioButton\` is associated with its label.",
+      "Use \`aria-labelledby\` on the group to associate it with a visible label.",
       "Keyboard navigation (arrow keys to change selection, Tab to move in/out of group) is handled by native radio button behavior.",
       "Disabled states are clearly indicated.",
     ]
@@ -535,8 +616,8 @@ function MyPageWithSidebar() {
 }
   `,
     accessibilityNotes: [
-      "Ensure the sidebar has a clear title (using `title` prop which sets `aria-labelledby`).",
-      "Sidebar has `role='complementary'` or could be `role='dialog'` if modal with `aria-modal='true'`.",
+      "Ensure the sidebar has a clear title (using \`title\` prop which sets \`aria-labelledby\`).",
+      "Sidebar has \`role='complementary'\` or could be \`role='dialog'\` if modal with \`aria-modal='true'\`.",
       "Provide a clear way to close the sidebar (e.g., close button, Escape key - Esc key not auto-implemented, but close button is).",
       "Manage focus appropriately: when opened, focus should move into the sidebar; when closed, focus should return to the trigger element (requires developer to handle).",
       "Overlay is dismissible on click if present.",
@@ -567,8 +648,8 @@ import { ReactifyTabs, ReactifyTab } from '@/components/reactify/tabs';
 // <ReactifyTabs onTabChange={(index) => console.log('Tab changed to:', index)}>...</ReactifyTabs>
   `,
     accessibilityNotes: [
-      "Tab list has `role='tablist'`, tabs have `role='tab'`, panels have `role='tabpanel'`.",
-      "Use `aria-selected` for active tab, `aria-controls` for panel association (handled by component).",
+      "Tab list has \`role='tablist'\`, tabs have \`role='tab'\`, panels have \`role='tabpanel'\`.",
+      "Use \`aria-selected\` for active tab, \`aria-controls\` for panel association (handled by component).",
       "Support keyboard navigation (arrow keys to switch tabs, Enter/Space to activate - basic click activation implemented). Full keyboard navigation (arrow keys) for switching tabs is desirable.",
       "Disabled tabs are visually distinct and not interactive.",
     ]
@@ -600,9 +681,9 @@ import { Label } from '@/components/ui/label'; // Assuming a Label component
 <ReactifyTextarea id="notes-disabled" value="Read-only notes." disabled />
   `,
     accessibilityNotes: [
-      "Always associate with a \`<label>\` using `htmlFor` and `id`.",
+      "Always associate with a \`<label>\` using \`htmlFor\` and \`id\`.",
       "Provide clear placeholder text or instructions.",
-      "Use `aria-invalid='true'` for error states (handled by the `error` prop).",
+      "Use \`aria-invalid='true'\` for error states (handled by the \`error\` prop).",
       "Ensure sufficient color contrast for borders and text.",
       "Disabled state is non-interactive.",
     ]
@@ -636,8 +717,8 @@ function MyToggleComponent() {
 // <ReactifyToggleSwitch id="disabledToggle" label="Cannot Change" disabled checked />
   `,
     accessibilityNotes: [
-      "Uses a hidden checkbox input with `role='switch'` and `aria-checked` for accessibility.",
-      "Associated with a visible label via `htmlFor` and `id`.",
+      "Uses a hidden checkbox input with \`role='switch'\` and \`aria-checked\` for accessibility.",
+      "Associated with a visible label via \`htmlFor\` and \`id\`.",
       "Focus indicators are important and handled by default styles.",
       "State (on/off) is clearly communicated visually and to assistive technologies.",
     ]
@@ -672,7 +753,7 @@ import { Info } from 'lucide-react'; // Example icon trigger
 // Delay prop (in ms) for appearance delay
   `,
     accessibilityNotes: [
-      "Tooltip has `role='tooltip'`.",
+      "Tooltip has \`role='tooltip'\`.",
       "Trigger element should be focusable. If wrapping non-focusable elements, the Tooltip wrapper itself becomes focusable.",
       "Tooltip visibility is controllable via hover and focus.",
       "Content is announced by screen readers when the trigger receives focus or hover.",

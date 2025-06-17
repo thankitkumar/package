@@ -21,5 +21,7 @@ export * from './radio-group';
 export * from './toggle-switch';
 export * from './divider';
 export * from './progress-bar';
+export * from './charts/reactify-bar-chart';
+export * from './charts/reactify-line-chart';
 export * from './common-props';
 export * from './utils';

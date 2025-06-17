@@ -7,7 +7,7 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true, // Clean output directory before build
-  external: ['react', 'react-dom', 'lucide-react'], // Externalize peer dependencies
+  external: ['react', 'react-dom', 'lucide-react', 'recharts'], // Externalize peer dependencies
   // tsup will automatically pick up tsconfig.json paths for aliases like @/*
   // Ensure your tsconfig.json's baseUrl and paths are set up if you use such aliases internally.
   // For Reactify components, we've updated them to use relative paths for utils and common-props.
