@@ -13,7 +13,7 @@ export function Header() {
             <Package className="h-6 w-6 text-primary" />
             <span className="font-bold inline-block text-xl">Reactify</span>
           </div>
-          <span className="text-xs text-muted-foreground ml-[calc(1.5rem+0.5rem)] -mt-0.5"> {/* Adjusted margin for alignment */}
+          <span className="text-xs text-destructive italic ml-[calc(1.5rem+0.5rem)] -mt-0.5"> {/* Adjusted margin, color, and style */}
             A product of Molecular connections
           </span>
         </Link>
