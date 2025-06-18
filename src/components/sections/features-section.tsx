@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Zap, Puzzle, Palette, Accessibility, Smartphone, BrainCircuit } from 'lucide-react';
+import { Zap, Puzzle, Palette, Accessibility, Smartphone } from 'lucide-react'; // BrainCircuit removed
 
 const features = [
   {
@@ -27,11 +27,12 @@ const features = [
     title: 'Platform Agnostic',
     description: 'Develop once, deploy anywhere. Code works across Web, Mobile, and Desktop environments.',
   },
-  {
-    icon: <BrainCircuit className="h-10 w-10 text-primary mb-4" />,
-    title: 'AI Component Generator',
-    description: 'Leverage AI to suggest component variants and modifications based on your design requirements.',
-  },
+  // Removed AI Component Generator feature
+  // {
+  //   icon: <BrainCircuit className="h-10 w-10 text-primary mb-4" />,
+  //   title: 'AI Component Generator',
+  //   description: 'Leverage AI to suggest component variants and modifications based on your design requirements.',
+  // },
 ];
 
 export function FeaturesSection() {

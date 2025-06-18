@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 const navItems = [
   { href: '/components', label: 'Components' },
   { href: '/theming', label: 'Theming' },
-  { href: '/ai-generator', label: 'AI Generator' },
+  // { href: '/ai-generator', label: 'AI Generator' }, // Removed
   { href: '/micro-animations', label: 'Micro Animations' },
   {
     href: '/auth-demo/login',
@@ -17,7 +17,7 @@ const navItems = [
     subPaths: ['/auth-demo/signup', '/auth-demo/forgot-password']
   },
   { href: '/auth-demo/roles', label: 'Role-Based Demo'},
-  { href: '/advanced-tools/feature-flag-manager', label: 'Feature Flags'}, // Updated link
+  { href: '/advanced-tools/feature-flag-manager', label: 'Feature Flags'},
   { href: '/docs', label: 'Docs' },
 ];
 

@@ -20,11 +20,13 @@ export function HeroSection() {
               Explore Components <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>
+          {/* Removed AI Component Generator Button
           <Button asChild variant="outline" size="lg" className="shadow-lg hover:shadow-accent/50 transition-shadow duration-300">
             <Link href="/ai-generator">
               AI Component Generator
             </Link>
           </Button>
+          */}
         </div>
         <div className="relative aspect-video max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl border border-border">
             <Image 

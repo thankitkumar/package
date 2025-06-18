@@ -14,8 +14,21 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { CodeBlock } from '@/components/ui/code-block';
 
-import { generateComponentVariants, GenerateComponentVariantsInput, GenerateComponentVariantsOutput } from '@/ai/flows/generate-component-variants';
-import { suggestComponentModifications, SuggestComponentModificationsInput, SuggestComponentModificationsOutput } from '@/ai/flows/suggest-component-modifications';
+// Genkit flows have been removed. Placeholder types and functions:
+type GenerateComponentVariantsInput = { componentDescription: string };
+type GenerateComponentVariantsOutput = { variants: string[] };
+type SuggestComponentModificationsInput = { componentDescription: string; styleGuide: string; currentParameters: string; };
+type SuggestComponentModificationsOutput = { suggestedModifications: string; reasoning: string; };
+
+const placeholderGenerateComponentVariants = async (input: GenerateComponentVariantsInput): Promise<GenerateComponentVariantsOutput> => {
+  console.warn("generateComponentVariants called, but Genkit is removed. Returning placeholder data.");
+  return { variants: ["Variant 1 (Genkit Removed)", "Variant 2 (Genkit Removed)"] };
+};
+const placeholderSuggestComponentModifications = async (input: SuggestComponentModificationsInput): Promise<SuggestComponentModificationsOutput> => {
+  console.warn("suggestComponentModifications called, but Genkit is removed. Returning placeholder data.");
+  return { suggestedModifications: '{ "info": "Genkit removed" }', reasoning: "Genkit removed." };
+};
+// End of placeholder Genkit-related code
 
 const variantsSchema = z.object({
   componentDescriptionVariants: z.string().min(10, 'Please provide a detailed component description.'),
@@ -62,12 +75,13 @@ export function AiGeneratorForm() {
     setIsVariantsLoading(true);
     setVariantsResult(null);
     try {
-      const input: GenerateComponentVariantsInput = { componentDescription: data.componentDescriptionVariants };
-      const result = await generateComponentVariants(input);
+      // Call placeholder function
+      const result = await placeholderGenerateComponentVariants({ componentDescription: data.componentDescriptionVariants });
       setVariantsResult(result);
+      toast({ title: 'Placeholder Data', description: 'Genkit removed. Displaying placeholder variant data.', variant: 'default' });
     } catch (error) {
-      console.error('Error generating variants:', error);
-      toast({ title: 'Error', description: 'Failed to generate component variants.', variant: 'destructive' });
+      console.error('Error generating variants (placeholder):', error);
+      toast({ title: 'Error', description: 'Failed to generate component variants (Genkit removed).', variant: 'destructive' });
     } finally {
       setIsVariantsLoading(false);
     }
@@ -77,16 +91,17 @@ export function AiGeneratorForm() {
     setIsModificationsLoading(true);
     setModificationsResult(null);
     try {
-      const input: SuggestComponentModificationsInput = {
+       // Call placeholder function
+      const result = await placeholderSuggestComponentModifications({
         componentDescription: data.componentDescriptionMod,
         styleGuide: data.styleGuide,
         currentParameters: data.currentParameters,
-      };
-      const result = await suggestComponentModifications(input);
+      });
       setModificationsResult(result);
+      toast({ title: 'Placeholder Data', description: 'Genkit removed. Displaying placeholder modification data.', variant: 'default' });
     } catch (error) {
-      console.error('Error suggesting modifications:', error);
-      toast({ title: 'Error', description: 'Failed to suggest component modifications.', variant: 'destructive' });
+      console.error('Error suggesting modifications (placeholder):', error);
+      toast({ title: 'Error', description: 'Failed to suggest component modifications (Genkit removed).', variant: 'destructive' });
     } finally {
       setIsModificationsLoading(false);
     }
@@ -97,6 +112,7 @@ export function AiGeneratorForm() {
       {/* Generate Variants Form */}
       <form onSubmit={variantsForm.handleSubmit(onVariantsSubmit)} className="space-y-6">
         <h3 className="text-xl font-semibold font-headline">Generate Component Variants</h3>
+        <p className="text-sm text-muted-foreground">AI functionality (Genkit) has been removed. This form will show placeholder data.</p>
         <div>
           <Label htmlFor="componentDescriptionVariants">Component Description</Label>
           <Textarea
@@ -111,14 +127,14 @@ export function AiGeneratorForm() {
         </div>
         <Button type="submit" disabled={isVariantsLoading}>
           {isVariantsLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Generate Variants
+          Generate Variants (Placeholder)
         </Button>
       </form>
 
       {variantsResult && (
         <Card className="mt-6 bg-muted/50">
           <CardHeader>
-            <CardTitle>Suggested Variants</CardTitle>
+            <CardTitle>Suggested Variants (Placeholder)</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="list-disc space-y-2 pl-5">
@@ -135,6 +151,7 @@ export function AiGeneratorForm() {
       {/* Suggest Modifications Form */}
       <form onSubmit={modificationsForm.handleSubmit(onModificationsSubmit)} className="space-y-6">
         <h3 className="text-xl font-semibold font-headline">Suggest Component Modifications</h3>
+        <p className="text-sm text-muted-foreground">AI functionality (Genkit) has been removed. This form will show placeholder data.</p>
         <div>
           <Label htmlFor="componentDescriptionMod">Component Description</Label>
           <Textarea
@@ -173,14 +190,14 @@ export function AiGeneratorForm() {
         </div>
         <Button type="submit" disabled={isModificationsLoading}>
           {isModificationsLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Suggest Modifications
+          Suggest Modifications (Placeholder)
         </Button>
       </form>
 
       {modificationsResult && (
         <Card className="mt-6 bg-muted/50">
           <CardHeader>
-            <CardTitle>Suggested Modifications</CardTitle>
+            <CardTitle>Suggested Modifications (Placeholder)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
