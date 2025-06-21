@@ -2,52 +2,68 @@
 'use client';
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger, SidebarInput } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
 import {
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
   MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox, Bell,
-  PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft, ToggleRight, // Added ToggleRight
+  PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft, ToggleRight,
   SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
   Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2, Table2,
-  Command as CommandIcon
+  Command as CommandIcon, ListTree
 } from 'lucide-react';
-
-import ReactifyAlertDemo from './_components/reactify-alert-demo';
-import ReactifyAvatarDemo from './_components/reactify-avatar-demo';
-import ReactifyBadgeDemo from './_components/reactify-badge-demo';
-import ReactifyButtonDemo from './_components/reactify-button-demo';
-import ReactifyCardDemo from './_components/reactify-card-demo';
-import ReactifyCheckboxDemo from './_components/reactify-checkbox-demo';
-import ReactifyDividerDemo from './_components/reactify-divider-demo';
-import ReactifyDropdownDemo from './_components/reactify-dropdown-demo';
-import ReactifyFooterDemo from './_components/reactify-footer-demo';
-import ReactifyHeaderDemo from './_components/reactify-header-demo';
-import ReactifyInputDemo from './_components/reactify-input-demo';
-import ReactifyModalDemo from './_components/reactify-modal-demo';
-import ReactifyProgressBarDemo from './_components/reactify-progress-bar-demo';
-import ReactifyRadioGroupDemo from './_components/reactify-radio-group-demo';
-import ReactifySidebarDemo from './_components/reactify-sidebar-demo';
-import ReactifySkeletonLoaderDemo from './_components/reactify-skeleton-loader-demo';
-import ReactifyTabsDemo from './_components/reactify-tabs-demo';
-import ReactifyTextareaDemo from './_components/reactify-textarea-demo';
-import ReactifyToggleSwitchDemo from './_components/reactify-toggle-switch-demo';
-import ReactifyTooltipDemo from './_components/reactify-tooltip-demo';
-import ReactifyToasterDemo from './_components/reactify-toaster-demo';
-import ReactifyBarChartDemo from './_components/charts/reactify-bar-chart-demo';
-import ReactifyLineChartDemo from './_components/charts/reactify-line-chart-demo';
-import ReactifyBubbleChartDemo from './_components/charts/reactify-bubble-chart-demo';
-import ReactifyMarkdownEditorDemo from './_components/reactify-markdown-editor-demo';
-import ReactifyRichTextEditorDemo from './_components/reactify-rich-text-editor-demo';
-import ReactifyFormWizardDemo from './_components/reactify-form-wizard-demo';
-import ReactifyProtectedContentDemo from './_components/reactify-protected-content-demo';
-import ReactifyNetworkAwareDemo from './_components/reactify-network-aware-demo';
-import ReactifySmartEmptyStateDemo from './_components/reactify-smart-empty-state-demo';
-import ReactifyAdvancedTableDemo from './_components/reactify-advanced-table-demo';
-import ReactifyKeyboardShortcutManagerDemo from './_components/reactify-keyboard-shortcut-manager-demo';
 import { ReactifyCard, ReactifyCardContent, ReactifyCardHeader, ReactifyCardTitle } from '@/components/reactify/card';
 import Link from 'next/link';
 import { ReactifyButton } from '@/components/reactify/button';
+import { ReactifySkeletonLoader } from '@/components/reactify/skeleton-loader';
+
+
+// Loader component for dynamic imports
+const ComponentLoader = () => (
+  <div className="w-full p-6 space-y-6">
+    <ReactifySkeletonLoader className="h-8 w-1/3 rounded-md" />
+    <div className="space-y-4">
+      <ReactifySkeletonLoader className="h-4 w-1/2 rounded-md" />
+      <ReactifySkeletonLoader className="h-20 w-full rounded-md" />
+      <ReactifySkeletonLoader className="h-10 w-1/4 rounded-md" />
+    </div>
+  </div>
+);
+
+// Dynamically import all demo components
+const ReactifyAlertDemo = dynamic(() => import('./_components/reactify-alert-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyAvatarDemo = dynamic(() => import('./_components/reactify-avatar-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyBadgeDemo = dynamic(() => import('./_components/reactify-badge-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyButtonDemo = dynamic(() => import('./_components/reactify-button-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyCardDemo = dynamic(() => import('./_components/reactify-card-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyCheckboxDemo = dynamic(() => import('./_components/reactify-checkbox-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyDividerDemo = dynamic(() => import('./_components/reactify-divider-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyDropdownDemo = dynamic(() => import('./_components/reactify-dropdown-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyFooterDemo = dynamic(() => import('./_components/reactify-footer-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyHeaderDemo = dynamic(() => import('./_components/reactify-header-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyInputDemo = dynamic(() => import('./_components/reactify-input-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyModalDemo = dynamic(() => import('./_components/reactify-modal-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyProgressBarDemo = dynamic(() => import('./_components/reactify-progress-bar-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyRadioGroupDemo = dynamic(() => import('./_components/reactify-radio-group-demo'), { loading: () => <ComponentLoader /> });
+const ReactifySidebarDemo = dynamic(() => import('./_components/reactify-sidebar-demo'), { loading: () => <ComponentLoader /> });
+const ReactifySkeletonLoaderDemo = dynamic(() => import('./_components/reactify-skeleton-loader-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyTabsDemo = dynamic(() => import('./_components/reactify-tabs-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyTextareaDemo = dynamic(() => import('./_components/reactify-textarea-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyToggleSwitchDemo = dynamic(() => import('./_components/reactify-toggle-switch-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyTooltipDemo = dynamic(() => import('./_components/reactify-tooltip-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyToasterDemo = dynamic(() => import('./_components/reactify-toaster-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyBarChartDemo = dynamic(() => import('./_components/charts/reactify-bar-chart-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyLineChartDemo = dynamic(() => import('./_components/charts/reactify-line-chart-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyBubbleChartDemo = dynamic(() => import('./_components/charts/reactify-bubble-chart-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyMarkdownEditorDemo = dynamic(() => import('./_components/reactify-markdown-editor-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyRichTextEditorDemo = dynamic(() => import('./_components/reactify-rich-text-editor-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyFormWizardDemo = dynamic(() => import('./_components/reactify-form-wizard-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyProtectedContentDemo = dynamic(() => import('./_components/reactify-protected-content-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyNetworkAwareDemo = dynamic(() => import('./_components/reactify-network-aware-demo'), { loading: () => <ComponentLoader /> });
+const ReactifySmartEmptyStateDemo = dynamic(() => import('./_components/reactify-smart-empty-state-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyAdvancedTableDemo = dynamic(() => import('./_components/reactify-advanced-table-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyKeyboardShortcutManagerDemo = dynamic(() => import('./_components/reactify-keyboard-shortcut-manager-demo'), { loading: () => <ComponentLoader /> });
 
 
 type ComponentCategory = 'standard' | 'charts' | 'advanced';
@@ -416,7 +432,7 @@ function IconDropdown() {
       "The dropdown trigger is focusable and activatable via keyboard (Enter/Space triggers it, it has \`aria-haspopup='true'\` and \`aria-expanded\`).",
       "The dropdown menu itself has \`role='menu'\`.",
       "Dropdown items (\`ReactifyDropdownItem\`) have \`role='menuitem'\`. Custom content within items should be accessible.",
-      "Keyboard navigation within the dropdown (Up/Down arrows, Enter/Space to select, Esc to close) is handled by the browser/underlying structure for simple button-based items. For fully custom items, ensure they are navigable.",
+      "Keyboard navigation within the dropdown (Up/Down arrows, Enter/Space to select, Esc to close) should be implemented. For fully custom items, ensure they are navigable.",
       "Focus is managed: when the dropdown opens, focus can move into it. When it closes (e.g., via Esc or click outside), focus should ideally return to the trigger.",
       "Disabled items are marked appropriately.",
     ],
@@ -556,7 +572,7 @@ function ModalExample() {
       "Focus is managed: when the modal opens, it attempts to focus itself (or the first focusable element).",
       "The modal can be closed via the Escape key.",
       "A visible close button with an \`aria-label\` is provided.",
-      "When the modal closes, focus should ideally return to the element that triggered it (this requires manual management by the consuming component if not handled by a library). ReactifyModal's basic version doesn't automatically manage return focus.",
+      "When the modal closes, focus should ideally return to the element that triggered it. ReactifyModal's basic version doesn't automatically manage return focus.",
       "Content within the modal should be scrollable if it exceeds the modal's height.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
@@ -786,8 +802,8 @@ function TabsExample() {
     accessibilityNotes: [
       "The tabs container (\`ReactifyTabs\`) has \`role='tablist'\` and \`aria-orientation='horizontal'\`.",
       "Each tab button (\`ReactifyTab\` label part) has \`role='tab'\`, \`aria-selected\`, \`aria-controls\` (pointing to its panel ID), and \`id\`.",
-      "Each tab panel (\`ReactifyTab\` children part) has \`role='tabpanel'\`, \`aria-labelledby\` (pointing to its tab button ID), and is hidden with \`hidden\` attribute when not active.",
-      "Keyboard navigation (Arrow keys to switch tabs, Enter/Space to activate a tab if it's not auto-activating) is expected. ReactifyTabs handles click activation; arrow key navigation is typically handled by the browser or a more robust tabs implementation from a library.",
+      "Each tab panel (\`ReactifyTab\` children part) has \`role='tabpanel'\`, \`aria-labelledby\` (pointing to its tab button ID), and is hidden with the \`hidden\` attribute when not active.",
+      "Keyboard navigation (Arrow keys to switch tabs) is handled by the component. Enter/Space to activate a tab is standard.",
       "Disabled tabs are marked with the \`disabled\` attribute.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
