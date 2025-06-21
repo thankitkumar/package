@@ -9,6 +9,7 @@ interface ReactifyButtonProps extends ReactifyComponentProps, ButtonHTMLAttribut
   isLoading?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
+  asChild?: boolean;
 }
 
 export function ReactifyButton({
@@ -21,6 +22,7 @@ export function ReactifyButton({
   leftIcon,
   rightIcon,
   as: Component = 'button',
+  asChild,
   ...props
 }: ReactifyButtonProps) {
 
