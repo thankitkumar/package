@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import { ReactifyCheckbox } from '@/components/reactify/checkbox';
@@ -25,7 +24,7 @@ export default function ReactifyCheckboxDemo() {
 
         <div>
           <h3 className="font-semibold text-lg mb-3">Checkbox Sizes</h3>
-          <div className="space-y-3">
+          <div className="flex flex-col space-y-4">
             <ReactifyCheckbox
               id="subscribe-sm"
               label="Small checkbox"
