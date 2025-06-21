@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import { ReactifyToggleSwitch } from '@/components/reactify/toggle-switch';
@@ -14,7 +13,7 @@ export default function ReactifyToggleSwitchDemo() {
       <CardContent className="p-6 space-y-8">
         <div>
           <h3 className="font-semibold text-lg mb-3">Basic Toggle Switches</h3>
-          <div className="space-y-4">
+          <div className="flex flex-col items-start space-y-6">
             <ReactifyToggleSwitch
               id="notifications"
               label="Enable Notifications"
