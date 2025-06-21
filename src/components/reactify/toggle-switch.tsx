@@ -23,9 +23,9 @@ export function ReactifyToggleSwitch({
   const inputId = id || (label ? `toggle-${label.toLowerCase().replace(/\s+/g, '-')}` : 'toggle-switch');
 
   const sizeClasses = {
-    sm: { wrapper: 'text-sm', switchContainer: 'w-10 h-5', thumb: 'h-4 w-4', thumbPos: 'left-0.5 top-0.5', travel: 'translate-x-5' },
-    md: { wrapper: 'text-base', switchContainer: 'w-12 h-6', thumb: 'h-5 w-5', thumbPos: 'left-0.5 top-0.5', travel: 'translate-x-6' },
-    lg: { wrapper: 'text-lg', switchContainer: 'w-14 h-7', thumb: 'h-6 w-6', thumbPos: 'left-0.5 top-0.5', travel: 'translate-x-7' },
+    sm: { wrapper: 'text-sm', switchContainer: 'w-10 h-5', thumb: 'h-4 w-4', thumbPos: 'left-0.5 top-0.5' },
+    md: { wrapper: 'text-base', switchContainer: 'w-12 h-6', thumb: 'h-5 w-5', thumbPos: 'left-0.5 top-0.5' },
+    lg: { wrapper: 'text-lg', switchContainer: 'w-14 h-7', thumb: 'h-6 w-6', thumbPos: 'left-0.5 top-0.5' },
   };
   const currentSize = sizeClasses[size];
 
@@ -81,7 +81,10 @@ export function ReactifyToggleSwitch({
             'absolute rounded-full bg-background shadow-lg transform transition-transform duration-200 ease-in-out',
             currentSize.thumb,
             currentSize.thumbPos,
-            'peer-checked:' + currentSize.travel
+            // These must be full string literals for Tailwind's JIT compiler to detect them.
+            size === 'sm' && 'peer-checked:translate-x-5',
+            size === 'md' && 'peer-checked:translate-x-6',
+            size === 'lg' && 'peer-checked:translate-x-7'
           )}
           aria-hidden="true"
         ></div>
