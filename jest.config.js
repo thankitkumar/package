@@ -13,9 +13,7 @@ const customJestConfig = {
   moduleNameMapper: {
     // Handle module aliases (this will be automatically configured by next/jest)
     '^@/(.*)$': '<rootDir>/src/$1',
-  },
-  // Automatically mock CSS and other file imports
-  moduleNameMapper: {
+    // Mock CSS and other file imports
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
 };
