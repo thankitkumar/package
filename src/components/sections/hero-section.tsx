@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, PackageCheck } from 'lucide-react';
@@ -35,7 +34,7 @@ export function HeroSection() {
                 alt="Abstract UI components collage" 
                 layout="fill"
                 objectFit="cover"
-                data-ai-hint="abstract components"
+                data-ai-hint="UI collage"
                 className="transform hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
