@@ -17,6 +17,7 @@ import { ReactifyCard, ReactifyCardContent, ReactifyCardHeader, ReactifyCardTitl
 import Link from 'next/link';
 import { ReactifyButton } from '@/components/reactify/button';
 import { ReactifySkeletonLoader } from '@/components/reactify/skeleton-loader';
+import { ReactifyBadge } from '@/components/reactify/badge';
 
 
 // Loader component for dynamic imports
@@ -77,11 +78,14 @@ interface ComponentDefinition {
   codeExample?: string;
   accessibilityNotes?: string[];
   codeBlockScrollAreaClassName?: string;
+  version?: string;
+  status?: 'new' | 'updated' | 'beta';
 }
 
 const components: ComponentDefinition[] = [
   {
     id: 'alert', name: 'Alert', icon: <MessageSquareWarning />, category: 'standard', demo: <ReactifyAlertDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyAlert } from '@/components/reactify/alert';
 import { CheckCircle } from 'lucide-react'; // Or your custom icon
@@ -121,6 +125,7 @@ import { CheckCircle } from 'lucide-react'; // Or your custom icon
   },
   {
     id: 'avatar', name: 'Avatar', icon: <UserCircle />, category: 'standard', demo: <ReactifyAvatarDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyAvatar } from '@/components/reactify/avatar';
 import { User, Image as ImageIcon } from 'lucide-react';
@@ -161,6 +166,7 @@ import { User, Image as ImageIcon } from 'lucide-react';
   },
   {
     id: 'badge', name: 'Badge', icon: <BadgePercent />, category: 'standard', demo: <ReactifyBadgeDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyBadge } from '@/components/reactify/badge';
 
@@ -194,6 +200,8 @@ import { ReactifyBadge } from '@/components/reactify/badge';
   },
   {
     id: 'button', name: 'Button', icon: <SquareStack />, category: 'standard', demo: <ReactifyButtonDemo />,
+    version: '1.1.0',
+    status: 'updated',
     codeExample: `
 import { ReactifyButton } from '@/components/reactify/button';
 import { Heart, Upload, AlertTriangle } from 'lucide-react';
@@ -249,6 +257,7 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
   },
   {
     id: 'card', name: 'Card', icon: <LayoutGrid />, category: 'standard', demo: <ReactifyCardDemo />,
+    version: '1.0.0',
     codeExample: `
 import {
   ReactifyCard,
@@ -311,6 +320,7 @@ import Image from 'next/image';
   },
   {
     id: 'checkbox', name: 'Checkbox', icon: <CheckSquare />, category: 'standard', demo: <ReactifyCheckboxDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyCheckbox } from '@/components/reactify/checkbox';
 import { useState } from 'react';
@@ -352,6 +362,7 @@ function CheckboxExample() {
   },
   {
     id: 'divider', name: 'Divider', icon: <SeparatorHorizontal />, category: 'standard', demo: <ReactifyDividerDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyDivider } from '@/components/reactify/divider';
 
@@ -380,6 +391,7 @@ import { ReactifyDivider } from '@/components/reactify/divider';
   },
   {
     id: 'dropdown', name: 'Dropdown Menu', icon: <ChevronDownCircle />, category: 'standard', demo: <ReactifyDropdownDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyDropdown, ReactifyDropdownItem } from '@/components/reactify/dropdown';
 import { ReactifyButton } from '@/components/reactify/button';
@@ -440,6 +452,7 @@ function IconDropdown() {
   },
   {
     id: 'footer', name: 'Footer', icon: <PanelBottom />, category: 'standard', demo: <ReactifyFooterDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyFooter } from '@/components/reactify/footer';
 
@@ -466,6 +479,7 @@ import { ReactifyFooter } from '@/components/reactify/footer';
   },
   {
     id: 'header', name: 'Header', icon: <PanelTop />, category: 'standard', demo: <ReactifyHeaderDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyHeader } from '@/components/reactify/header';
 import { ReactifyButton } from '@/components/reactify/button';
@@ -498,6 +512,7 @@ import { Package } from 'lucide-react'; // Example Icon
   },
   {
     id: 'input', name: 'Input', icon: <TerminalSquare />, category: 'standard', demo: <ReactifyInputDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyInput } from '@/components/reactify/input';
 import { Label } from '@/components/ui/label'; // Assuming a Label component
@@ -532,6 +547,7 @@ import { Label } from '@/components/ui/label'; // Assuming a Label component
   },
   {
     id: 'modal', name: 'Modal', icon: <Rows />, category: 'standard', demo: <ReactifyModalDemo />,
+    version: '1.0.0',
     codeExample: `
 import { useState } from 'react';
 import { ReactifyModal } from '@/components/reactify/modal';
@@ -579,6 +595,7 @@ function ModalExample() {
   },
   {
     id: 'progress-bar', name: 'Progress Bar', icon: <Gauge />, category: 'standard', demo: <ReactifyProgressBarDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyProgressBar } from '@/components/reactify/progress-bar';
 import { useState, useEffect } from 'react';
@@ -622,6 +639,7 @@ function ProgressExample() {
   },
   {
     id: 'radio-group', name: 'Radio Group', icon: <Dot />, category: 'standard', demo: <ReactifyRadioGroupDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyRadioGroup, ReactifyRadioButton } from '@/components/reactify/radio-group';
 import { useState } from 'react';
@@ -678,6 +696,7 @@ function RadioExample() {
   },
   {
     id: 'sidebar-component', name: 'Sidebar (Component)', icon: <PanelLeft />, category: 'standard', demo: <ReactifySidebarDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifySidebar } from '@/components/reactify/sidebar';
 import { ReactifyButton } from '@/components/reactify/button';
@@ -728,6 +747,7 @@ function SidebarExample() {
   },
   {
     id: 'skeleton-loader', name: 'Skeleton Loader', icon: <Square />, category: 'standard', demo: <ReactifySkeletonLoaderDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifySkeletonLoader } from '@/components/reactify/skeleton-loader';
 import { Card } from '@/components/ui/card'; // Assuming ShadCN Card for demo
@@ -770,6 +790,7 @@ function SkeletonDemo() {
   },
   {
     id: 'tabs', name: 'Tabs', icon: <Folders />, category: 'standard', demo: <ReactifyTabsDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyTabs, ReactifyTab } from '@/components/reactify/tabs';
 import { User, Settings, ShieldCheck } from 'lucide-react';
@@ -810,6 +831,7 @@ function TabsExample() {
   },
   {
     id: 'textarea', name: 'Textarea', icon: <TypeIcon />, category: 'standard', demo: <ReactifyTextareaDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyTextarea } from '@/components/reactify/textarea';
 import { Label } from '@/components/ui/label';
@@ -859,6 +881,7 @@ function TextareaExample() {
     icon: <Bell />,
     category: 'standard',
     demo: <ReactifyToasterDemo />,
+    version: '1.0.0',
     codeExample: `
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button'; // Or ReactifyButton
@@ -926,6 +949,7 @@ function MyComponentWithToasts() {
   },
   {
     id: 'toggle-switch', name: 'Toggle Switch', icon: <ToggleLeft />, category: 'standard', demo: <ReactifyToggleSwitchDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyToggleSwitch } from '@/components/reactify/toggle-switch';
 import { useState } from 'react';
@@ -971,6 +995,7 @@ function ToggleExample() {
   },
   {
     id: 'tooltip', name: 'Tooltip', icon: <Info />, category: 'standard', demo: <ReactifyTooltipDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyTooltip } from '@/components/reactify/tooltip';
 import { ReactifyButton } from '@/components/reactify/button';
@@ -1026,6 +1051,7 @@ function TooltipExample() {
   // Charts
   {
     id: 'bar-chart', name: 'Bar Chart', icon: <BarChartBig />, category: 'charts', demo: <ReactifyBarChartDemo />,
+    version: '1.1.0',
     codeExample: `
 import { ReactifyBarChart, type BarChartDataKey } from '@/components/reactify/charts/reactify-bar-chart';
 import type { ChartConfig } from '@/components/ui/chart'; // ShadCN's ChartConfig type
@@ -1071,6 +1097,7 @@ function BarChartExample() {
   },
   {
     id: 'bubble-chart', name: 'Bubble Chart', icon: <ScatterChart />, category: 'charts', demo: <ReactifyBubbleChartDemo />,
+    version: '1.1.0',
     codeExample: `
 import { ReactifyBubbleChart } from '@/components/reactify/charts/reactify-bubble-chart';
 import type { ChartConfig } from '@/components/ui/chart';
@@ -1120,6 +1147,7 @@ function BubbleChartExample() {
   },
   {
     id: 'line-chart', name: 'Line Chart', icon: <LineChartIcon />, category: 'charts', demo: <ReactifyLineChartDemo />,
+    version: '1.1.0',
     codeExample: `
 import { ReactifyLineChart, type LineChartDataKey } from '@/components/reactify/charts/reactify-line-chart';
 import type { ChartConfig } from '@/components/ui/chart';
@@ -1169,6 +1197,8 @@ function LineChartExample() {
     icon: <Table2 />,
     category: 'advanced',
     demo: <ReactifyAdvancedTableDemo />,
+    version: '1.2.0',
+    status: 'new',
     codeExample: `
 import { ReactifyAdvancedTable, type ColumnDef } from '@/components/reactify/advanced-table';
 import { useState, useEffect, useMemo } from 'react';
@@ -1279,6 +1309,8 @@ function MyTablePage() {
         </ReactifyCardContent>
       </ReactifyCard>
     ),
+    version: '1.2.0',
+    status: 'beta',
     codeExample: `
 // In src/contexts/feature-flag-context.tsx (simplified example)
 export interface FeatureFlag {
@@ -1324,6 +1356,8 @@ function MyComponentUsingFlags() {
   },
   {
     id: 'form-wizard', name: 'Form Wizard', icon: <ListChecks />, category: 'advanced', demo: <ReactifyFormWizardDemo />,
+    version: '1.1.0',
+    status: 'updated',
     codeExample: `
 import { ReactifyFormWizard, type WizardStepConfig } from '@/components/reactify/form-wizard';
 import { z } from 'zod'; // For schema definition
@@ -1407,6 +1441,8 @@ function WizardDemo() {
     icon: <CommandIcon />,
     category: 'advanced',
     demo: <ReactifyKeyboardShortcutManagerDemo />,
+    version: '1.2.0',
+    status: 'new',
     codeExample: `
 import { useEffect } from 'react';
 import { useKeyboardShortcuts, type Shortcut } from '@/contexts/keyboard-shortcut-context';
@@ -1483,6 +1519,7 @@ export default MyComponentWithShortcuts;
   },
   {
     id: 'markdown-editor', name: 'Markdown Editor', icon: <FileText />, category: 'advanced', demo: <ReactifyMarkdownEditorDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifyMarkdownEditor } from '@/components/reactify/markdown-editor';
 import { useState } from 'react';
@@ -1522,6 +1559,7 @@ function MarkdownEditorExample() {
     icon: <Wifi />,
     category: 'advanced',
     demo: <ReactifyNetworkAwareDemo />,
+    version: '1.0.0',
     codeExample: `
 import { NetworkAwareWrapper } from '@/components/reactify/network-aware-wrapper';
 import { ReactifyButton } from '@/components/reactify/button';
@@ -1594,6 +1632,7 @@ function MyAppContent() {
   },
   {
     id: 'protected-content', name: 'Protected Content', icon: <ShieldCheck />, category: 'advanced', demo: <ReactifyProtectedContentDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ProtectedContent } from '@/components/reactify/protected-content';
 import { MockAuthProvider, useMockAuth, type UserRole } from '@/contexts/mock-auth-context'; // For demo
@@ -1657,6 +1696,8 @@ export default function PageWithProtection() {
   },
   {
     id: 'rich-text-editor', name: 'Rich Text Editor', icon: <PilcrowSquare />, category: 'advanced', demo: <ReactifyRichTextEditorDemo />,
+    version: '1.1.0',
+    status: 'updated',
     codeExample: `
 import { ReactifyRichTextEditor } from '@/components/reactify/rich-text-editor';
 import { useState } from 'react';
@@ -1702,6 +1743,7 @@ function RichTextEditorExample() {
     icon: <Inbox />,
     category: 'advanced',
     demo: <ReactifySmartEmptyStateDemo />,
+    version: '1.0.0',
     codeExample: `
 import { ReactifySmartEmptyState } from '@/components/reactify/smart-empty-state';
 import { ReactifyButton } from '@/components/reactify/button';
@@ -1840,7 +1882,12 @@ export default function ComponentsPage() {
                             tooltip={{ children: component.name, side: 'right' }}
                           >
                             {React.cloneElement(component.icon, { className: 'h-5 w-5' })}
-                            <span className="group-data-[collapsible=icon]:hidden">{component.name}</span>
+                            <span className="group-data-[collapsible=icon]:hidden flex-1 flex items-center justify-between">
+                              <span>{component.name}</span>
+                               {component.status === 'new' && <ReactifyBadge variant="success" size="sm" className="py-0 px-1.5 ml-2">New</ReactifyBadge>}
+                               {component.status === 'updated' && <ReactifyBadge variant="warning" size="sm" className="py-0 px-1.5 ml-2">Upd</ReactifyBadge>}
+                               {component.status === 'beta' && <ReactifyBadge variant="destructive" size="sm" className="py-0 px-1.5 ml-2">Beta</ReactifyBadge>}
+                            </span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                       ))
@@ -1879,6 +1926,8 @@ export default function ComponentsPage() {
                   codeExample={activeComponentDetails.codeExample}
                   accessibilityNotes={activeComponentDetails.accessibilityNotes}
                   codeBlockScrollAreaClassName={activeComponentDetails.codeBlockScrollAreaClassName}
+                  version={activeComponentDetails.version}
+                  status={activeComponentDetails.status}
                 >
                   {activeComponentDetails.demo}
                 </ComponentDisplay>

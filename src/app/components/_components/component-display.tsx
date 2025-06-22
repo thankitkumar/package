@@ -7,6 +7,7 @@ import { CodeBlock } from '@/components/ui/code-block';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import { ReactifyBadge } from '@/components/reactify/badge';
 
 interface ComponentDisplayProps {
   title: string;
@@ -15,7 +16,9 @@ interface ComponentDisplayProps {
   codeExample?: string;
   accessibilityNotes?: string[];
   previewPaddingClassName?: string;
-  codeBlockScrollAreaClassName?: string; // New prop
+  codeBlockScrollAreaClassName?: string;
+  version?: string;
+  status?: 'new' | 'updated' | 'beta';
 }
 
 export function ComponentDisplay({
@@ -25,12 +28,20 @@ export function ComponentDisplay({
   codeExample = "No code example provided.",
   accessibilityNotes = ["Follow standard accessibility practices for this component type."],
   previewPaddingClassName = "p-4",
-  codeBlockScrollAreaClassName, // Destructure new prop
+  codeBlockScrollAreaClassName,
+  version,
+  status,
 }: ComponentDisplayProps) {
   return (
     <Card className="mb-12 shadow-lg">
       <CardHeader>
-        <CardTitle className="text-2xl font-headline">{title}</CardTitle>
+        <div className="flex flex-wrap items-center gap-3">
+          <CardTitle className="text-2xl font-headline">{title}</CardTitle>
+          {version && <ReactifyBadge variant="outline" size="sm">v{version}</ReactifyBadge>}
+          {status === 'new' && <ReactifyBadge variant="success" size="sm">New</ReactifyBadge>}
+          {status === 'updated' && <ReactifyBadge variant="warning" size="sm">Updated</ReactifyBadge>}
+          {status === 'beta' && <ReactifyBadge variant="destructive" size="sm">Beta</ReactifyBadge>}
+        </div>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
