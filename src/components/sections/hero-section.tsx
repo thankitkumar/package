@@ -12,7 +12,7 @@ export function HeroSection() {
           Build Universally with <span className="text-primary">Reactify</span>
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-3xl mx-auto">
-          A comprehensive library of unstyled, accessible, and composable UI components built for the React ecosystem. Ready to be used in any React-based project, including Next.js, Vite, or Create React App.
+          A comprehensive library of unstyled, accessible, and composable UI components for the React ecosystem, designed to work seamlessly in Next.js, Vite, Create React App, and more.
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
           <Button asChild size="lg" className="shadow-lg hover:shadow-primary/50 transition-shadow duration-300">
