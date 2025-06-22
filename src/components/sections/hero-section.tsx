@@ -80,9 +80,34 @@ const AnimatedUiCollage = () => {
         </div>
       </div>
 
+      {/* NEW: Input Field element */}
+      <div className={cn(
+        itemBase,
+        "w-2/5 h-10 top-48 left-8 bg-muted p-2 flex items-center",
+        animationClass,
+        isMounted ? "translate-y-0" : "translate-y-8"
+      )} style={{ transitionDelay: '600ms' }}>
+        <div className="h-3 w-full bg-muted-foreground/10 rounded-sm"></div>
+      </div>
+
+      {/* NEW: Chart element */}
+      <div className={cn(
+        itemBase,
+        "w-1/4 h-20 bottom-8 right-8 p-2",
+        animationClass,
+        isMounted ? "translate-x-0" : "translate-x-8"
+      )} style={{ transitionDelay: '700ms' }}>
+        <div className="flex items-end justify-between h-full w-full">
+            <div className="w-1/4 h-1/2 bg-primary/30 rounded-t-sm"></div>
+            <div className="w-1/4 h-3/4 bg-primary/30 rounded-t-sm"></div>
+            <div className="w-1/4 h-1/3 bg-primary/30 rounded-t-sm"></div>
+            <div className="w-1/4 h-1/2 bg-primary/30 rounded-t-sm"></div>
+        </div>
+      </div>
     </div>
   );
 };
+
 
 export function HeroSection() {
   return (
@@ -93,7 +118,7 @@ export function HeroSection() {
           Build Universally with <span className="text-primary">Reactify</span>
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-3xl mx-auto">
-          A comprehensive library of unstyled, accessible, and composable UI components for the React ecosystem, designed to work seamlessly in Next.js, Vite, Create React App, and more.
+          A comprehensive library of unstyled, accessible, and composable UI components for any React-based project, designed to work seamlessly in Next.js, Vite, Create React App, and more.
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
           <Button asChild size="lg" className="shadow-lg hover:shadow-primary/50 transition-shadow duration-300">
