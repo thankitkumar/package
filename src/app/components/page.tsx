@@ -1882,12 +1882,10 @@ export default function ComponentsPage() {
                             tooltip={{ children: component.name, side: 'right' }}
                           >
                             {React.cloneElement(component.icon, { className: 'h-5 w-5' })}
-                            <span className="group-data-[collapsible=icon]:hidden flex-1 flex items-center justify-between">
-                              <span>{component.name}</span>
-                               {component.status === 'new' && <ReactifyBadge variant="success" size="sm" className="py-0 px-1.5 ml-2">New</ReactifyBadge>}
-                               {component.status === 'updated' && <ReactifyBadge variant="warning" size="sm" className="py-0 px-1.5 ml-2">Upd</ReactifyBadge>}
-                               {component.status === 'beta' && <ReactifyBadge variant="destructive" size="sm" className="py-0 px-1.5 ml-2">Beta</ReactifyBadge>}
-                            </span>
+                            <span className="group-data-[collapsible=icon]:hidden flex-1">{component.name}</span>
+                            {component.status === 'new' && <Dot className="text-green-500 ml-auto" aria-label="New component" />}
+                            {component.status === 'updated' && <Dot className="text-yellow-500 ml-auto" aria-label="Updated component" />}
+                            {component.status === 'beta' && <Dot className="text-red-500 ml-auto" aria-label="Beta component" />}
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                       ))
