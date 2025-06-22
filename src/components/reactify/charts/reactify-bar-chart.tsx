@@ -125,7 +125,7 @@ export function ReactifyBarChart({
               name={dk.label || config[dk.key]?.label || dk.key}
               fill={dk.color || `var(--color-${dk.key})`}
               stackId={dk.stackId}
-              radius={dk.radius !== undefined ? dk.radius : (layout === 'horizontal' ? (compact ? [0,2,2,0] : [0,4,4,0]) : (compact ? [2,2,0,0] : [4, 4, 0, 0]))}
+              radius={dk.radius}
               barSize={compact ? (layout === 'horizontal' ? 10 : 12) : undefined}
             />
           ))}
