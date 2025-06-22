@@ -18,7 +18,12 @@ export function Header() {
           </span>
         </Link>
         <MainNav />
-        <div className="flex flex-1 items-center justify-end space-x-4">
+        <div className="flex flex-1 items-center justify-end space-x-2">
+          <Button asChild variant="ghost">
+            <a href="https://www.npmjs.com/package/@reactify/components" target="_blank" rel="noopener noreferrer">
+              NPM
+            </a>
+          </Button>
           <Button asChild variant="ghost">
             <a href="https://github.com/your-repo/reactify" target="_blank" rel="noopener noreferrer">
               GitHub
