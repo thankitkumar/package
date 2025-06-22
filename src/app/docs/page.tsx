@@ -5,10 +5,10 @@ import { CodeBlock } from '@/components/ui/code-block';
 export default function DocsPage() {
   const installationCode = `
 # Using npm
-npm install @reactify/components # (Example package name)
+npm install @reactify/components
 
 # Using yarn
-yarn add @reactify/components # (Example package name)
+yarn add @reactify/components
   `.trim();
 
   const usageCode = `
@@ -114,7 +114,7 @@ export default MyFormComponent;
             <CodeBlock code={themingCode} lang="css" />
             <p className="text-muted-foreground">
               Visit the "Theming" page for an interactive demonstration of how changing these variables affects the components live.
-              The values are in HSL format (Hue Saturation Lightness), but the theme switcher tool allows you to use hex color codes as well.
+              The theme switcher tool allows you to use hex color codes as well.
             </p>
           </CardContent>
         </Card>

@@ -2,8 +2,12 @@
   "name": "@reactify/components",
   "version": "0.1.0",
   "description": "A universal and accessible React component library built with Tailwind CSS and ShadCN UI.",
-  "author": "Your Name <you@example.com>",
+  "author": "Molecular Connections",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/molecular-connections/reactify"
+  },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",

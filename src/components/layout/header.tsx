@@ -24,7 +24,7 @@ export function Header() {
             </a>
           </Button>
           <Button asChild variant="ghost">
-            <a href="https://github.com/your-repo/reactify" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/molecular-connections/reactify" target="_blank" rel="noopener noreferrer">
               GitHub
             </a>
           </Button>
