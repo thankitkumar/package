@@ -44,8 +44,8 @@ const stackedConfig = {
 
 // Radius array is [topLeft, topRight, bottomRight, bottomLeft]
 const stackedDataKeys: BarChartDataKey[] = [
-  { key: 'new', stackId: 'a', radius: 0 },
-  { key: 'returning', stackId: 'a', radius: 0 },
+  { key: 'new', stackId: 'a', radius: [0, 0, 0, 0] },
+  { key: 'returning', stackId: 'a', radius: [0, 0, 0, 0] },
   { key: 'inactive', stackId: 'a', radius: [4, 4, 0, 0] }, // Only round the top-most bar
 ];
 
