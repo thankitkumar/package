@@ -79,7 +79,6 @@ interface ComponentDefinition {
   accessibilityNotes?: string[];
   codeBlockScrollAreaClassName?: string;
   version?: string;
-  status?: 'new' | 'updated' | 'beta';
 }
 
 const components: ComponentDefinition[] = [
@@ -201,7 +200,6 @@ import { ReactifyBadge } from '@/components/reactify/badge';
   {
     id: 'button', name: 'Button', icon: <SquareStack />, category: 'standard', demo: <ReactifyButtonDemo />,
     version: '1.1.0',
-    status: 'updated',
     codeExample: `
 import { ReactifyButton } from '@/components/reactify/button';
 import { Heart, Upload, AlertTriangle } from 'lucide-react';
@@ -1198,7 +1196,6 @@ function LineChartExample() {
     category: 'advanced',
     demo: <ReactifyAdvancedTableDemo />,
     version: '1.2.0',
-    status: 'new',
     codeExample: `
 import { ReactifyAdvancedTable, type ColumnDef } from '@/components/reactify/advanced-table';
 import { useState, useEffect, useMemo } from 'react';
@@ -1310,7 +1307,6 @@ function MyTablePage() {
       </ReactifyCard>
     ),
     version: '1.2.0',
-    status: 'beta',
     codeExample: `
 // In src/contexts/feature-flag-context.tsx (simplified example)
 export interface FeatureFlag {
@@ -1357,7 +1353,6 @@ function MyComponentUsingFlags() {
   {
     id: 'form-wizard', name: 'Form Wizard', icon: <ListChecks />, category: 'advanced', demo: <ReactifyFormWizardDemo />,
     version: '1.1.0',
-    status: 'updated',
     codeExample: `
 import { ReactifyFormWizard, type WizardStepConfig } from '@/components/reactify/form-wizard';
 import { z } from 'zod'; // For schema definition
@@ -1442,7 +1437,6 @@ function WizardDemo() {
     category: 'advanced',
     demo: <ReactifyKeyboardShortcutManagerDemo />,
     version: '1.2.0',
-    status: 'new',
     codeExample: `
 import { useEffect } from 'react';
 import { useKeyboardShortcuts, type Shortcut } from '@/contexts/keyboard-shortcut-context';
@@ -1509,7 +1503,7 @@ export default MyComponentWithShortcuts;
       "Ensure shortcut combinations do not conflict with common browser or assistive technology shortcuts. Test thoroughly.",
       "Provide clear, concise, and user-friendly names for each shortcut in the palette.",
       "The shortcut palette UI itself must be keyboard navigable (search input, list items, close button).",
-      "Use appropriate ARIA roles (e.g., `dialog`, `listbox`, `option`) and states (e.g., `aria-modal`, `aria-activedescendant`) within the palette.",
+      "Use appropriate ARIA roles (e.g., \`dialog\`, \`listbox\`, \`option\`) and states (e.g., \`aria-modal\`, \`aria-activedescendant\`) within the palette.",
       "The palette should be closeable via the Escape key.",
       "Clearly indicate modifier keys (Ctrl, Cmd, Alt, Shift) and the main action key. Use platform-conventional symbols (e.g., ⌘ for Command on Mac).",
       "Consider allowing users to customize or disable shortcuts, especially if they conflict with user-defined or assistive tech shortcuts (not implemented in this version).",
@@ -1697,7 +1691,6 @@ export default function PageWithProtection() {
   {
     id: 'rich-text-editor', name: 'Rich Text Editor', icon: <PilcrowSquare />, category: 'advanced', demo: <ReactifyRichTextEditorDemo />,
     version: '1.1.0',
-    status: 'updated',
     codeExample: `
 import { ReactifyRichTextEditor } from '@/components/reactify/rich-text-editor';
 import { useState } from 'react';
@@ -1883,9 +1876,6 @@ export default function ComponentsPage() {
                           >
                             {React.cloneElement(component.icon, { className: 'h-5 w-5' })}
                             <span className="group-data-[collapsible=icon]:hidden flex-1">{component.name}</span>
-                            {component.status === 'new' && <Dot className="text-green-500 ml-auto" aria-label="New component" />}
-                            {component.status === 'updated' && <Dot className="text-yellow-500 ml-auto" aria-label="Updated component" />}
-                            {component.status === 'beta' && <Dot className="text-red-500 ml-auto" aria-label="Beta component" />}
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                       ))
@@ -1925,7 +1915,6 @@ export default function ComponentsPage() {
                   accessibilityNotes={activeComponentDetails.accessibilityNotes}
                   codeBlockScrollAreaClassName={activeComponentDetails.codeBlockScrollAreaClassName}
                   version={activeComponentDetails.version}
-                  status={activeComponentDetails.status}
                 >
                   {activeComponentDetails.demo}
                 </ComponentDisplay>
