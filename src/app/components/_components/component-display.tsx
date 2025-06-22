@@ -18,6 +18,7 @@ interface ComponentDisplayProps {
   previewPaddingClassName?: string;
   codeBlockScrollAreaClassName?: string;
   version?: string;
+  status?: 'new';
 }
 
 export function ComponentDisplay({
@@ -29,6 +30,7 @@ export function ComponentDisplay({
   previewPaddingClassName = "p-4",
   codeBlockScrollAreaClassName,
   version,
+  status,
 }: ComponentDisplayProps) {
   return (
     <Card className="mb-12 shadow-lg">
@@ -36,6 +38,7 @@ export function ComponentDisplay({
         <div className="flex flex-wrap items-center gap-3">
           <CardTitle className="text-2xl font-headline">{title}</CardTitle>
           {version && <ReactifyBadge variant="outline" size="sm">v{version}</ReactifyBadge>}
+          {status === 'new' && <ReactifyBadge variant="success" size="sm">New</ReactifyBadge>}
         </div>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
