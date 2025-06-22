@@ -199,7 +199,7 @@ import { ReactifyBadge } from '@/components/reactify/badge';
   },
   {
     id: 'button', name: 'Button', icon: <SquareStack />, category: 'standard', demo: <ReactifyButtonDemo />,
-    version: '1.1.0',
+    version: '1.0.0',
     codeExample: `
 import { ReactifyButton } from '@/components/reactify/button';
 import { Heart, Upload, AlertTriangle } from 'lucide-react';
@@ -1195,7 +1195,7 @@ function LineChartExample() {
     icon: <Table2 />,
     category: 'advanced',
     demo: <ReactifyAdvancedTableDemo />,
-    version: '1.2.0',
+    version: '1.0.0',
     codeExample: `
 import { ReactifyAdvancedTable, type ColumnDef } from '@/components/reactify/advanced-table';
 import { useState, useEffect, useMemo } from 'react';
@@ -1306,7 +1306,7 @@ function MyTablePage() {
         </ReactifyCardContent>
       </ReactifyCard>
     ),
-    version: '1.2.0',
+    version: '1.0.0',
     codeExample: `
 // In src/contexts/feature-flag-context.tsx (simplified example)
 export interface FeatureFlag {
@@ -1352,7 +1352,7 @@ function MyComponentUsingFlags() {
   },
   {
     id: 'form-wizard', name: 'Form Wizard', icon: <ListChecks />, category: 'advanced', demo: <ReactifyFormWizardDemo />,
-    version: '1.1.0',
+    version: '1.0.0',
     codeExample: `
 import { ReactifyFormWizard, type WizardStepConfig } from '@/components/reactify/form-wizard';
 import { z } from 'zod'; // For schema definition
@@ -1436,7 +1436,7 @@ function WizardDemo() {
     icon: <CommandIcon />,
     category: 'advanced',
     demo: <ReactifyKeyboardShortcutManagerDemo />,
-    version: '1.2.0',
+    version: '1.0.0',
     codeExample: `
 import { useEffect } from 'react';
 import { useKeyboardShortcuts, type Shortcut } from '@/contexts/keyboard-shortcut-context';
@@ -1690,7 +1690,7 @@ export default function PageWithProtection() {
   },
   {
     id: 'rich-text-editor', name: 'Rich Text Editor', icon: <PilcrowSquare />, category: 'advanced', demo: <ReactifyRichTextEditorDemo />,
-    version: '1.1.0',
+    version: '1.0.0',
     codeExample: `
 import { ReactifyRichTextEditor } from '@/components/reactify/rich-text-editor';
 import { useState } from 'react';
