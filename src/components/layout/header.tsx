@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import { Package } from 'lucide-react';
 import { MainNav } from './main-nav';
