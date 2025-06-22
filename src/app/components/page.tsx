@@ -1049,7 +1049,7 @@ function TooltipExample() {
   // Charts
   {
     id: 'bar-chart', name: 'Bar Chart', icon: <BarChartBig />, category: 'charts', demo: <ReactifyBarChartDemo />,
-    version: '0.1.0',
+    version: '1.0.0',
     codeExample: `
 import { ReactifyBarChart, type BarChartDataKey } from '@/components/reactify/charts/reactify-bar-chart';
 import type { ChartConfig } from '@/components/ui/chart'; // ShadCN's ChartConfig type
@@ -1095,7 +1095,7 @@ function BarChartExample() {
   },
   {
     id: 'bubble-chart', name: 'Bubble Chart', icon: <ScatterChart />, category: 'charts', demo: <ReactifyBubbleChartDemo />,
-    version: '1.1.0',
+    version: '1.0.0',
     codeExample: `
 import { ReactifyBubbleChart } from '@/components/reactify/charts/reactify-bubble-chart';
 import type { ChartConfig } from '@/components/ui/chart';
@@ -1145,7 +1145,7 @@ function BubbleChartExample() {
   },
   {
     id: 'line-chart', name: 'Line Chart', icon: <LineChartIcon />, category: 'charts', demo: <ReactifyLineChartDemo />,
-    version: '0.1.0',
+    version: '1.0.0',
     codeExample: `
 import { ReactifyLineChart, type LineChartDataKey } from '@/components/reactify/charts/reactify-line-chart';
 import type { ChartConfig } from '@/components/ui/chart';
