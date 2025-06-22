@@ -43,10 +43,11 @@ const stackedConfig = {
 } satisfies ChartConfig;
 
 // Radius array is [topLeft, topRight, bottomRight, bottomLeft]
+// Apply radius only to the last item in the stack to round the top corners of the whole stack.
 const stackedDataKeys: BarChartDataKey[] = [
   { key: 'new', stackId: 'a' },
   { key: 'returning', stackId: 'a' },
-  { key: 'inactive', stackId: 'a' }, 
+  { key: 'inactive', stackId: 'a', radius: [4, 4, 0, 0] }, 
 ];
 
 const horizontalData = [
