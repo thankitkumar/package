@@ -79,7 +79,6 @@ interface ComponentDefinition {
   accessibilityNotes?: string[];
   codeBlockScrollAreaClassName?: string;
   version?: string;
-  status?: 'new';
 }
 
 const components: ComponentDefinition[] = [
@@ -1814,40 +1813,14 @@ const displayCategories: Array<{ id: ComponentCategory; title: string }> = [
   { id: 'advanced', title: 'Advanced Tools' },
 ];
 
-// --- Versioning Logic ---
-// This version would ideally come from package.json, but we'll define it here for the demo.
-const libraryVersion = '0.1.0';
-
-// Simple semantic version comparison: returns 1 if v1 > v2, -1 if v1 < v2, 0 if equal
-const compareVersions = (v1: string, v2: string) => {
-  const parts1 = v1.split('.').map(Number);
-  const parts2 = v2.split('.').map(Number);
-  const len = Math.max(parts1.length, parts2.length);
-  for (let i = 0; i < len; i++) {
-    const p1 = parts1[i] || 0;
-    const p2 = parts2[i] || 0;
-    if (p1 > p2) return 1;
-    if (p1 < p2) return -1;
-  }
-  return 0;
-};
-
-const componentsWithStatus = components.map(comp => {
-  if (comp.version && compareVersions(comp.version, libraryVersion) > 0) {
-    return { ...comp, status: 'new' as const };
-  }
-  return comp;
-});
-// --- End Versioning Logic ---
-
 
 export default function ComponentsPage() {
-  const [selectedComponentId, setSelectedComponentId] = useState<string>(componentsWithStatus[0]?.id ?? '');
+  const [selectedComponentId, setSelectedComponentId] = useState<string>(components[0]?.id ?? '');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const activeComponentDetails = componentsWithStatus.find(comp => comp.id === selectedComponentId);
+  const activeComponentDetails = components.find(comp => comp.id === selectedComponentId);
 
-  const sortedComponentsByName = [...componentsWithStatus].sort((a, b) => a.name.localeCompare(b.name));
+  const sortedComponentsByName = [...components].sort((a, b) => a.name.localeCompare(b.name));
 
   const globallyFilteredComponents = sortedComponentsByName.filter(component =>
     component.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -1904,9 +1877,6 @@ export default function ComponentsPage() {
                           >
                             {React.cloneElement(component.icon, { className: 'h-5 w-5' })}
                             <span className="group-data-[collapsible=icon]:hidden flex-1">{component.name}</span>
-                            {component.status === 'new' && (
-                              <span className="h-2 w-2 rounded-full bg-green-500 ml-auto shrink-0 group-data-[collapsible=icon]:absolute group-data-[collapsible=icon]:top-1 group-data-[collapsible=icon]:right-1" />
-                            )}
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                       ))
@@ -1946,7 +1916,6 @@ export default function ComponentsPage() {
                   accessibilityNotes={activeComponentDetails.accessibilityNotes}
                   codeBlockScrollAreaClassName={activeComponentDetails.codeBlockScrollAreaClassName}
                   version={activeComponentDetails.version}
-                  status={activeComponentDetails.status}
                 >
                   {activeComponentDetails.demo}
                 </ComponentDisplay>
