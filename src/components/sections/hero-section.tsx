@@ -12,7 +12,7 @@ export function HeroSection() {
           Build Universally with <span className="text-primary">Reactify</span>
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-3xl mx-auto">
-          A comprehensive library of unstyled, accessible, and composable UI components designed to work seamlessly across React, Vue, Angular, Next.js, and more.
+          A comprehensive library of unstyled, accessible, and composable UI components for the React ecosystem, designed to work seamlessly in Next.js, Vite, Create React App, and more.
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
           <Button asChild size="lg" className="shadow-lg hover:shadow-primary/50 transition-shadow duration-300">
@@ -38,7 +38,7 @@ export function HeroSection() {
                 className="transform hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-            <div className="absolute bottom-4 left-4 text-white text-xs font-mono">#React #Vue #Angular #NextJS #Web #Mobile #Desktop</div>
+            <div className="absolute bottom-4 left-4 text-white text-xs font-mono">#React #NextJS #Vite #WebApp #Components</div>
         </div>
       </div>
     </section>

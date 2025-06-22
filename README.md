@@ -1,18 +1,17 @@
 
-# Reactify - Universal Component Library
+# Reactify - A Universal React Component Library
 
 [![npm version](https://img.shields.io/npm/v/@reactify/components.svg?style=flat)](https://www.npmjs.com/package/@reactify/components)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Reactify provides a collection of reusable, unstyled, and accessible UI components designed to accelerate your development workflow. Built with adaptability in mind, it's perfect for creating consistent user interfaces across any platform or framework, with first-class support for React and Next.js.
+Reactify provides a collection of reusable, unstyled, and accessible UI components designed to accelerate your development workflow within the React ecosystem. Built with adaptability in mind, it's perfect for creating consistent user interfaces in any React-based project, including Next.js, Vite, or Create React App.
 
 ## Key Features
 
 -   **Core Components**: A rich library of foundational UI components like buttons, inputs, modals, charts, and advanced data tables.
--   **Framework Agnostic**: Designed for easy integration with React, Next.js, and can be adapted for others.
+-   **React Ecosystem Ready**: Works seamlessly in any React environment. The components are bundled as a standard library.
 -   **Flexible Theming**: Easily customize the look and feel using CSS variables to match your brand identity.
 -   **Accessibility First**: Built with WAI-ARIA standards in mind, ensuring all components are usable by everyone, with full keyboard navigation and screen reader support.
--   **Platform Agnostic**: Write once, use everywhere. Components are compatible with web, mobile, and desktop environments.
 -   **Developer Experience**: Built with TypeScript for a clean, predictable, and robust development experience.
 
 ## Installation
@@ -76,7 +75,7 @@ function MyForm() {
 
 Reactify is built on top of **Tailwind CSS** and uses **CSS variables** for theming, making it incredibly easy to customize.
 
-To theme the components, set up a global stylesheet (e.g., `src/app/globals.css`) and define the theme variables inside the `:root` selector. The components will automatically adapt to these values.
+To theme the components, set up a global stylesheet (e.g., `src/styles/globals.css`) in your project and define the theme variables inside the `:root` selector. The components will automatically adapt to these values.
 
 ```css
 @tailwind base;
@@ -99,6 +98,8 @@ To theme the components, set up a global stylesheet (e.g., `src/app/globals.css`
   }
 }
 ```
+
+You will also need to configure Tailwind CSS in your project to use these variables.
 
 ## License
 

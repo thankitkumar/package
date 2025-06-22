@@ -1,7 +1,7 @@
 {
   "name": "@reactify/components",
   "version": "0.1.0",
-  "description": "A universal component library.",
+  "description": "A universal and accessible React component library built with Tailwind CSS and ShadCN UI.",
   "author": "Your Name <you@example.com>",
   "license": "MIT",
   "main": "dist/index.js",
@@ -99,7 +99,9 @@
     "react",
     "components",
     "ui",
-    "reactify"
+    "reactify",
+    "tailwind",
+    "shadcn"
   ],
   "publishConfig": {
     "access": "public"

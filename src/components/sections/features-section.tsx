@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Zap, Puzzle, Palette, Accessibility, Smartphone } from 'lucide-react'; // BrainCircuit removed
+import { Zap, Puzzle, Palette, Accessibility, Smartphone, Layers } from 'lucide-react'; // BrainCircuit removed, added Layers
 
 const features = [
   {
@@ -8,9 +8,9 @@ const features = [
     description: 'Reusable, unstyled UI blocks like buttons, inputs, modals, and dropdowns, built for accessibility and composition.',
   },
   {
-    icon: <Zap className="h-10 w-10 text-primary mb-4" />,
-    title: 'Framework Adapters',
-    description: 'Seamless integration with React, Vue, Angular, and Next.js through dedicated wrappers and adapters.',
+    icon: <Layers className="h-10 w-10 text-primary mb-4" />,
+    title: 'React Ecosystem Ready',
+    description: 'Works seamlessly in any React environment, including Next.js, Vite, and Create React App.',
   },
   {
     icon: <Palette className="h-10 w-10 text-primary mb-4" />,
@@ -25,7 +25,7 @@ const features = [
   {
     icon: <Smartphone className="h-10 w-10 text-primary mb-4" />,
     title: 'Platform Agnostic',
-    description: 'Develop once, deploy anywhere. Code works across Web, Mobile, and Desktop environments.',
+    description: 'Designed for the web, components can be used in any web-based platform, including mobile web and desktop (Electron).',
   },
   // Removed AI Component Generator feature
   // {

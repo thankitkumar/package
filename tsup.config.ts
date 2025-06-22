@@ -19,6 +19,5 @@ export default defineConfig({
     'katex'
   ], // Externalize peer dependencies
   // tsup will automatically pick up tsconfig.json paths for aliases like @/*
-  // Ensure your tsconfig.json's baseUrl and paths are set up if you use such aliases internally.
-  // For Reactify components, we've updated them to use relative paths for utils and common-props.
+  // so we need to ensure component source files use relative paths.
 });
