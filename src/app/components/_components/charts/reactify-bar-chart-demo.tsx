@@ -29,27 +29,6 @@ const dataKeys: BarChartDataKey[] = [
   { key: 'mobile', radius: [4,4,0,0] },
 ];
 
-const stackedData = [
-  { date: 'Jan', new: 50, returning: 30, inactive: 10 },
-  { date: 'Feb', new: 65, returning: 40, inactive: 12 },
-  { date: 'Mar', new: 70, returning: 55, inactive: 8 },
-  { date: 'Apr', new: 60, returning: 45, inactive: 15 },
-  { date: 'May', new: 75, returning: 60, inactive: 5 },
-];
-const stackedConfig = {
-  new: { label: 'New', color: 'hsl(var(--chart-1))' },
-  returning: { label: 'Returning', color: 'hsl(var(--chart-2))' },
-  inactive: { label: 'Inactive', color: 'hsl(var(--chart-3))' },
-} satisfies ChartConfig;
-
-// Radius array is [topLeft, topRight, bottomRight, bottomLeft]
-// Apply radius only to the last item in the stack to round the top corners of the whole stack.
-const stackedDataKeys: BarChartDataKey[] = [
-  { key: 'new', stackId: 'a' },
-  { key: 'returning', stackId: 'a' },
-  { key: 'inactive', stackId: 'a', radius: [4, 4, 0, 0] }, 
-];
-
 const horizontalData = [
   { feature: "Feature A", usage: 75, adoption: 90 },
   { feature: "Feature B", usage: 90, adoption: 60 },
@@ -81,24 +60,6 @@ export default function ReactifyBarChartDemo() {
             categoryKey="month"
             dataKeys={dataKeys}
             yAxisLabel="Active Users"
-            xAxisLabel="Month"
-            className="h-[350px]"
-          />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Stacked Bar Chart</CardTitle>
-          <CardDescription>User segments over time. (Vertical Layout, Rounded Stack)</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ReactifyBarChart
-            data={stackedData}
-            config={stackedConfig}
-            categoryKey="date"
-            dataKeys={stackedDataKeys}
-            yAxisLabel="User Count"
             xAxisLabel="Month"
             className="h-[350px]"
           />
