@@ -31,8 +31,8 @@ export function ReactifyButton({
   const variantStyles = {
     primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
     secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-    outline: 'border border-input bg-transparent hover:bg-accent hover:text-accent-foreground',
-    ghost: 'hover:bg-accent hover:text-accent-foreground',
+    outline: 'border border-input bg-transparent hover:bg-muted hover:text-muted-foreground',
+    ghost: 'hover:bg-muted hover:text-muted-foreground',
     destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
     success: 'bg-green-500 text-white hover:bg-green-500/90',
     warning: 'bg-yellow-500 text-black hover:bg-yellow-500/90',
