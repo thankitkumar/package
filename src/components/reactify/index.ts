@@ -28,6 +28,7 @@ export * from './protected-content';
 export * from './network-aware-wrapper';
 export * from './smart-empty-state';
 export * from './advanced-table';
+export * from './autocomplete';
 export * from './keyboard-shortcut-manager';
 // Consider if useNetworkState hook should be exported for direct use:
 // export * from '../hooks/use-network-state'; 

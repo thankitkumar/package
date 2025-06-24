@@ -10,7 +10,7 @@ import {
   MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, ShieldCheck, Wifi, Inbox, Bell,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft, ToggleRight,
   SeparatorHorizontal, Gauge,
-  ListChecks, Wand2, Table2,
+  ListChecks, Wand2, Table2, Search,
   Command as CommandIcon, ListTree, Code as CodeIcon, Presentation, FileCode2,
   PencilRuler, BookMarked, Loader2
 } from 'lucide-react';
@@ -61,6 +61,7 @@ const ReactifyNetworkAwareDemo = dynamic(() => import('./_components/reactify-ne
 const ReactifySmartEmptyStateDemo = dynamic(() => import('./_components/reactify-smart-empty-state-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyAdvancedTableDemo = dynamic(() => import('./_components/reactify-advanced-table-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyKeyboardShortcutManagerDemo = dynamic(() => import('./_components/reactify-keyboard-shortcut-manager-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyAutocompleteDemo = dynamic(() => import('./_components/reactify-autocomplete-demo'), { loading: () => <ComponentLoader /> });
 
 
 type ComponentCategory = 'standard' | 'advanced';
@@ -1199,6 +1200,87 @@ function MyTablePage() {
       "Pagination controls should be clearly labeled and operable via keyboard.",
       "Loading states should be announced (e.g., \`aria-busy\`).",
       "Ensure sufficient color contrast for text and interactive elements.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
+    id: 'autocomplete',
+    name: 'Autocomplete (Combobox)',
+    icon: <Search />,
+    category: 'advanced',
+    demo: <ReactifyAutocompleteDemo />,
+    version: '1.0.0',
+    codeExample: `
+import { useState, useMemo } from 'react';
+import { ReactifyAutocomplete, type AutocompleteSuggestion } from '@/components/reactify/autocomplete';
+
+// Example with simple string array
+function SimpleAutocomplete() {
+  const allItems = ['Apple', 'Banana', 'Cherry', 'Date'];
+  const [value, setValue] = useState('');
+  const [selected, setSelected] = useState<string | undefined>('');
+
+  const suggestions = useMemo(() => 
+    value ? allItems.filter(item => item.toLowerCase().includes(value.toLowerCase())) : [],
+    [value]
+  );
+
+  return (
+    <ReactifyAutocomplete<string>
+      suggestions={suggestions}
+      value={value}
+      onValueChange={setValue}
+      onSelect={setSelected}
+      placeholder="Search for a fruit..."
+    />
+  );
+}
+
+// Example with object array
+interface Framework extends AutocompleteSuggestion {
+  id: string;
+  name: string;
+}
+
+function ObjectAutocomplete() {
+  const allFrameworks: Framework[] = [
+    { id: 'next', name: 'Next.js' },
+    { id: 'svk', name: 'SvelteKit' },
+    { id: 'remix', name: 'Remix' },
+  ];
+
+  const [value, setValue] = useState('');
+  const [selected, setSelected] = useState<Framework | undefined>();
+
+  const suggestions = useMemo(() =>
+    value ? allFrameworks.filter(f => f.name.toLowerCase().includes(value.toLowerCase())) : [],
+    [value]
+  );
+
+  return (
+    <ReactifyAutocomplete<Framework>
+      suggestions={suggestions}
+      value={value}
+      onValueChange={setValue}
+      onSelect={(item) => {
+        setSelected(item);
+        if (item) {
+          setValue(item.name); // Set input to the display name on selection
+        }
+      }}
+      labelKey="name" // Tell the component which key to display
+      placeholder="Search frameworks..."
+    />
+  );
+}
+`,
+    accessibilityNotes: [
+      "The component uses `role='combobox'` on the input, and `role='listbox'` for the suggestion list.",
+      "Each suggestion has `role='option'` and `aria-selected` to indicate focus.",
+      "The input's `aria-expanded` attribute reflects the visibility of the suggestion list.",
+      "`aria-controls` links the input to the suggestion list.",
+      "`aria-activedescendant` is used to announce the currently focused suggestion to screen readers during keyboard navigation.",
+      "Keyboard navigation is supported: Arrow Up/Down to navigate, Enter to select, and Escape to close.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },
