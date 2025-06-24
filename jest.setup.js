@@ -1,6 +1,13 @@
 // In jest.setup.js or similar
 import '@testing-library/jest-dom';
 
+// Mock ResizeObserver for components that might use it under the hood (e.g., Radix UI)
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn(),
+}));
+
 // Mock matchMedia for components that use it (like useIsMobile hook)
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
