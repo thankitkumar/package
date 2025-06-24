@@ -1,3 +1,4 @@
+
 'use client';
 import { cn } from './utils';
 import type { ReactifyComponentProps } from './common-props';
@@ -15,7 +16,7 @@ export function ReactifyCard({
   return (
     <Component
       className={cn(
-        'rounded-lg border bg-card text-card-foreground shadow-sm p-6', // Basic card styling
+        'rounded-lg border bg-card text-card-foreground shadow-sm', // Basic card styling, padding removed
         className
       )}
       {...props}
@@ -27,7 +28,7 @@ export function ReactifyCard({
 
 // Optional sub-components for structure, similar to ShadCN's Card
 export function ReactifyCardHeader({ children, className, ...props }: ReactifyComponentProps) {
-  return <div className={cn("flex flex-col space-y-1.5 pb-4", className)} {...props}>{children}</div>;
+  return <div className={cn("flex flex-col space-y-1.5 p-6", className)} {...props}>{children}</div>;
 }
 ReactifyCardHeader.displayName = "ReactifyCardHeader";
 
@@ -42,11 +43,11 @@ export function ReactifyCardDescription({ children, className, ...props }: React
 ReactifyCardDescription.displayName = "ReactifyCardDescription";
 
 export function ReactifyCardContent({ children, className, ...props }: ReactifyComponentProps) {
-  return <div className={cn("", className)} {...props}>{children}</div>;
+  return <div className={cn("p-6 pt-0", className)} {...props}>{children}</div>;
 }
 ReactifyCardContent.displayName = "ReactifyCardContent";
 
 export function ReactifyCardFooter({ children, className, ...props }: ReactifyComponentProps) {
-  return <div className={cn("flex items-center pt-4", className)} {...props}>{children}</div>;
+  return <div className={cn("flex items-center p-6 pt-0", className)} {...props}>{children}</div>;
 }
 ReactifyCardFooter.displayName = "ReactifyCardFooter";

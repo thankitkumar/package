@@ -12,7 +12,7 @@ import {
   SeparatorHorizontal, Gauge,
   ListChecks, Wand2, Table2, Search,
   Command as CommandIcon, ListTree, Code as CodeIcon, Presentation, FileCode2,
-  PencilRuler, BookMarked, Loader2
+  PencilRuler, BookMarked, Loader2, Footprints
 } from 'lucide-react';
 import { ReactifyCard, ReactifyCardContent, ReactifyCardHeader, ReactifyCardTitle } from '@/components/reactify/card';
 import Link from 'next/link';
@@ -254,51 +254,46 @@ import {
 import { ReactifyButton } from '@/components/reactify/button';
 import Image from 'next/image';
 
-// Basic Card
-<ReactifyCard className="max-w-md">
+// Card with structured content
+<ReactifyCard>
   <ReactifyCardHeader>
     <ReactifyCardTitle>Product Update</ReactifyCardTitle>
     <ReactifyCardDescription>Version 1.0.0 is now live!</ReactifyCardDescription>
   </ReactifyCardHeader>
   <ReactifyCardContent>
-    <Image
-      src="https://placehold.co/600x400.png"
-      alt="Product abstract image"
-      width={600}
-      height={400}
-      className="rounded-md mb-4"
-      data-ai-hint="product update"
-    />
-    <p className="text-sm">
-      We're excited to announce the release of Reactify v1.0.0.
+    <p>
+      The main content of the card goes here. Padding is applied by default.
     </p>
   </ReactifyCardContent>
   <ReactifyCardFooter>
-    <ReactifyButton variant="primary" size="sm" className="mr-2">Read More</ReactifyButton>
-    <ReactifyButton variant="outline" size="sm">Dismiss</ReactifyButton>
+    <ReactifyButton>Action</ReactifyButton>
   </ReactifyCardFooter>
 </ReactifyCard>
 
-// Card with different background (using Tailwind utility classes)
-<ReactifyCard className="max-w-md bg-accent text-accent-foreground">
+// Card with an image that fills the width (no root padding)
+<ReactifyCard className="max-w-md">
+  <Image
+    src="https://placehold.co/600x300.png"
+    alt="Product image"
+    width={600}
+    height={300}
+    className="rounded-t-lg"
+  />
   <ReactifyCardHeader>
-    <ReactifyCardTitle>Special Announcement</ReactifyCardTitle>
+    <ReactifyCardTitle>Image Card</ReactifyCardTitle>
   </ReactifyCardHeader>
   <ReactifyCardContent>
-    <p>Join our webinar next week!</p>
+    <p>
+      Because padding is in the sub-components, this image can be flush with the card's edges.
+    </p>
   </ReactifyCardContent>
-  <ReactifyCardFooter>
-    <ReactifyButton variant="secondary" className="bg-accent-foreground text-accent hover:bg-accent-foreground/90">
-      Register Now
-    </ReactifyButton>
-  </ReactifyCardFooter>
 </ReactifyCard>
 `,
     accessibilityNotes: [
-      "Ensure card titles (\`ReactifyCardTitle\`) are meaningful and provide context. They are rendered as <h3> by default.",
-      "If a card is entirely clickable (acts as a link or button), wrap it in an appropriate interactive element and ensure it has proper focus indicators and ARIA roles.",
-      "Content within the card (text, images, interactive elements like buttons) should follow general accessibility guidelines.",
-      "Image elements within cards should have appropriate \`alt\` text.",
+      "By moving padding to sub-components, the root Card is more flexible for custom layouts (e.g., full-width images).",
+      "Ensure card titles (\`ReactifyCardTitle\`) are meaningful. They render as <h3> by default.",
+      "If a card is entirely clickable, wrap it in an `<a>` or `<button>` tag and ensure it has proper focus indicators and ARIA roles.",
+      "Content within the card should follow general accessibility guidelines.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },
@@ -435,7 +430,7 @@ function IconDropdown() {
     codeBlockScrollAreaClassName: "max-h-none",
   },
   {
-    id: 'footer', name: 'Footer', icon: <PanelBottom />, category: 'standard', demo: <ReactifyFooterDemo />,
+    id: 'footer', name: 'Footer', icon: <Footprints />, category: 'standard', demo: <ReactifyFooterDemo />,
     version: '1.0.0',
     codeExample: `
 import { 
@@ -494,7 +489,7 @@ function MyPageWithFooter() {
     accessibilityNotes: [
       "The component uses the HTML5 `<footer>` landmark element, which is good for page structure and assistive technologies.",
       "Ensure content within the footer (links, text) is accessible (e.g., links have discernible text, sufficient contrast).",
-      "Social media links should have `aria-label` attributes to provide context (e.g., 'Visit our LinkedIn page').",
+      "Social media links should have `aria-label` attributes to provide context (e.g., 'Visit our LinkedIn page'). The component handles this automatically.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },
