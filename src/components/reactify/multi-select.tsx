@@ -63,16 +63,15 @@ export function ReactifyMultiSelect({
                     key={option.value}
                     variant="secondary"
                     className="mr-1"
-                    onClickCapture={(e) => {
-                        e.stopPropagation();
-                        handleUnselect(option.value);
-                    }}
                   >
                     {option.label}
-                    <button
+                    <span
+                      role="button"
+                      tabIndex={0}
                       className="ml-1.5 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
                       onKeyDown={(e) => {
-                        if (e.key === "Enter") {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
                           handleUnselect(option.value);
                         }
                       }}
@@ -80,11 +79,15 @@ export function ReactifyMultiSelect({
                         e.preventDefault();
                         e.stopPropagation();
                       }}
-                      onClick={() => handleUnselect(option.value)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleUnselect(option.value);
+                      }}
                       aria-label={`Remove ${option.label}`}
                     >
                       <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                    </button>
+                    </span>
                   </ReactifyBadge>
                 ))
             ) : (
