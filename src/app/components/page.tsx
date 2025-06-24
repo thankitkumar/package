@@ -439,20 +439,10 @@ function IconDropdown() {
     codeExample: `
 import { ReactifyFooter } from '@/components/reactify/footer';
 
-// Basic Footer
-<ReactifyFooter>
-  © {new Date().getFullYear()} Reactify. All rights reserved.
-  <div className="mt-1">
-    <a href="#" className="text-primary hover:underline text-xs">Privacy Policy</a>
-    <span className="mx-1 text-xs">|</span>
-    <a href="#" className="text-primary hover:underline text-xs">Terms of Service</a>
-  </div>
-</ReactifyFooter>
+// The footer component is pre-styled with specific content
+// for the demo, but can be customized with children.
 
-// Footer with different HTML tag
-<ReactifyFooter as="div" className="bg-neutral-800 text-neutral-200">
-  Custom Footer Content
-</ReactifyFooter>
+<ReactifyFooter />
 `,
     accessibilityNotes: [
       "The component defaults to using the HTML5 \`<footer>\` landmark element, which is good for page structure and assistive technologies.",
