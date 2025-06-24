@@ -5,7 +5,6 @@ import * as React from 'react';
 import { cn } from './utils';
 import { X, ChevronsUpDown } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ReactifyButton } from './button';
 import { ReactifyBadge } from './badge';
 import { ReactifyInput } from './input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -46,13 +45,16 @@ export function ReactifyMultiSelect({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <ReactifyButton
-          variant="outline"
-          size="lg"
-          className={cn("w-full h-full min-h-10 justify-between font-normal", className)}
-          onClick={() => setOpen(!open)}
+        <button
+          role="combobox"
           aria-expanded={open}
-          aria-haspopup="listbox"
+          className={cn(
+            "flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background",
+            "hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50",
+            open ? "ring-2 ring-ring ring-offset-2" : "",
+            className
+          )}
+          onClick={() => setOpen(!open)}
         >
           <div className="flex gap-1.5 flex-wrap">
             {selected.length > 0 ? (
@@ -95,7 +97,7 @@ export function ReactifyMultiSelect({
             )}
           </div>
           <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
-        </ReactifyButton>
+        </button>
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
          <div className="p-2 border-b">
