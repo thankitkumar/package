@@ -114,7 +114,7 @@ export function ReactifyMultiSelect({
                             key={option.value}
                             role="option"
                             aria-selected={selected.includes(option.value)}
-                            className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                            className="flex items-center space-x-2 p-2 rounded-md hover:bg-muted cursor-pointer"
                             onClick={() => {
                                 const isSelected = selected.includes(option.value);
                                 if (isSelected) {
