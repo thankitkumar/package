@@ -1,31 +1,80 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { ReactifyFooter } from '../footer';
+import { ReactifyFooter, type FooterAddressColumn, type FooterLinkColumn, type SocialLink } from '../footer';
+
+const mockAddress: FooterAddressColumn = {
+  title: "Test Address",
+  addressLines: ["123 Test St", "Testville, TS 12345"],
+  tel: "111-222-3333",
+  email: "test@test.com",
+};
+
+const mockLinkColumns: FooterLinkColumn[] = [
+  {
+    title: "Company Links",
+    links: [{ href: "/about", text: "About Us" }],
+  },
+  {
+    title: "Resource Links",
+    links: [{ href: "/blog", text: "Blog" }],
+  },
+];
+
+const mockSocials: SocialLink[] = [
+  { type: "linkedin", href: "https://linkedin.com" },
+  { type: "youtube", href: "https://youtube.com" },
+];
+
+const mockCopyright = "Test Copyright 2024";
+
 
 describe('ReactifyFooter', () => {
-  it('renders corporate address', () => {
+  it('renders default copyright if no props are provided', () => {
     render(<ReactifyFooter />);
-    expect(screen.getByText('Corporate Address:')).toBeInTheDocument();
-    expect(screen.getByText(/Bangalore 560070/)).toBeInTheDocument();
+    // Default copyright will still render
+    expect(screen.getByText(/Copyright ©/)).toBeInTheDocument();
+    expect(screen.queryByText("Test Address")).not.toBeInTheDocument();
   });
 
-  it('renders copyright information', () => {
-    render(<ReactifyFooter />);
-    const currentYear = new Date().getFullYear();
-    const copyrightRegex = new RegExp(`Copyright © ${currentYear} Molecular Connections Pvt. Ltd.`, 'i');
-    expect(screen.getByText(copyrightRegex)).toBeInTheDocument();
+  it('renders all sections when data is provided', () => {
+    render(<ReactifyFooter 
+        address={mockAddress}
+        linkColumns={mockLinkColumns}
+        socials={mockSocials}
+        copyrightText={mockCopyright}
+    />);
+    
+    // Check address
+    expect(screen.getByText('Test Address')).toBeInTheDocument();
+    expect(screen.getByText('123 Test St')).toBeInTheDocument();
+    expect(screen.getByText(/111-222-3333/)).toBeInTheDocument();
+
+    // Check link columns
+    expect(screen.getByText('Company Links')).toBeInTheDocument();
+    expect(screen.getByText('About Us')).toBeInTheDocument();
+    expect(screen.getByText('Resource Links')).toBeInTheDocument();
+    expect(screen.getByText('Blog')).toBeInTheDocument();
+
+    // Check socials
+    const socialLinks = screen.getAllByRole('link');
+    expect(socialLinks.some(link => link.getAttribute('aria-label')?.includes('linkedin'))).toBe(true);
+    expect(socialLinks.some(link => link.getAttribute('aria-label')?.includes('youtube'))).toBe(true);
+
+    // Check copyright
+    expect(screen.getByText(mockCopyright)).toBeInTheDocument();
   });
 
-  it('renders as a footer element by default', () => {
-    const { container } = render(<ReactifyFooter />);
-    expect(container.querySelector('footer')).toBeInTheDocument();
-  });
+  it('applies custom classNames to sections', () => {
+    const { container } = render(<ReactifyFooter 
+        topSectionClassName="bg-custom-top"
+        bottomSectionClassName="bg-custom-bottom"
+    />);
 
-  it('renders social media links', () => {
-    render(<ReactifyFooter />);
-    // Check for links that would contain the icons. This is a proxy.
-    const links = screen.getAllByRole('link');
-    expect(links.some(link => link.href.includes('#'))).toBe(true); // Simplified check
+    const topSection = container.querySelector('.bg-custom-top');
+    const bottomSection = container.querySelector('.bg-custom-bottom');
+
+    expect(topSection).toBeInTheDocument();
+    expect(bottomSection).toBeInTheDocument();
   });
 });

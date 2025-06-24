@@ -437,16 +437,63 @@ function IconDropdown() {
     id: 'footer', name: 'Footer', icon: <PanelBottom />, category: 'standard', demo: <ReactifyFooterDemo />,
     version: '1.0.0',
     codeExample: `
-import { ReactifyFooter } from '@/components/reactify/footer';
+import { 
+  ReactifyFooter, 
+  type FooterAddressColumn, 
+  type FooterLinkColumn, 
+  type SocialLink 
+} from '@/components/reactify/footer';
 
-// The footer component is pre-styled with specific content
-// for the demo, but can be customized with children.
+// Define the data for your footer
+const addressData: FooterAddressColumn = {
+  title: "Corporate Address",
+  addressLines: ["123 Main Street", "Anytown, USA 12345"],
+  tel: "555-123-4567",
+  email: "contact@example.com"
+};
 
-<ReactifyFooter />
+const linkCols: FooterLinkColumn[] = [
+  {
+    title: "Company",
+    links: [
+      { text: "About Us", href: "/about" },
+      { text: "Careers", href: "/careers" }
+    ]
+  },
+  {
+    title: "Resources",
+    links: [
+      { text: "Blog", href: "/blog" },
+      { text: "Support", href: "/support" }
+    ]
+  }
+];
+
+const socialData: SocialLink[] = [
+  { type: 'linkedin', href: '#' },
+  { type: 'twitter', href: '#' }
+];
+
+const copyrightNotice = "© 2024 Your Company, Inc.";
+
+function MyPageWithFooter() {
+  return (
+    <ReactifyFooter
+      address={addressData}
+      linkColumns={linkCols}
+      socials={socialData}
+      copyrightText={copyrightNotice}
+      // You can customize colors via Tailwind classes
+      topSectionClassName="bg-gray-800"
+      bottomSectionClassName="bg-gray-900"
+    />
+  );
+}
 `,
     accessibilityNotes: [
-      "The component defaults to using the HTML5 \`<footer>\` landmark element, which is good for page structure and assistive technologies.",
+      "The component uses the HTML5 `<footer>` landmark element, which is good for page structure and assistive technologies.",
       "Ensure content within the footer (links, text) is accessible (e.g., links have discernible text, sufficient contrast).",
+      "Social media links should have `aria-label` attributes to provide context (e.g., 'Visit our LinkedIn page').",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },
