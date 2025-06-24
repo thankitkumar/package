@@ -8,7 +8,7 @@ Reactify provides a collection of reusable, unstyled, and accessible UI componen
 
 ## Key Features
 
--   **Core Components**: A rich library of foundational UI components like buttons, inputs, modals, charts, and advanced data tables.
+-   **Core Components**: A rich library of foundational UI components like buttons, inputs, modals, and advanced data tables.
 -   **React Ecosystem Ready**: Works seamlessly in any React environment. The components are bundled as a standard library.
 -   **Flexible Theming**: Easily customize the look and feel using CSS variables to match your brand identity.
 -   **Accessibility First**: Built with WAI-ARIA standards in mind, ensuring all components are usable by everyone, with full keyboard navigation and screen reader support.
@@ -37,7 +37,6 @@ Reactify relies on several peer dependencies that you need to have installed in 
   "lucide-react": "^0.x",
   "react": "^18.x",
   "react-dom": "^18.x",
-  "recharts": "^2.x",
   "@tiptap/react": "^2.x",
   "@tiptap/pm": "^2.x",
   "@tiptap/starter-kit": "^2.x",

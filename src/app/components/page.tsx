@@ -9,7 +9,7 @@ import {
   SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
   MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox, Bell,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft, ToggleRight,
-  SeparatorHorizontal, Gauge, BarChartBig, LineChart as LineChartIcon, ScatterChart, FileText,
+  SeparatorHorizontal, Gauge, FileText,
   Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2, Table2,
   Command as CommandIcon, ListTree
 } from 'lucide-react';
@@ -54,9 +54,6 @@ const ReactifyTextareaDemo = dynamic(() => import('./_components/reactify-textar
 const ReactifyToggleSwitchDemo = dynamic(() => import('./_components/reactify-toggle-switch-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyTooltipDemo = dynamic(() => import('./_components/reactify-tooltip-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyToasterDemo = dynamic(() => import('./_components/reactify-toaster-demo'), { loading: () => <ComponentLoader /> });
-const ReactifyBarChartDemo = dynamic(() => import('./_components/charts/reactify-bar-chart-demo'), { loading: () => <ComponentLoader /> });
-const ReactifyLineChartDemo = dynamic(() => import('./_components/charts/reactify-line-chart-demo'), { loading: () => <ComponentLoader /> });
-const ReactifyBubbleChartDemo = dynamic(() => import('./_components/charts/reactify-bubble-chart-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyMarkdownEditorDemo = dynamic(() => import('./_components/reactify-markdown-editor-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyRichTextEditorDemo = dynamic(() => import('./_components/reactify-rich-text-editor-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyFormWizardDemo = dynamic(() => import('./_components/reactify-form-wizard-demo'), { loading: () => <ComponentLoader /> });
@@ -67,7 +64,7 @@ const ReactifyAdvancedTableDemo = dynamic(() => import('./_components/reactify-a
 const ReactifyKeyboardShortcutManagerDemo = dynamic(() => import('./_components/reactify-keyboard-shortcut-manager-demo'), { loading: () => <ComponentLoader /> });
 
 
-type ComponentCategory = 'standard' | 'charts' | 'advanced';
+type ComponentCategory = 'standard' | 'advanced';
 
 interface ComponentDefinition {
   id: string;
@@ -1046,148 +1043,6 @@ function TooltipExample() {
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },
-  // Charts
-  {
-    id: 'bar-chart', name: 'Bar Chart', icon: <BarChartBig />, category: 'charts', demo: <ReactifyBarChartDemo />,
-    version: '1.0.0',
-    codeExample: `
-import { ReactifyBarChart, type BarChartDataKey } from '@/components/reactify/charts/reactify-bar-chart';
-import type { ChartConfig } from '@/components/ui/chart'; // ShadCN's ChartConfig type
-
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  // ... more data
-];
-
-const chartConfig = {
-  desktop: { label: "Desktop", color: "hsl(var(--chart-1))" },
-  mobile: { label: "Mobile", color: "hsl(var(--chart-2))" },
-} satisfies ChartConfig;
-
-const dataKeys: BarChartDataKey[] = [
-  { key: 'desktop', radius: [4,4,0,0] }, // Rounded top corners
-  { key: 'mobile', radius: [4,4,0,0] },
-];
-
-function BarChartExample() {
-  return (
-    <ReactifyBarChart
-      data={chartData}
-      config={chartConfig}
-      categoryKey="month" // Key for X-axis categories
-      dataKeys={dataKeys} // Keys for Y-axis values/bars
-      yAxisLabel="Active Users"
-      xAxisLabel="Month"
-      className="h-[350px]" // Set height for the chart container
-    />
-  );
-}
-`,
-    accessibilityNotes: [
-      "Charts use Recharts' \`accessibilityLayer\` which helps make them more accessible.",
-      "Ensure chart titles and axis labels (\`xAxisLabel\`, \`yAxisLabel\` props) are descriptive.",
-      "Data points in tooltips are announced.",
-      "Legends (\`ChartLegendContent\`) are used to describe data series; ensure labels in \`config\` are clear.",
-      "Consider providing a data table alternative for complex charts.",
-      "Color contrast for bars and text should meet accessibility standards (managed by theme and ChartConfig colors).",
-    ],
-    codeBlockScrollAreaClassName: "max-h-none",
-  },
-  {
-    id: 'bubble-chart', name: 'Bubble Chart', icon: <ScatterChart />, category: 'charts', demo: <ReactifyBubbleChartDemo />,
-    version: '1.0.0',
-    codeExample: `
-import { ReactifyBubbleChart } from '@/components/reactify/charts/reactify-bubble-chart';
-import type { ChartConfig } from '@/components/ui/chart';
-
-const bubbleData = {
-  seriesA: [
-    { name: 'Point1', x: 10, y: 20, z: 100 },
-    // ... more points for seriesA
-  ],
-  seriesB: [
-    { name: 'PointX', x: 15, y: 25, z: 150 },
-    // ... more points for seriesB
-  ],
-};
-
-const bubbleConfig = {
-  seriesA: { label: "Series A", color: "hsl(var(--chart-1))" },
-  seriesB: { label: "Series B", color: "hsl(var(--chart-2))" },
-  z: { label: "Size Metric" } // Label for Z-axis in tooltip
-} satisfies ChartConfig;
-
-function BubbleChartExample() {
-  return (
-    <ReactifyBubbleChart
-      data={bubbleData}
-      config={bubbleConfig}
-      xKey="x"       // Data key for X-axis value
-      yKey="y"       // Data key for Y-axis value
-      zKey="z"       // Data key for bubble size value
-      nameKey="name" // Data key for bubble name (shown in tooltip)
-      xAxisLabel="X-Axis Metric"
-      yAxisLabel="Y-Axis Metric"
-      sizeRange={[100, 2000]} // Min/max area for bubbles
-      className="h-[450px]"
-    />
-  );
-}
-`,
-    accessibilityNotes: [
-      "Similar to Bar Chart, relies on Recharts' accessibility features.",
-      "Descriptive axis labels (\`xAxisLabel\`, \`yAxisLabel\`) and series labels in \`config\` are crucial.",
-      "The \`nameKey\` helps identify individual bubbles in tooltips.",
-      "The \`zKey\` (size) should also have a meaningful label in the \`config\` for tooltips (e.g., \`budget: { label: \"Budget (\$K)\" }\`).",
-      "Ensure color contrast. Bubble opacity/overlap can be a challenge; consider patterns or distinct outlines if series overlap significantly.",
-    ],
-    codeBlockScrollAreaClassName: "max-h-none",
-  },
-  {
-    id: 'line-chart', name: 'Line Chart', icon: <LineChartIcon />, category: 'charts', demo: <ReactifyLineChartDemo />,
-    version: '1.0.0',
-    codeExample: `
-import { ReactifyLineChart, type LineChartDataKey } from '@/components/reactify/charts/reactify-line-chart';
-import type { ChartConfig } from '@/components/ui/chart';
-
-const lineData = [
-  { date: "2024-01-01", views: 200, clicks: 80 },
-  // ... more data
-];
-
-const lineConfig = {
-  views: { label: "Page Views", color: "hsl(var(--chart-1))" },
-  clicks: { label: "Clicks", color: "hsl(var(--chart-2))" },
-} satisfies ChartConfig;
-
-const dataKeys: LineChartDataKey[] = [
-  { key: 'views', type: 'monotone' },
-  { key: 'clicks', type: 'monotone', strokeDasharray: "3 3" }, // Dashed line
-];
-
-function LineChartExample() {
-  return (
-    <ReactifyLineChart
-      data={lineData}
-      config={lineConfig}
-      categoryKey="date" // Key for X-axis categories
-      dataKeys={dataKeys}  // Keys for Y-axis lines/values
-      yAxisLabel="Count"
-      xAxisLabel="Date"
-      className="h-[350px]"
-    />
-  );
-}
-`,
-    accessibilityNotes: [
-      "Utilizes Recharts' \`accessibilityLayer\`.",
-      "Clear axis labels (\`xAxisLabel\`, \`yAxisLabel\`) and line labels (from \`config\` or \`LineChartDataKey\`) are important.",
-      "Tooltips provide data point values. Ensure these are clearly announced.",
-      "Use \`strokeDasharray\` or distinct point shapes for different lines if colors are not sufficiently distinguishable for colorblind users.",
-      "Legends help identify lines.",
-    ],
-    codeBlockScrollAreaClassName: "max-h-none",
-  },
   // Advanced
   {
     id: 'advanced-table',
@@ -1809,7 +1664,6 @@ function MyListComponent() {
 
 const displayCategories: Array<{ id: ComponentCategory; title: string }> = [
   { id: 'standard', title: 'Standard Components' },
-  { id: 'charts', title: 'Charts' },
   { id: 'advanced', title: 'Advanced Tools' },
 ];
 

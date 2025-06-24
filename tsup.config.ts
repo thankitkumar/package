@@ -12,7 +12,6 @@ export default defineConfig({
     'react', 
     'react-dom', 
     'lucide-react', 
-    'recharts',
     '@tiptap/react',
     '@tiptap/pm',
     '@tiptap/starter-kit',
