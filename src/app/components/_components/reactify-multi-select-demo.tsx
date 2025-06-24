@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { ReactifyMultiSelect, type MultiSelectOption } from '@/components/reactify/multi-select';
 import { ReactifyCard, ReactifyCardContent, ReactifyCardDescription, ReactifyCardHeader, ReactifyCardTitle } from '@/components/reactify/card';
 import { Label } from '@/components/ui/label';
-import { User, Tag, Code } from 'lucide-react';
+import { User, Code } from 'lucide-react';
 
 const frameworks: MultiSelectOption[] = [
   { value: 'next.js', label: 'Next.js', icon: <Code size={16} /> },

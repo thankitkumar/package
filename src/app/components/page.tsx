@@ -1517,12 +1517,13 @@ export default MyComponentWithShortcuts;
     codeExample: `
 import { useState } from 'react';
 import { ReactifyMultiSelect, type MultiSelectOption } from '@/components/reactify/multi-select';
+import { Code } from 'lucide-react'; // Example icon
 
 const FRAMEWORKS: MultiSelectOption[] = [
-  { value: 'next.js', label: 'Next.js' },
-  { value: 'sveltekit', label: 'SvelteKit' },
-  { value: 'nuxt.js', label: 'Nuxt.js' },
-  { value: 'remix', label: 'Remix' },
+  { value: 'next.js', label: 'Next.js', icon: <Code size={16} /> },
+  { value: 'sveltekit', label: 'SvelteKit', icon: <Code size={16} /> },
+  { value: 'nuxt.js', label: 'Nuxt.js' }, // Can omit icon
+  { value: 'remix', label: 'Remix', icon: <Code size={16} /> },
 ];
 
 function MyMultiSelectComponent() {
