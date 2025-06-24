@@ -6,7 +6,7 @@ import { ReactifyAdvancedTable, type ColumnDef } from '@/components/reactify/adv
 import { ReactifyCard, ReactifyCardContent, ReactifyCardHeader, ReactifyCardTitle, ReactifyCardDescription } from '@/components/reactify/card';
 import { ReactifyBadge } from '@/components/reactify/badge';
 import { ReactifyButton } from '@/components/reactify/button';
-import { RefreshCw, Edit3, Trash2 } from 'lucide-react';
+import { RefreshCw, Edit3, Trash2, Shield, User } from 'lucide-react';
 
 interface User {
   id: number;
@@ -68,7 +68,18 @@ export default function ReactifyAdvancedTableDemo() {
       header: 'Name',
       width: 200,
       minWidth: 150,
-      cell: (row) => <span className="font-medium">{row.name}</span>,
+      cell: (row) => {
+        const icon =
+          row.role === 'Admin' ? <Shield size={14} className="text-primary" />
+          : row.role === 'Editor' ? <Edit3 size={14} className="text-amber-600" />
+          : <User size={14} className="text-muted-foreground" />;
+        return (
+          <div className="flex items-center gap-2">
+            {icon}
+            <span className="font-medium">{row.name}</span>
+          </div>
+        );
+      },
     },
     {
       key: 'email',

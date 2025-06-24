@@ -12,7 +12,7 @@ import {
   SeparatorHorizontal, Gauge,
   ListChecks, Wand2, Table2,
   Command as CommandIcon, ListTree, Code as CodeIcon, Presentation, FileCode2,
-  RichText, PencilRuler, BookMarked, Loader2
+  PencilRuler, BookMarked, Loader2
 } from 'lucide-react';
 import { ReactifyCard, ReactifyCardContent, ReactifyCardHeader, ReactifyCardTitle } from '@/components/reactify/card';
 import Link from 'next/link';
@@ -1114,87 +1114,79 @@ function TooltipExample() {
     version: '1.0.0',
     codeExample: `
 import { ReactifyAdvancedTable, type ColumnDef } from '@/components/reactify/advanced-table';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { ReactifyBadge } from '@/components/reactify/badge'; // Import custom components
+import { ReactifyButton } from '@/components/reactify/button';
+import { useState, useEffect, useMemo } from 'react';
 
+// Define your data structure
 interface MyDataType {
   id: number;
   name: string;
   email: string;
-  // ... other fields
+  status: 'Active' | 'Inactive' | 'Pending';
 }
 
-// Sample data (in a real app, this would come from an API)
+// Sample data
 const sampleData: MyDataType[] = [
-  { id: 1, name: 'Alice', email: 'alice@example.com' },
-  { id: 2, name: 'Bob', email: 'bob@example.com' },
-  // ... more items
+  { id: 1, name: 'Alice Smith', email: 'alice@example.com', status: 'Active' },
+  { id: 2, name: 'Bob Johnson', email: 'bob@example.com', status: 'Inactive' },
+  { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', status: 'Pending' },
 ];
 
 function MyTablePage() {
-  const [data, setData] = useState<MyDataType[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [totalItems, setTotalItems] = useState(0);
-
-  const pageCount = Math.ceil(totalItems / pageSize);
-
-  useEffect(() => {
-    // Simulate fetching paginated data
-    setIsLoading(true);
-    const fetchPage = () => {
-      const start = (currentPage - 1) * pageSize;
-      const end = start + pageSize;
-      // In real app, fetch from API: fetch(\`/api/data?page=\${currentPage}&limit=\${pageSize}\`)
-      setData(sampleData.slice(start, end));
-      setTotalItems(sampleData.length);
-      setIsLoading(false);
-    };
-    const timer = setTimeout(fetchPage, 500);
-    return () => clearTimeout(timer);
-  }, [currentPage, pageSize]);
-
+  // ... (state and useEffect logic for fetching data can be added here)
+  
+  // Define columns and use the 'cell' renderer for custom content
   const columns = useMemo((): ColumnDef<MyDataType>[] => [
-    { key: 'id', header: 'ID', width: 80, enableReordering: false }, // Example: ID not reorderable
-    { key: 'name', header: 'Name', minWidth: 150 },
-    { key: 'email', header: 'Email', width: 250, enableResizing: false }, // Example: Email not resizable
+    { key: 'id', header: 'User ID' },
+    { 
+      key: 'name', 
+      header: 'User Name',
+      // You can render any React node inside a cell
+      cell: (row) => <span className="font-bold text-primary">{row.name}</span>
+    },
+    { key: 'email', header: 'Email Address' },
+    { 
+      key: 'status', 
+      header: 'Status',
+      // Example: Rendering a custom Badge component based on status
+      cell: (row) => {
+        const variantMap = {
+          Active: 'success',
+          Inactive: 'destructive',
+          Pending: 'warning',
+        };
+        return (
+          <ReactifyBadge variant={variantMap[row.status] as any}>
+            {row.status}
+          </ReactifyBadge>
+        );
+      }
+    },
     { 
       key: 'actions', 
-      header: 'Actions', 
-      enableReordering: false, // Actions column usually not reorderable
-      enableResizing: false,   // Or resizable
+      header: 'Actions',
+      // Example: Rendering interactive buttons
       cell: (row) => (
-        <button onClick={() => alert('Action for ' + row.name)}>Do Action</button>
+        <ReactifyButton 
+          variant="outline"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent onRowClick if it exists
+            alert('Viewing details for ' + row.name)
+          }}
+        >
+          View Details
+        </ReactifyButton>
       ) 
     }
   ], []);
 
-  const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page);
-  }, []);
-
-  const handlePageSizeChange = useCallback((size: number) => {
-    setPageSize(size);
-    setCurrentPage(1); // Reset to first page
-  }, []);
-
   return (
     <ReactifyAdvancedTable
       columns={columns}
-      data={data}
-      isLoading={isLoading}
-      currentPage={currentPage}
-      pageCount={pageCount}
-      onPageChange={handlePageChange}
-      pageSize={pageSize}
-      onPageSizeChange={handlePageSizeChange}
-      caption="List of items"
-      enableColumnResizing={true} // Global toggle
-      enableColumnReordering={true} // Global toggle
-      onRowClick={(row) => alert(\`Clicked \${row.name}\`)}
-      // Optional callbacks:
-      // onColumnOrderChange={(newOrder) => console.log('New column order:', newOrder)}
-      // onColumnResize={(key, width) => console.log(\`Column \${key} resized to \${width}\`)}
+      data={sampleData} // Using static data for this example
+      onRowClick={(row) => alert(\`Row clicked: \${row.name}\`)}
     />
   );
 }
