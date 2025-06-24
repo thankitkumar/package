@@ -6,11 +6,11 @@ import dynamic from 'next/dynamic';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger, SidebarInput } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
 import {
-  SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, PilcrowSquare, Square,
-  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, Sigma, ShieldCheck, Wifi, Inbox, Bell,
+  SquareStack, TerminalSquare, LayoutGrid, Rows, ChevronDownCircle, Type as TypeIcon, Square,
+  MessageSquareWarning, BadgePercent, CheckSquare, Folders, Info, ShieldCheck, Wifi, Inbox, Bell,
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft, ToggleRight,
-  SeparatorHorizontal, Gauge, FileText,
-  Briefcase, Heading as HeadingLucideIcon, AlignJustify, ListChecks, Wand2, Table2,
+  SeparatorHorizontal, Gauge,
+  ListChecks, Wand2, Table2,
   Command as CommandIcon, ListTree
 } from 'lucide-react';
 import { ReactifyCard, ReactifyCardContent, ReactifyCardHeader, ReactifyCardTitle } from '@/components/reactify/card';
@@ -54,8 +54,6 @@ const ReactifyTextareaDemo = dynamic(() => import('./_components/reactify-textar
 const ReactifyToggleSwitchDemo = dynamic(() => import('./_components/reactify-toggle-switch-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyTooltipDemo = dynamic(() => import('./_components/reactify-tooltip-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyToasterDemo = dynamic(() => import('./_components/reactify-toaster-demo'), { loading: () => <ComponentLoader /> });
-const ReactifyMarkdownEditorDemo = dynamic(() => import('./_components/reactify-markdown-editor-demo'), { loading: () => <ComponentLoader /> });
-const ReactifyRichTextEditorDemo = dynamic(() => import('./_components/reactify-rich-text-editor-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyFormWizardDemo = dynamic(() => import('./_components/reactify-form-wizard-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyProtectedContentDemo = dynamic(() => import('./_components/reactify-protected-content-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyNetworkAwareDemo = dynamic(() => import('./_components/reactify-network-aware-demo'), { loading: () => <ComponentLoader /> });
@@ -1367,42 +1365,6 @@ export default MyComponentWithShortcuts;
     codeBlockScrollAreaClassName: "max-h-none",
   },
   {
-    id: 'markdown-editor', name: 'Markdown Editor', icon: <FileText />, category: 'advanced', demo: <ReactifyMarkdownEditorDemo />,
-    version: '1.0.0',
-    codeExample: `
-import { ReactifyMarkdownEditor } from '@/components/reactify/markdown-editor';
-import { useState } from 'react';
-
-const initialMarkdown = \`
-# Hello World
-This is **Markdown**.
-## Subheading
-- Item 1
-- Item 2
-\`;
-
-function MarkdownEditorExample() {
-  const [markdown, setMarkdown] = useState(initialMarkdown);
-
-  return (
-    <ReactifyMarkdownEditor
-      initialValue={markdown}
-      onValueChange={setMarkdown} // Optional: to get updated markdown
-      textareaRows={15}
-    />
-  );
-}
-`,
-    accessibilityNotes: [
-      "The textarea for Markdown input is labeled 'Markdown Input'.",
-      "The HTML preview area is labeled 'HTML Preview' and uses \`aria-live='polite'\` to announce changes, though this might be noisy for rapid typing; consider refining if needed.",
-      "The Table of Contents (ToC) items are buttons that scroll to the relevant section. They are keyboard focusable and activatable.",
-      "Ensure the generated HTML in the preview is itself accessible (e.g., headings have correct levels, links are descriptive). The basic parser aims for this.",
-      "The textarea itself is a standard accessible form control.",
-    ],
-    codeBlockScrollAreaClassName: "max-h-none",
-  },
-  {
     id: 'network-aware-wrapper',
     name: 'Network Aware Wrapper',
     icon: <Wifi />,
@@ -1540,48 +1502,6 @@ export default function PageWithProtection() {
       "If significant sections of a page are hidden, consider if this impacts the overall page structure or navigation for assistive technologies. Usually, simple conditional rendering is fine.",
       "The `fallback` prop can be used to provide alternative content or an explanation if access is denied, which can be more user-friendly than just hiding content.",
       "If content appearance/disappearance is frequent or based on rapid user interaction, consider using \`aria-live\` regions on a container to announce changes, though this is often not necessary for role-based access which changes less frequently.",
-    ],
-    codeBlockScrollAreaClassName: "max-h-none",
-  },
-  {
-    id: 'rich-text-editor', name: 'Rich Text Editor', icon: <PilcrowSquare />, category: 'advanced', demo: <ReactifyRichTextEditorDemo />,
-    version: '1.0.0',
-    codeExample: `
-import { ReactifyRichTextEditor } from '@/components/reactify/rich-text-editor';
-import { useState } from 'react';
-
-const initialHtmlContent = \`
-<h2>Hello TipTap!</h2>
-<p>This is a <strong>rich text editor</strong> example.</p>
-<p>Try the AI features in the toolbar like <em>Summarize</em> or <em>Make Formal</em> on selected text!</p>
-<div data-latex-block="true"><span data-latex="E = mc^2"></span><div></div></div>
-\`;
-
-function RichTextEditorExample() {
-  const [content, setContent] = useState({ html: initialHtmlContent, json: {} });
-
-  const handleUpdate = (newContent: { html: string; json: any }) => {
-    setContent(newContent);
-    // console.log('HTML:', newContent.html);
-    // console.log('JSON:', newContent.json);
-  };
-
-  return (
-    <ReactifyRichTextEditor
-      initialContent={initialHtmlContent}
-      onUpdate={handleUpdate}
-      editable={true}
-    />
-  );
-}
-`,
-    accessibilityNotes: [
-      "Relies heavily on TipTap's (and underlying ProseMirror's) accessibility features.",
-      "Toolbar buttons should have clear \`title\` attributes or \`aria-label\`s for icon-only buttons (ReactifyButton handles this if title is passed). Current demo uses \`title\`.",
-      "The editor content area itself should be navigable and editable using standard keyboard commands.",
-      "Ensure AI transformation features provide clear feedback (e.g., via toasts) about success or failure.",
-      "LaTeX blocks: The input is via a prompt. The rendered output within the editor should be perceivable (KaTeX aims for accessible math rendering).",
-      "Semantic HTML is generated by TipTap (e.g., \`<strong>\` for bold, \`<h1>\` for headings).",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },
@@ -1760,6 +1680,7 @@ export default function ComponentsPage() {
                   codeExample={activeComponentDetails.codeExample}
                   accessibilityNotes={activeComponentDetails.accessibilityNotes}
                   codeBlockScrollAreaClassName={activeComponentDetails.codeBlockScrollAreaClassName}
+                  version={activeComponentDetails.version}
                 >
                   {activeComponentDetails.demo}
                 </ComponentDisplay>

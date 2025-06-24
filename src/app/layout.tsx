@@ -5,7 +5,6 @@ import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { Header } from '@/components/layout/header';
 import { Toaster } from "@/components/ui/toaster";
-import 'katex/dist/katex.min.css'; // Import KaTeX CSS
 import { KeyboardShortcutProvider } from '@/contexts/keyboard-shortcut-context';
 import { KeyboardShortcutManager } from '@/components/reactify/keyboard-shortcut-manager';
 import { FeatureFlagProvider } from '@/contexts/feature-flag-context'; // Added

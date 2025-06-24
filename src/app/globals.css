@@ -73,42 +73,6 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-
-  /* Basic TipTap editor styles for prose */
-  .tiptap {
-    h1, h2, h3, h4, h5, h6 {
-      @apply font-headline;
-    }
-    
-    h1 { @apply text-3xl font-bold my-4; }
-    h2 { @apply text-2xl font-semibold my-3; }
-    h3 { @apply text-xl font-semibold my-2; }
-    p { @apply my-2 leading-relaxed; }
-    ul, ol { @apply my-2 ml-6; }
-    ul { @apply list-disc; }
-    ol { @apply list-decimal; }
-    li > p { @apply my-0; } 
-    li { @apply my-1; }
-    blockquote { @apply border-l-4 border-border pl-4 italic my-4 text-muted-foreground; }
-    code { @apply bg-muted text-muted-foreground px-1 py-0.5 rounded-sm font-code text-sm; }
-    pre { @apply bg-muted p-3 rounded-md overflow-x-auto font-code text-sm my-4; }
-    pre code { @apply bg-transparent p-0; }
-    hr { @apply border-border my-6; }
-    a { @apply text-primary hover:underline; }
-  }
-
-  /* Styles for KaTeX rendered LaTeX blocks within TipTap */
-  .tiptap .latex-block-container {
-    @apply my-4 p-2 border border-dashed border-border rounded-md;
-    /* KaTeX elements are display: inline-block by default, ensure they break lines if needed */
-  }
-  .tiptap .latex-block-container .katex-display {
-    @apply mx-auto; /* Center block math if KaTeX structure allows */
-  }
-  .tiptap .latex-block-container .latex-render-area {
-    @apply overflow-x-auto; /* Allow scrolling for wide formulas */
-  }
-
 }
 
 /* Custom Scrollbar for Webkit-based browsers (targeting sidebar content area) */

@@ -36,11 +36,7 @@ Reactify relies on several peer dependencies that you need to have installed in 
 "peerDependencies": {
   "lucide-react": "^0.x",
   "react": "^18.x",
-  "react-dom": "^18.x",
-  "@tiptap/react": "^2.x",
-  "@tiptap/pm": "^2.x",
-  "@tiptap/starter-kit": "^2.x",
-  "katex": "^0.16.x"
+  "react-dom": "^18.x"
 }
 ```
 
