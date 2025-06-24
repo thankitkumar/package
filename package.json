@@ -1,6 +1,6 @@
 {
   "name": "@reactify/components",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A universal and accessible React component library built with Tailwind CSS and ShadCN UI.",
   "author": "Molecular Connections",
   "license": "MIT",
@@ -73,7 +73,7 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.6",
-    "@testing-library/react": "^16.0.0",
+    "@testing-library/react": "^15.0.0",
     "@types/jest": "^29.5.12",
     "@types/katex": "^0.16.7",
     "@types/node": "^20",
