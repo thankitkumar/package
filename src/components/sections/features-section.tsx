@@ -1,5 +1,6 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Zap, Puzzle, Palette, Accessibility, Smartphone, Layers } from 'lucide-react'; // BrainCircuit removed, added Layers
+import { Puzzle, Palette, Accessibility, Smartphone, Layers } from 'lucide-react';
 
 const features = [
   {
@@ -27,12 +28,6 @@ const features = [
     title: 'Platform Agnostic',
     description: 'Designed for the web, components can be used in any web-based platform, including mobile web and desktop (Electron).',
   },
-  // Removed AI Component Generator feature
-  // {
-  //   icon: <BrainCircuit className="h-10 w-10 text-primary mb-4" />,
-  //   title: 'AI Component Generator',
-  //   description: 'Leverage AI to suggest component variants and modifications based on your design requirements.',
-  // },
 ];
 
 export function FeaturesSection() {
