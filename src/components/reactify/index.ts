@@ -30,6 +30,7 @@ export * from './smart-empty-state';
 export * from './advanced-table';
 export * from './autocomplete';
 export * from './keyboard-shortcut-manager';
+export * from './multi-select';
 // Consider if useNetworkState hook should be exported for direct use:
 // export * from '../hooks/use-network-state'; 
 // Export context and types if they are intended for external use by consumers of the library

@@ -62,6 +62,7 @@ const ReactifySmartEmptyStateDemo = dynamic(() => import('./_components/reactify
 const ReactifyAdvancedTableDemo = dynamic(() => import('./_components/reactify-advanced-table-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyKeyboardShortcutManagerDemo = dynamic(() => import('./_components/reactify-keyboard-shortcut-manager-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyAutocompleteDemo = dynamic(() => import('./_components/reactify-autocomplete-demo'), { loading: () => <ComponentLoader /> });
+const ReactifyMultiSelectDemo = dynamic(() => import('./_components/reactify-multi-select-demo'), { loading: () => <ComponentLoader /> });
 
 
 type ComponentCategory = 'standard' | 'advanced';
@@ -1503,6 +1504,46 @@ export default MyComponentWithShortcuts;
       "Clearly indicate modifier keys (Ctrl, Cmd, Alt, Shift) and the main action key. Use platform-conventional symbols (e.g., ⌘ for Command on Mac).",
       "Consider allowing users to customize or disable shortcuts, especially if they conflict with user-defined or assistive tech shortcuts (not implemented in this version).",
       "When a shortcut triggers an action, provide clear feedback to the user (e.g., toast, visual change).",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
+    id: 'multi-select',
+    name: 'Multi Select',
+    icon: <ListTree />,
+    category: 'advanced',
+    demo: <ReactifyMultiSelectDemo />,
+    version: '1.0.0',
+    codeExample: `
+import { useState } from 'react';
+import { ReactifyMultiSelect, type MultiSelectOption } from '@/components/reactify/multi-select';
+
+const FRAMEWORKS: MultiSelectOption[] = [
+  { value: 'next.js', label: 'Next.js' },
+  { value: 'sveltekit', label: 'SvelteKit' },
+  { value: 'nuxt.js', label: 'Nuxt.js' },
+  { value: 'remix', label: 'Remix' },
+];
+
+function MyMultiSelectComponent() {
+  const [selected, setSelected] = useState<string[]>(['next.js']);
+
+  return (
+    <ReactifyMultiSelect
+      options={FRAMEWORKS}
+      selected={selected}
+      onChange={setSelected}
+      placeholder="Select frameworks..."
+    />
+  );
+}
+`,
+    accessibilityNotes: [
+      "The trigger button has 'aria-haspopup=\"listbox\"' and 'aria-expanded' to indicate the state of the dropdown.",
+      "The popover content containing the options has 'role=\"listbox\"'.",
+      "Each option has an associated 'label' and checkbox for clear selection state.",
+      "The search input within the popover helps filter long lists.",
+      "Ensure popover content is properly managed for focus when it opens.",
     ],
     codeBlockScrollAreaClassName: "max-h-none",
   },
