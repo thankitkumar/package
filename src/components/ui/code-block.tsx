@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { ClipboardCopy, Check } from 'lucide-react';
@@ -21,7 +21,7 @@ export function CodeBlock({ code, className, lang, scrollAreaClassName }: CodeBl
 
   const lines = code.trimEnd().split('\n');
 
-  const handleCopy = async () => {
+  const handleCopy = useCallback(async () => {
     if (!code) return;
     try {
       await navigator.clipboard.writeText(code);
@@ -32,7 +32,7 @@ export function CodeBlock({ code, className, lang, scrollAreaClassName }: CodeBl
       console.error('Failed to copy text: ', err);
       toast({ title: 'Error', description: 'Failed to copy code.', variant: 'destructive' });
     }
-  };
+  }, [code, toast]);
 
   return (
     <div className={cn(

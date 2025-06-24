@@ -80,6 +80,7 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
   const [resizingColumn, setResizingColumn] = useState<{ key: string; startX: number; startWidth: number } | null>(null);
   const [draggedColumnKey, setDraggedColumnKey] = useState<string | null>(null);
   const [dropTargetInfo, setDropTargetInfo] = useState<{ targetKey: string; position: 'before' | 'after' } | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleResizeMouseDown = useCallback((key: string, event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -212,6 +213,11 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
       onPageChange(currentPage + 1);
     }
   };
+
+  const handleRefresh = useCallback(() => {
+    setRefreshKey(key => key + 1);
+  }, []);
+
 
   return (
     <div className={cn("space-y-4", className)} {...htmlDivAttributes}>
@@ -385,4 +391,3 @@ export function ReactifyAdvancedTable<TData extends Record<string, any>>(
     </div>
   );
 }
-

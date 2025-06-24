@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { ReactifyModal } from '@/components/reactify/modal';
 import { ReactifyButton } from '@/components/reactify/button';
 import { ReactifyInput } from '@/components/reactify/input';
@@ -9,6 +9,22 @@ import { Card, CardContent } from '@/components/ui/card';
 export default function ReactifyModalDemo() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+
+  const handleCloseBasicModal = useCallback(() => setIsModalOpen(false), []);
+  const handleOpenBasicModal = useCallback(() => setIsModalOpen(true), []);
+  const handleCloseFormModal = useCallback(() => setIsFormModalOpen(false), []);
+  const handleOpenFormModal = useCallback(() => setIsFormModalOpen(true), []);
+
+  const handleConfirmAction = useCallback(() => {
+    setIsModalOpen(false);
+    alert('Action Confirmed!');
+  }, []);
+  
+  const handleSubscribeAction = useCallback(() => {
+    setIsFormModalOpen(false);
+    alert('Subscribed!');
+  }, []);
+
 
   const codeExample = `
 import { useState } from 'react';
@@ -53,19 +69,19 @@ function MyComponent() {
       <CardContent className="p-6 space-y-4">
         <div>
           <h3 className="font-semibold text-lg mb-2">Basic Modal</h3>
-          <ReactifyButton onClick={() => setIsModalOpen(true)}>Open Basic Modal</ReactifyButton>
+          <ReactifyButton onClick={handleOpenBasicModal}>Open Basic Modal</ReactifyButton>
         </div>
         
         <ReactifyModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={handleCloseBasicModal}
           title="Sample Modal"
           footer={
             <>
-              <ReactifyButton variant="outline" onClick={() => setIsModalOpen(false)}>
+              <ReactifyButton variant="outline" onClick={handleCloseBasicModal}>
                 Cancel
               </ReactifyButton>
-              <ReactifyButton variant="primary" onClick={() => { setIsModalOpen(false); alert('Action Confirmed!'); }}>
+              <ReactifyButton variant="primary" onClick={handleConfirmAction}>
                 Confirm Action
               </ReactifyButton>
             </>
@@ -81,19 +97,19 @@ function MyComponent() {
 
         <div>
           <h3 className="font-semibold text-lg mb-2">Modal with Form</h3>
-          <ReactifyButton onClick={() => setIsFormModalOpen(true)}>Open Form Modal</ReactifyButton>
+          <ReactifyButton onClick={handleOpenFormModal}>Open Form Modal</ReactifyButton>
         </div>
 
         <ReactifyModal
           isOpen={isFormModalOpen}
-          onClose={() => setIsFormModalOpen(false)}
+          onClose={handleCloseFormModal}
           title="Subscribe to Newsletter"
           footer={
             <>
-              <ReactifyButton variant="outline" onClick={() => setIsFormModalOpen(false)}>
+              <ReactifyButton variant="outline" onClick={handleCloseFormModal}>
                 Close
               </ReactifyButton>
-              <ReactifyButton variant="primary" onClick={() => { setIsFormModalOpen(false); alert('Subscribed!'); }}>
+              <ReactifyButton variant="primary" onClick={handleSubscribeAction}>
                 Subscribe
               </ReactifyButton>
             </>

@@ -1,6 +1,6 @@
 
 'use client';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { ReactifySidebar } from '@/components/reactify/sidebar';
 import { ReactifyButton } from '@/components/reactify/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,14 +11,19 @@ export default function ReactifySidebarDemo() {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
 
+  const handleCloseLeft = useCallback(() => setIsLeftSidebarOpen(false), []);
+  const handleOpenLeft = useCallback(() => setIsLeftSidebarOpen(true), []);
+  const handleCloseRight = useCallback(() => setIsRightSidebarOpen(false), []);
+  const handleOpenRight = useCallback(() => setIsRightSidebarOpen(true), []);
+
   return (
     <Card className="w-full">
       <CardContent className="p-6 space-y-4">
         <div className="flex gap-4">
-          <ReactifyButton onClick={() => setIsLeftSidebarOpen(true)}>
+          <ReactifyButton onClick={handleOpenLeft}>
             Open Left Sidebar
           </ReactifyButton>
-          <ReactifyButton variant="secondary" onClick={() => setIsRightSidebarOpen(true)}>
+          <ReactifyButton variant="secondary" onClick={handleOpenRight}>
             Open Right Sidebar
           </ReactifyButton>
         </div>
@@ -26,7 +31,7 @@ export default function ReactifySidebarDemo() {
         {/* Left Sidebar */}
         <ReactifySidebar
           isOpen={isLeftSidebarOpen}
-          onClose={() => setIsLeftSidebarOpen(false)}
+          onClose={handleCloseLeft}
           position="left"
           title="Left Panel"
           widthClass="w-80"
@@ -42,7 +47,7 @@ export default function ReactifySidebarDemo() {
             <ReactifyButton onClick={() => alert('Action from left sidebar!')} size="sm">
               Do Something
             </ReactifyButton>
-             <ReactifyButton variant="outline" size="sm" onClick={() => setIsLeftSidebarOpen(false)}>
+             <ReactifyButton variant="outline" size="sm" onClick={handleCloseLeft}>
               Close Panel
             </ReactifyButton>
           </div>
@@ -51,7 +56,7 @@ export default function ReactifySidebarDemo() {
         {/* Right Sidebar */}
         <ReactifySidebar
           isOpen={isRightSidebarOpen}
-          onClose={() => setIsRightSidebarOpen(false)}
+          onClose={handleCloseRight}
           position="right"
           title="Settings"
           showOverlay={false} // Example: no overlay
@@ -66,7 +71,7 @@ export default function ReactifySidebarDemo() {
               <li>Option 2</li>
               <li>Option 3</li>
             </ul>
-             <ReactifyButton variant="destructive" size="sm" onClick={() => setIsRightSidebarOpen(false)}>
+             <ReactifyButton variant="destructive" size="sm" onClick={handleCloseRight}>
               Close Settings
             </ReactifyButton>
           </div>

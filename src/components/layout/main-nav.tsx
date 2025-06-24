@@ -9,15 +9,10 @@ import { useState, useEffect } from 'react';
 const navItems = [
   { href: '/components', label: 'Components' },
   { href: '/theming', label: 'Theming' },
-  // { href: '/ai-generator', label: 'AI Generator' }, // Removed
   { href: '/micro-animations', label: 'Micro Animations' },
-  {
-    href: '/auth-demo/login',
-    label: 'Auth Forms Demo',
-    subPaths: ['/auth-demo/signup', '/auth-demo/forgot-password']
-  },
-  { href: '/auth-demo/roles', label: 'Role-Based Demo'},
-  { href: '/advanced-tools/feature-flag-manager', label: 'Feature Flags'},
+  { href: '/auth-demo/login', label: 'Auth Forms Demo' },
+  { href: '/auth-demo/roles', label: 'Role-Based Demo' },
+  { href: '/advanced-tools/feature-flag-manager', label: 'Feature Flags' },
   { href: '/docs', label: 'Docs' },
 ];
 
@@ -35,11 +30,9 @@ export function MainNav() {
         let isActive = false;
         if (isMounted) {
           if (item.href === '/auth-demo/login') {
-            isActive = pathname.startsWith('/auth-demo') && !pathname.startsWith('/auth-demo/roles') && !pathname.startsWith('/advanced-tools');
-          } else if (item.href === '/auth-demo/roles' || item.href === '/advanced-tools/feature-flag-manager') {
-            isActive = pathname === item.href;
-          }
-          else {
+            // "Auth Forms Demo" is active for /login, /signup, /forgot-password, but not /roles
+            isActive = pathname.startsWith('/auth-demo/') && !pathname.startsWith('/auth-demo/roles');
+          } else {
             isActive = pathname === item.href;
           }
         }

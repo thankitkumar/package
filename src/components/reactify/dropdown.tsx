@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useEffect, type ReactNode } from 'react';
+import { useState, useRef, useEffect, type ReactNode, useCallback } from 'react';
 import { cn } from './utils';
 import type { ReactifyComponentProps } from './common-props';
 // Note: ReactifyButton import will be resolved by the build process or if used within the same package.
@@ -41,7 +41,7 @@ export function ReactifyDropdown({ trigger, children, className, align = 'left',
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  const toggleDropdown = useCallback(() => setIsOpen(prev => !prev), []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useFeatureFlags, type FeatureFlag, type RolloutCondition } from '@/hooks/use-feature-flags';
 import { ReactifyCard, ReactifyCardHeader, ReactifyCardTitle, ReactifyCardDescription, ReactifyCardContent } from '@/components/reactify/card';
 import { ReactifyToggleSwitch } from '@/components/reactify/toggle-switch';
@@ -146,18 +146,18 @@ export function FeatureFlagDashboard() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newFlagData, setNewFlagData] = useState({ name: '', description: '', isEnabled: false });
 
-  const handleEditConditions = (flag: FeatureFlag) => {
+  const handleEditConditions = useCallback((flag: FeatureFlag) => {
     setEditingFlag(flag);
-  };
+  }, []);
 
-  const handleSaveConditions = (id: string, updatedConditions: RolloutCondition[]) => {
+  const handleSaveConditions = useCallback((id: string, updatedConditions: RolloutCondition[]) => {
     const flagToUpdate = featureFlags.find(f => f.id === id);
     if (flagToUpdate) {
       updateFlag({ ...flagToUpdate, rolloutConditions: updatedConditions });
     }
-  };
+  }, [featureFlags, updateFlag]);
 
-  const handleAddNewFlag = () => {
+  const handleAddNewFlag = useCallback(() => {
     if(newFlagData.name.trim() === '') {
         alert('Flag name cannot be empty.'); // Basic validation
         return;
@@ -165,7 +165,17 @@ export function FeatureFlagDashboard() {
     addFlag(newFlagData);
     setIsAddModalOpen(false);
     setNewFlagData({ name: '', description: '', isEnabled: false }); // Reset form
-  };
+  }, [addFlag, newFlagData]);
+
+  const handleCloseAddModal = useCallback(() => setIsAddModalOpen(false), []);
+  const handleCloseEditModal = useCallback(() => setEditingFlag(null), []);
+
+  const handleSaveAndCloseEditModal = useCallback((updatedConditions: RolloutCondition[]) => {
+    if (editingFlag) {
+      handleSaveConditions(editingFlag.id, updatedConditions);
+      setEditingFlag(null);
+    }
+  }, [editingFlag, handleSaveConditions]);
 
 
   return (
@@ -227,15 +237,12 @@ export function FeatureFlagDashboard() {
         <EditConditionsModal
           flag={editingFlag}
           isOpen={!!editingFlag}
-          onClose={() => setEditingFlag(null)}
-          onSave={(updatedConditions) => {
-            handleSaveConditions(editingFlag.id, updatedConditions);
-            setEditingFlag(null);
-          }}
+          onClose={handleCloseEditModal}
+          onSave={handleSaveAndCloseEditModal}
         />
       )}
 
-        <ReactifyModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Add New Feature Flag" className="max-w-lg">
+        <ReactifyModal isOpen={isAddModalOpen} onClose={handleCloseAddModal} title="Add New Feature Flag" className="max-w-lg">
             <div className="space-y-4">
                 <div>
                     <Label htmlFor="new-flag-name">Flag Name</Label>
@@ -266,7 +273,7 @@ export function FeatureFlagDashboard() {
                 </div>
             </div>
             <div className="flex justify-end gap-2 mt-6 pt-4 border-t">
-                <ReactifyButton variant="ghost" onClick={() => setIsAddModalOpen(false)}>Cancel</ReactifyButton>
+                <ReactifyButton variant="ghost" onClick={handleCloseAddModal}>Cancel</ReactifyButton>
                 <ReactifyButton onClick={handleAddNewFlag}>Add Flag</ReactifyButton>
             </div>
         </ReactifyModal>

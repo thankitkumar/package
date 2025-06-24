@@ -1,6 +1,6 @@
 
 'use client';
-import { useState, useRef, useEffect, type ReactNode, Children, isValidElement, cloneElement } from 'react';
+import { useState, useRef, useEffect, type ReactNode, useCallback } from 'react';
 import { cn } from './utils';
 import type { ReactifyComponentProps } from './common-props';
 
@@ -25,17 +25,17 @@ export function ReactifyTooltip({
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
-  const showTooltip = () => {
+  const showTooltip = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setIsVisible(true);
     }, delay);
-  };
+  }, [delay]);
 
-  const hideTooltip = () => {
+  const hideTooltip = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setIsVisible(false);
-  };
+  }, []);
 
   useEffect(() => {
     return () => {

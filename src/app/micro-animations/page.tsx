@@ -13,9 +13,18 @@ import Image from 'next/image';
 
 // Note: We are primarily using Tailwind CSS transitions and animations.
 
+interface ListItem {
+  id: number;
+  text: string;
+}
+
 export default function MicroAnimationsPage() {
   const [showElement, setShowElement] = useState(true);
-  const [listItems, setListItems] = useState(['Item 1', 'Item 2', 'Item 3']);
+  const [listItems, setListItems] = useState<ListItem[]>([
+    { id: 1, text: 'Item 1' },
+    { id: 2, text: 'Item 2' },
+    { id: 3, text: 'Item 3' },
+  ]);
   const [newItemText, setNewItemText] = useState('');
   const [buttonClickState, setButtonClickState] = useState(false);
 
@@ -29,15 +38,15 @@ export default function MicroAnimationsPage() {
 
   const addListItem = () => {
     if (newItemText.trim()) {
-      setListItems(prev => [...prev, newItemText.trim()]);
+      setListItems(prev => [...prev, { id: Date.now(), text: newItemText.trim() }]);
       setNewItemText('');
     }
   };
 
-  const removeListItem = (indexToRemove: number) => {
+  const removeListItem = (idToRemove: number) => {
     // For CSS-only, immediate removal is simpler.
     // Libraries like Framer Motion handle exit animations better.
-    setListItems(prev => prev.filter((_, index) => index !== indexToRemove));
+    setListItems(prev => prev.filter((item) => item.id !== idToRemove));
   };
 
   const handleButtonClick = () => {
@@ -203,13 +212,13 @@ export default function MicroAnimationsPage() {
               <Button onClick={addListItem}>Add Item</Button>
             </div>
             <ul className="space-y-2">
-              {listItems.map((item, index) => (
+              {listItems.map((item) => (
                 <li
-                  key={item + index} // Unique key for list items
+                  key={item.id}
                   className="flex justify-between items-center p-3 bg-background border rounded-md animate-in fade-in-0 slide-in-from-bottom-5 duration-300"
                 >
-                  <span>{item}</span>
-                  <Button variant="ghost" size="sm" onClick={() => removeListItem(index)} className="text-destructive hover:text-destructive/80">
+                  <span>{item.text}</span>
+                  <Button variant="ghost" size="sm" onClick={() => removeListItem(item.id)} className="text-destructive hover:text-destructive/80">
                     <AlertTriangle size={16} className="mr-1 hidden sm:inline-block"/> Remove
                   </Button>
                 </li>

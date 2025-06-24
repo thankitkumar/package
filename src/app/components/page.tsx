@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger, SidebarInput } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
@@ -272,7 +272,7 @@ import Image from 'next/image';
 <ReactifyCard className="max-w-md">
   <ReactifyCardHeader>
     <ReactifyCardTitle>Product Update</ReactifyCardTitle>
-    <ReactifyCardDescription>Version 2.0 is now live!</ReactifyCardDescription>
+    <ReactifyCardDescription>Version 1.0.0 is now live!</ReactifyCardDescription>
   </ReactifyCardHeader>
   <ReactifyCardContent>
     <Image
@@ -284,7 +284,7 @@ import Image from 'next/image';
       data-ai-hint="product update"
     />
     <p className="text-sm">
-      We're excited to announce the release of Reactify v2.0.
+      We're excited to announce the release of Reactify v1.0.0.
     </p>
   </ReactifyCardContent>
   <ReactifyCardFooter>
@@ -456,7 +456,7 @@ import { ReactifyFooter } from '@/components/reactify/footer';
 
 // Basic Footer
 <ReactifyFooter>
-  © {new Date().getFullYear()} Your Company Name. All rights reserved.
+  © {new Date().getFullYear()} Reactify. All rights reserved.
   <div className="mt-1">
     <a href="#" className="text-primary hover:underline text-xs">Privacy Policy</a>
     <span className="mx-1 text-xs">|</span>
@@ -1818,23 +1818,22 @@ export default function ComponentsPage() {
   const [selectedComponentId, setSelectedComponentId] = useState<string>(components[0]?.id ?? '');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const activeComponentDetails = components.find(comp => comp.id === selectedComponentId);
+  const sortedComponentsByName = useMemo(() => [...components].sort((a, b) => a.name.localeCompare(b.name)), []);
 
-  const sortedComponentsByName = [...components].sort((a, b) => a.name.localeCompare(b.name));
+  const globallyFilteredComponents = useMemo(() =>
+    sortedComponentsByName.filter(component =>
+      component.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ), [sortedComponentsByName, searchTerm]);
 
-  const globallyFilteredComponents = sortedComponentsByName.filter(component =>
-    component.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  React.useEffect(() => {
-    if (globallyFilteredComponents.length > 0 && !globallyFilteredComponents.find(comp => comp.id === selectedComponentId)) {
+  const activeComponentDetails = useMemo(() =>
+    components.find(comp => comp.id === selectedComponentId), [selectedComponentId]);
+  
+  useEffect(() => {
+    const isSelectedVisible = globallyFilteredComponents.some(c => c.id === selectedComponentId);
+    if (globallyFilteredComponents.length > 0 && !isSelectedVisible) {
       setSelectedComponentId(globallyFilteredComponents[0].id);
-    } else if (globallyFilteredComponents.length === 0 && components.length > 0 && selectedComponentId) {
-      // If search yields no results, and a component was selected, clear selection or keep?
-      // For now, if current selection is filtered out, try to select first of global filter.
-      // If global filter is empty, it means nothing matches search.
     }
-  }, [searchTerm, selectedComponentId, globallyFilteredComponents]);
+  }, [globallyFilteredComponents, selectedComponentId, setSelectedComponentId]);
 
 
   return (
@@ -1859,34 +1858,26 @@ export default function ComponentsPage() {
                 const componentsInCategory = globallyFilteredComponents.filter(
                   comp => comp.category === category.id
                 );
-                if (componentsInCategory.length === 0 && !searchTerm) { // Only skip if not searching and category empty
-                    // return null; // Skip rendering category if no components and not searching
+                if (componentsInCategory.length === 0 && searchTerm) {
+                    return null;
                 }
                 return (
                   <div key={category.id} className="mb-4">
                     <h3 className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider group-data-[collapsible=icon]:hidden">
                       {category.title}
                     </h3>
-                    {componentsInCategory.length > 0 ? (
-                      componentsInCategory.map((component) => (
-                        <SidebarMenuItem key={component.id}>
-                          <SidebarMenuButton
-                            onClick={() => setSelectedComponentId(component.id)}
-                            isActive={selectedComponentId === component.id}
-                            tooltip={{ children: component.name, side: 'right' }}
-                          >
-                            {React.cloneElement(component.icon, { className: 'h-5 w-5' })}
-                            <span className="group-data-[collapsible=icon]:hidden flex-1">{component.name}</span>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      ))
-                    ) : (
-                      searchTerm && ( // Only show "no matching" if actually searching
-                        <div className="px-2 py-1 text-sm text-muted-foreground group-data-[collapsible=icon]:hidden">
-                          No matching components in this category.
-                        </div>
-                      )
-                    )}
+                    {componentsInCategory.map((component) => (
+                      <SidebarMenuItem key={component.id}>
+                        <SidebarMenuButton
+                          onClick={() => setSelectedComponentId(component.id)}
+                          isActive={selectedComponentId === component.id}
+                          tooltip={{ children: component.name, side: 'right' }}
+                        >
+                          {React.cloneElement(component.icon, { className: 'h-5 w-5' })}
+                          <span className="group-data-[collapsible=icon]:hidden flex-1">{component.name}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
                   </div>
                 );
               })}
@@ -1915,7 +1906,6 @@ export default function ComponentsPage() {
                   codeExample={activeComponentDetails.codeExample}
                   accessibilityNotes={activeComponentDetails.accessibilityNotes}
                   codeBlockScrollAreaClassName={activeComponentDetails.codeBlockScrollAreaClassName}
-                  version={activeComponentDetails.version}
                 >
                   {activeComponentDetails.demo}
                 </ComponentDisplay>
