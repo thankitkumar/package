@@ -22,6 +22,7 @@ export * from './toggle-switch';
 export * from './divider';
 export * from './progress-bar';
 export * from './skeleton-loader';
+export * from './spinner';
 export * from './form-wizard';
 export * from './protected-content';
 export * from './network-aware-wrapper';

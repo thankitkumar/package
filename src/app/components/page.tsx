@@ -12,7 +12,7 @@ import {
   SeparatorHorizontal, Gauge,
   ListChecks, Wand2, Table2,
   Command as CommandIcon, ListTree, Code as CodeIcon, Presentation, FileCode2,
-  RichText, PencilRuler, BookMarked
+  RichText, PencilRuler, BookMarked, Loader2
 } from 'lucide-react';
 import { ReactifyCard, ReactifyCardContent, ReactifyCardHeader, ReactifyCardTitle } from '@/components/reactify/card';
 import Link from 'next/link';
@@ -49,6 +49,7 @@ const ReactifyProgressBarDemo = dynamic(() => import('./_components/reactify-pro
 const ReactifyRadioGroupDemo = dynamic(() => import('./_components/reactify-radio-group-demo'), { loading: () => <ComponentLoader /> });
 const ReactifySidebarDemo = dynamic(() => import('./_components/reactify-sidebar-demo'), { loading: () => <ComponentLoader /> });
 const ReactifySkeletonLoaderDemo = dynamic(() => import('./_components/reactify-skeleton-loader-demo'), { loading: () => <ComponentLoader /> });
+const ReactifySpinnerDemo = dynamic(() => import('./_components/reactify-spinner-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyTabsDemo = dynamic(() => import('./_components/reactify-tabs-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyTextareaDemo = dynamic(() => import('./_components/reactify-textarea-demo'), { loading: () => <ComponentLoader /> });
 const ReactifyToggleSwitchDemo = dynamic(() => import('./_components/reactify-toggle-switch-demo'), { loading: () => <ComponentLoader /> });
@@ -197,7 +198,7 @@ import { ReactifyBadge } from '@/components/reactify/badge';
     version: '1.0.0',
     codeExample: `
 import { ReactifyButton } from '@/components/reactify/button';
-import { Heart, Upload, AlertTriangle } from 'lucide-react';
+import { Heart, Upload, AlertTriangle, CheckCircle, ExternalLink } from 'lucide-react';
 
 // Primary Button
 <ReactifyButton variant="primary">Primary Action</ReactifyButton>
@@ -205,49 +206,29 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
 // Secondary Button
 <ReactifyButton variant="secondary">Secondary Action</ReactifyButton>
 
-// Outline Button
-<ReactifyButton variant="outline">Outline Action</ReactifyButton>
-
-// Ghost Button
-<ReactifyButton variant="ghost">Ghost Action</ReactifyButton>
-
 // Destructive Button
 <ReactifyButton variant="destructive" leftIcon={<AlertTriangle size={16} />}>
   Delete Item
 </ReactifyButton>
 
 // Success Button
-<ReactifyButton variant="success">Success Action</ReactifyButton>
+<ReactifyButton variant="success" leftIcon={<CheckCircle size={16}/>}>Success Action</ReactifyButton>
 
 // Warning Button
 <ReactifyButton variant="warning">Warning Action</ReactifyButton>
 
 // Link Button
-<ReactifyButton variant="link">This is a link</ReactifyButton>
+<ReactifyButton variant="link" rightIcon={<ExternalLink size={14}/>}>This is a link</ReactifyButton>
 
 // Button with Left Icon
 <ReactifyButton variant="primary" leftIcon={<Heart size={16} />}>
   Like
 </ReactifyButton>
 
-// Button with Right Icon
-<ReactifyButton variant="secondary" rightIcon={<Upload size={16} />}>
-  Upload
-</ReactifyButton>
-
 // Loading State Button
 <ReactifyButton variant="primary" isLoading={true}>
   Processing
 </ReactifyButton>
-
-// Disabled Button
-<ReactifyButton variant="primary" disabled>
-  Disabled
-</ReactifyButton>
-
-// Different Sizes
-<ReactifyButton variant="primary" size="sm">Small</ReactifyButton>
-<ReactifyButton variant="secondary" size="lg">Large</ReactifyButton>
   `,
     accessibilityNotes: [
       "Ensure buttons have clear, descriptive text content or an \`aria-label\` if only an icon is present.",
@@ -791,6 +772,42 @@ function SkeletonDemo() {
     codeBlockScrollAreaClassName: "max-h-none",
   },
   {
+    id: 'spinner',
+    name: 'Spinner',
+    icon: <Loader2 />,
+    category: 'standard',
+    demo: <ReactifySpinnerDemo />,
+    version: '1.0.0',
+    codeExample: `
+import { ReactifySpinner } from '@/components/reactify/spinner';
+
+// Default (Primary, md)
+<ReactifySpinner />
+
+// With different variants
+<ReactifySpinner variant="secondary" />
+<ReactifySpinner variant="destructive" />
+<ReactifySpinner variant="success" />
+
+// With different sizes
+<ReactifySpinner size="sm" />
+<ReactifySpinner size="lg" />
+<ReactifySpinner size="xl" />
+
+// In context with a label for accessibility
+<div className="flex items-center gap-2">
+  <ReactifySpinner />
+  <p>Loading data...</p>
+</div>
+`,
+    accessibilityNotes: [
+      "The spinner wrapper has `role='status'` to indicate it's a live region.",
+      "A visually hidden `<span>` with the `label` prop is included for screen reader users to announce the loading state (e.g., 'Loading...').",
+      "The SVG itself is decorative and will be ignored by screen readers, which will focus on the role and label.",
+    ],
+    codeBlockScrollAreaClassName: "max-h-none",
+  },
+  {
     id: 'tabs', name: 'Tabs', icon: <Folders />, category: 'standard', demo: <ReactifyTabsDemo />,
     version: '1.0.0',
     codeExample: `
@@ -1060,7 +1077,7 @@ function TooltipExample() {
     version: '1.0.0',
     codeExample: `
 import { ReactifyAdvancedTable, type ColumnDef } from '@/components/reactify/advanced-table';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 
 interface MyDataType {
   id: number;
@@ -1137,6 +1154,7 @@ function MyTablePage() {
       caption="List of items"
       enableColumnResizing={true} // Global toggle
       enableColumnReordering={true} // Global toggle
+      onRowClick={(row) => alert(\`Clicked \${row.name}\`)}
       // Optional callbacks:
       // onColumnOrderChange={(newOrder) => console.log('New column order:', newOrder)}
       // onColumnResize={(key, width) => console.log(\`Column \${key} resized to \${width}\`)}
