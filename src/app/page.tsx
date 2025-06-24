@@ -1,6 +1,7 @@
 import { HeroSection } from '@/components/sections/hero-section';
 import { FeaturesSection } from '@/components/sections/features-section';
 import { CtaSection } from '@/components/sections/cta-section';
+import { CustomFooter } from '@/components/layout/custom-footer';
 
 export default function HomePage() {
   return (
@@ -8,9 +9,7 @@ export default function HomePage() {
       <HeroSection />
       <FeaturesSection />
       <CtaSection />
-      <footer className="py-8 text-center text-muted-foreground">
-        © {new Date().getFullYear()} Reactify. All rights reserved.
-      </footer>
+      <CustomFooter />
     </div>
   );
 }
