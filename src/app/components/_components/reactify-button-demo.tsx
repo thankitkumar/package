@@ -2,80 +2,34 @@
 'use client';
 import { ReactifyButton } from '@/components/reactify/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Heart, Upload, AlertTriangle } from 'lucide-react';
+import { Heart, Upload, AlertTriangle, CheckCircle, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ReactifyButtonDemo() {
   const [loadingVariant, setLoadingVariant] = useState<string | null>(null);
 
-  const handleVariantClick = (clickedVariant: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive') => {
+  const handleVariantClick = (clickedVariant: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'success' | 'warning') => {
     setLoadingVariant(clickedVariant);
     setTimeout(() => {
       setLoadingVariant(null);
     }, 2000);
   };
   
-  const codeExample = `
-import { ReactifyButton } from '@/components/reactify/button';
-import { Heart, Upload, AlertTriangle } from 'lucide-react';
-
-// Primary Button
-<ReactifyButton variant="primary">Primary Action</ReactifyButton>
-
-// Secondary Button
-<ReactifyButton variant="secondary">Secondary Action</ReactifyButton>
-
-// Outline Button
-<ReactifyButton variant="outline">Outline Action</ReactifyButton>
-
-// Ghost Button
-<ReactifyButton variant="ghost">Ghost Action</ReactifyButton>
-
-// Destructive Button
-<ReactifyButton variant="destructive" leftIcon={<AlertTriangle />}>
-  Delete Item
-</ReactifyButton>
-
-// Button with Icon
-<ReactifyButton variant="primary" leftIcon={<Heart />}>
-  Like
-</ReactifyButton>
-
-// Loading State Button
-<ReactifyButton variant="primary" isLoading={true}>
-  Processing
-</ReactifyButton>
-
-// Disabled Button
-<ReactifyButton variant="primary" disabled>
-  Disabled
-</ReactifyButton>
-
-// Different Sizes
-<ReactifyButton variant="primary" size="sm">Small</ReactifyButton>
-<ReactifyButton variant="secondary" size="lg">Large</ReactifyButton>
-  `;
-
-  const accessibilityNotes = [
-    "Ensure buttons have clear, descriptive text content.",
-    "Use `aria-label` for icon-only buttons or if the text is not descriptive enough.",
-    "Buttons are focusable and can be activated using Enter or Space keys.",
-    "Loading state is announced via `aria-busy` and `aria-live`.",
-    "Disabled state is handled with the `disabled` attribute, making it unfocusable and unclickable.",
-  ];
-
   return (
     <Card className="w-full">
       <CardContent className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           <div className="space-y-4">
             <h3 className="font-semibold text-lg mb-2">Variants</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 items-center">
               <ReactifyButton variant="primary" onClick={() => handleVariantClick('primary')} isLoading={loadingVariant === 'primary'} data-variant="primary">Primary</ReactifyButton>
               <ReactifyButton variant="secondary" onClick={() => handleVariantClick('secondary')} isLoading={loadingVariant === 'secondary'} data-variant="secondary">Secondary</ReactifyButton>
               <ReactifyButton variant="outline" onClick={() => handleVariantClick('outline')} isLoading={loadingVariant === 'outline'} data-variant="outline">Outline</ReactifyButton>
               <ReactifyButton variant="ghost" onClick={() => handleVariantClick('ghost')} isLoading={loadingVariant === 'ghost'} data-variant="ghost">Ghost</ReactifyButton>
               <ReactifyButton variant="destructive" leftIcon={<AlertTriangle size={16}/>} onClick={() => handleVariantClick('destructive')} isLoading={loadingVariant === 'destructive'} data-variant="destructive">Destructive</ReactifyButton>
+              <ReactifyButton variant="success" leftIcon={<CheckCircle size={16}/>} onClick={() => handleVariantClick('success')} isLoading={loadingVariant === 'success'} data-variant="success">Success</ReactifyButton>
+              <ReactifyButton variant="warning" onClick={() => handleVariantClick('warning')} isLoading={loadingVariant === 'warning'} data-variant="warning">Warning</ReactifyButton>
+              <ReactifyButton variant="link" onClick={() => alert('Link button clicked!')} rightIcon={<ExternalLink size={14}/>}>Link Button</ReactifyButton>
             </div>
           </div>
 

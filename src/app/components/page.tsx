@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger, SidebarInput } from '@/components/ui/sidebar';
 import { ComponentDisplay } from './_components/component-display';
@@ -11,13 +11,13 @@ import {
   PanelTop, PanelBottom, PanelLeft, UserCircle, Dot, ToggleLeft, ToggleRight,
   SeparatorHorizontal, Gauge,
   ListChecks, Wand2, Table2,
-  Command as CommandIcon, ListTree
+  Command as CommandIcon, ListTree, Code as CodeIcon, Presentation, FileCode2,
+  RichText, PencilRuler, BookMarked
 } from 'lucide-react';
 import { ReactifyCard, ReactifyCardContent, ReactifyCardHeader, ReactifyCardTitle } from '@/components/reactify/card';
 import Link from 'next/link';
 import { ReactifyButton } from '@/components/reactify/button';
 import { ReactifySkeletonLoader } from '@/components/reactify/skeleton-loader';
-import { ReactifyBadge } from '@/components/reactify/badge';
 
 
 // Loader component for dynamic imports
@@ -215,6 +215,15 @@ import { Heart, Upload, AlertTriangle } from 'lucide-react';
 <ReactifyButton variant="destructive" leftIcon={<AlertTriangle size={16} />}>
   Delete Item
 </ReactifyButton>
+
+// Success Button
+<ReactifyButton variant="success">Success Action</ReactifyButton>
+
+// Warning Button
+<ReactifyButton variant="warning">Warning Action</ReactifyButton>
+
+// Link Button
+<ReactifyButton variant="link">This is a link</ReactifyButton>
 
 // Button with Left Icon
 <ReactifyButton variant="primary" leftIcon={<Heart size={16} />}>
@@ -1106,6 +1115,15 @@ function MyTablePage() {
     }
   ], []);
 
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+  }, []);
+
+  const handlePageSizeChange = useCallback((size: number) => {
+    setPageSize(size);
+    setCurrentPage(1); // Reset to first page
+  }, []);
+
   return (
     <ReactifyAdvancedTable
       columns={columns}
@@ -1113,9 +1131,9 @@ function MyTablePage() {
       isLoading={isLoading}
       currentPage={currentPage}
       pageCount={pageCount}
-      onPageChange={setCurrentPage}
+      onPageChange={handlePageChange}
       pageSize={pageSize}
-      onPageSizeChange={setPageSize}
+      onPageSizeChange={handlePageSizeChange}
       caption="List of items"
       enableColumnResizing={true} // Global toggle
       enableColumnReordering={true} // Global toggle
@@ -1185,7 +1203,7 @@ function MyComponentUsingFlags() {
   );
 }
 
-// Ensure FeatureFlagProvider is in your _app.tsx or layout.tsx
+// Ensure FeatureFlagProvider is in your layout.tsx
 // <FeatureFlagProvider>
 //   <YourApp />
 // </FeatureFlagProvider>
@@ -1607,7 +1625,7 @@ export default function ComponentsPage() {
     if (globallyFilteredComponents.length > 0 && !isSelectedVisible) {
       setSelectedComponentId(globallyFilteredComponents[0].id);
     }
-  }, [globallyFilteredComponents, selectedComponentId, setSelectedComponentId]);
+  }, [globallyFilteredComponents, selectedComponentId]);
 
 
   return (

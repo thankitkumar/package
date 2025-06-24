@@ -4,7 +4,7 @@ import { cn } from './utils';
 import type { ReactifyComponentProps } from './common-props';
 
 interface ReactifyButtonProps extends ReactifyComponentProps, ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'success' | 'warning' | 'link';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   leftIcon?: ReactNode;
@@ -34,6 +34,9 @@ export function ReactifyButton({
     outline: 'border border-input bg-transparent hover:bg-accent hover:text-accent-foreground',
     ghost: 'hover:bg-accent hover:text-accent-foreground',
     destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+    success: 'bg-green-500 text-white hover:bg-green-500/90',
+    warning: 'bg-yellow-500 text-black hover:bg-yellow-500/90',
+    link: 'text-primary underline-offset-4 hover:underline',
   };
 
   const sizeStyles = {
@@ -47,7 +50,7 @@ export function ReactifyButton({
       className={cn(
         baseStyles,
         variantStyles[variant],
-        sizeStyles[size],
+        variant !== 'link' && sizeStyles[size],
         className
       )}
       disabled={isLoading || disabled}
